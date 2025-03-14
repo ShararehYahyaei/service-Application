@@ -30,9 +30,9 @@ public class CustomerService implements CustomerServiceInterface {
     @Transactional(readOnly = true)
     @Override
     public CustomerResponseDto findById(Long id) {
-        Optional<Customer> byId = customerRepository.findById(id);
-        if (byId.isPresent()) {
-            return convertEntityToResponseDto(byId.get());
+        Optional<Customer> customerFound = customerRepository.findById(id);
+        if (customerFound.isPresent()) {
+            return convertEntityToResponseDto(customerFound.get());
         }
         throw new RuntimeException("Customer not found");
     }
@@ -59,7 +59,7 @@ public class CustomerService implements CustomerServiceInterface {
     @Transactional(readOnly = true)
     @Override
     public List<CustomerResponseDto> getAllCustomersWithActiveStatus() {
-        List<Customer> allCustomers = customerRepository.findAll();
+        List<Customer> allCustomers = customerRepository.findByActiveTrue();
         return allCustomers.stream()
                 .map(this::convertEntityToResponseDto)
                 .collect(Collectors.toList());

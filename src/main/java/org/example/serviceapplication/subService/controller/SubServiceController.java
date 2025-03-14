@@ -1,14 +1,17 @@
 package org.example.serviceapplication.subService.controller;
 
 
-
+import org.example.serviceapplication.Cusotmer.dto.CustomerResponseDto;
 import org.example.serviceapplication.subService.service.SubCategoryService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.example.serviceapplication.subService.subCategoryDto.SubCategoryCreateDto;
+import org.example.serviceapplication.subService.subCategoryDto.SubCategoryResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
-@RestController("/api/v1/subService")
+@RestController("/api/v1/subCategory")
 public class SubServiceController {
 
     private final SubCategoryService subCategoryService;
@@ -18,7 +21,18 @@ public class SubServiceController {
     }
 
     @PostMapping
-    public void createSubcategory(@RequestBody SubCategoryRequest subCategoryRequest) {
+    public void createSubcategory(@RequestBody SubCategoryCreateDto subCategoryCreateDto) {
+
+        subCategoryService.createSubCategory(subCategoryCreateDto);
 
     }
+
+
+    @GetMapping("/services/below-price")
+    public ResponseEntity<List<SubCategoryResponse>> getAllSubCategoriesLessThanThisPrice(@RequestParam double price) {
+        List<SubCategoryResponse> subCategories = subCategoryService.
+                getSubCategoriesLessThanThisPrice(price);
+        return new ResponseEntity<>(subCategories, HttpStatus.OK);
+    }
+
 }

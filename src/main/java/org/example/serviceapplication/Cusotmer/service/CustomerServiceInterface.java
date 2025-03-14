@@ -10,19 +10,19 @@ import java.util.List;
 public interface CustomerServiceInterface {
 
 
-    @Transactional
+
     Customer createCustomer(CustomerCreateDto customerDto);
 
-    @Transactional(readOnly = true)
+
     CustomerResponseDto findById(Long id);
 
-    @Transactional(readOnly = true)
+
     List<CustomerResponseDto> getCustomersByName(String name);
 
-    @Transactional(readOnly = true)
+
     List<CustomerResponseDto> getAllCustomers();
 
-    @Transactional(readOnly = true)
+
     List<CustomerResponseDto> getAllCustomersWithActiveStatus();
 
     ;

@@ -1,19 +1,13 @@
 package org.example.serviceapplication.specialist.service;
 
-import org.example.serviceapplication.Cusotmer.model.Customer;
 import org.example.serviceapplication.enumPackage.Role;
 import org.example.serviceapplication.enumPackage.Status;
 import org.example.serviceapplication.specialist.model.Specialist;
 import org.example.serviceapplication.specialist.repository.SpecialistRepository;
-import org.example.serviceapplication.workCategory.model.Work;
-import org.example.serviceapplication.workCategory.repository.WorkRepository;
-import org.example.serviceapplication.workCategory.service.WorkServiceImpl;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.stereotype.Service;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
