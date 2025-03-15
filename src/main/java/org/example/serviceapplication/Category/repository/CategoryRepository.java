@@ -1,7 +1,6 @@
-package org.example.serviceapplication.workCategory.repository;
+package org.example.serviceapplication.Category.repository;
 
-import org.example.serviceapplication.Cusotmer.model.Customer;
-import org.example.serviceapplication.workCategory.model.Category;
+import org.example.serviceapplication.Category.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

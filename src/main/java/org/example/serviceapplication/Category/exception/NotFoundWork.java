@@ -1,4 +1,4 @@
-package org.example.serviceapplication.workCategory.exception;
+package org.example.serviceapplication.Category.exception;
 
 public class NotFoundWork extends RuntimeException {
     public NotFoundWork(String message) {

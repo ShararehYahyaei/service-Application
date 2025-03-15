@@ -1,9 +1,10 @@
 package org.example.serviceapplication.workCategory.service;
 
-import org.example.serviceapplication.workCategory.exception.NotFoundWork;
-import org.example.serviceapplication.subService.model.SubCategory;
-import org.example.serviceapplication.workCategory.model.Category;
-import org.example.serviceapplication.workCategory.repository.CategoryRepository;
+import org.example.serviceapplication.Category.exception.NotFoundWork;
+import org.example.serviceapplication.Category.service.CategoryServiceImpl;
+import org.example.serviceapplication.subCategory.model.SubCategory;
+import org.example.serviceapplication.Category.model.Category;
+import org.example.serviceapplication.Category.repository.CategoryRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -74,7 +75,7 @@ class CategoryServiceImplTest {
         Category category2 = getWork();
         service.createNewCategory(category1);
         service.createNewCategory(category2);
-        List<Category> categories = service.getAllWorks();
+        List<Category> categories = service.getAllCategories();
         assertEquals(2, categories.size());
 
     }
@@ -83,7 +84,7 @@ class CategoryServiceImplTest {
     void get_work_by_name() {
         Category category = getWork();
         Category newCategory = service.createNewCategory(category);
-        Category categoryByName = service.getWorkByName(newCategory.getName());
+        Category categoryByName = service.getAllCategoriesByName(newCategory.getName());
         assertEquals(category.getName(), categoryByName.getName());
 
     }

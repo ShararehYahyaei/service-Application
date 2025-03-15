@@ -8,7 +8,6 @@ import org.example.serviceapplication.enumPackage.Status;
 
 public record CustomerCreateDto(
 
-
         String address,
         String phone,
         String name,
