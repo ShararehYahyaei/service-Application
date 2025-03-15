@@ -3,6 +3,7 @@ package org.example.serviceapplication.Category.service;
 import org.example.serviceapplication.Category.dto.CategoryRequest;
 import org.example.serviceapplication.Category.dto.CategoryResponse;
 import org.example.serviceapplication.Category.dto.SubCategoryResponseDto;
+import org.example.serviceapplication.Category.exception.DuplicateCategoryName;
 import org.example.serviceapplication.Category.model.Category;
 import org.example.serviceapplication.Category.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category createNewCategory(CategoryRequest categoryRequest) {
         Category category = convertDtoToEntity(categoryRequest);
+        if (categoryRepository.existsByName(category.getName())) {
+            throw new DuplicateCategoryName("این نام قبلاً در سیستم وجود دارد.");
+        }
         return categoryRepository.save(category);
 
     }

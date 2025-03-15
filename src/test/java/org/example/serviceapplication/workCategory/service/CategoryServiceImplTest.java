@@ -1,6 +1,6 @@
 package org.example.serviceapplication.workCategory.service;
 
-import org.example.serviceapplication.Category.exception.NotFoundWork;
+import org.example.serviceapplication.Category.exception.NotFoundCategory;
 import org.example.serviceapplication.Category.service.CategoryServiceImpl;
 import org.example.serviceapplication.subCategory.model.SubCategory;
 import org.example.serviceapplication.Category.model.Category;
@@ -54,8 +54,8 @@ class CategoryServiceImplTest {
     void should_return_exception_if_work_not_found() {
         Category category = getWork();
         service.createNewCategory(category);
-        NotFoundWork notFoundWork = assertThrows(NotFoundWork.class, () -> service.getCategoryById(30L));
-        assertEquals("Work not found", notFoundWork.getMessage());
+        NotFoundCategory notFoundCategory = assertThrows(NotFoundCategory.class, () -> service.getCategoryById(30L));
+        assertEquals("Work not found", notFoundCategory.getMessage());
 
     }
 
@@ -65,8 +65,8 @@ class CategoryServiceImplTest {
         Category category = getWork();
         Category newCategory = service.createNewCategory(category);
         service.deleteWork(newCategory.getId());
-        NotFoundWork notFoundWork = assertThrows(NotFoundWork.class, () -> service.getCategoryById(newCategory.getId()));
-        assertEquals("Work not found", notFoundWork.getMessage());
+        NotFoundCategory notFoundCategory = assertThrows(NotFoundCategory.class, () -> service.getCategoryById(newCategory.getId()));
+        assertEquals("Work not found", notFoundCategory.getMessage());
     }
 
     @Test
