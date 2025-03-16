@@ -1,10 +1,10 @@
 package org.example.serviceapplication.workCategory.service;
 
 import org.example.serviceapplication.Category.exception.NotFoundCategory;
-import org.example.serviceapplication.Category.service.CategoryServiceImpl;
-import org.example.serviceapplication.subCategory.model.SubCategory;
-import org.example.serviceapplication.Category.model.Category;
-import org.example.serviceapplication.Category.repository.CategoryRepository;
+import org.example.serviceapplication.Category.service.ServiceCategoryImpl;
+import org.example.serviceapplication.Category.model.ServiceCategory;
+import org.example.serviceapplication.Category.repository.ServiceCategoryRepository;
+import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -22,17 +22,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ActiveProfiles("test")
 @SpringBootTest
-class CategoryServiceImplTest {
+class ServiceCategoryImplTest {
         @Autowired
-        private CategoryServiceImpl service;
+        private ServiceCategoryImpl service;
         @Autowired
-        private CategoryRepository categoryRepository;
+        private ServiceCategoryRepository serviceCategoryRepository;
 
 
     @Test
     void should_create_work_category() {
-        Category categories = getWork();
-        Category newCategory = service.createNewCategory(categories);
+        ServiceCategory categories = getWork();
+        ServiceCategory newCategory = service.createNewCategory(categories);
         Assertions.assertNotNull(newCategory);
         Assertions.assertNotNull(newCategory.getId());
         assertEquals(categories.getName(), newCategory.getName());
@@ -43,16 +43,16 @@ class CategoryServiceImplTest {
 
     @Test
     void should_return_work_By_id() {
-        Category category = getWork();
-        Category newCategory = service.createNewCategory(category);
-        Category categoryById = service.getCategoryByIdResponse(newCategory.getId());
+        ServiceCategory category = getWork();
+        ServiceCategory newCategory = service.createNewCategory(category);
+        ServiceCategory categoryById = service.getCategoryByIdResponse(newCategory.getId());
         assertEquals(categoryById.getId(), newCategory.getId());
 
     }
 
     @Test
     void should_return_exception_if_work_not_found() {
-        Category category = getWork();
+        ServiceCategory category = getWork();
         service.createNewCategory(category);
         NotFoundCategory notFoundCategory = assertThrows(NotFoundCategory.class, () -> service.getCategoryByIdResponse(30L));
         assertEquals("Work not found", notFoundCategory.getMessage());
@@ -62,8 +62,8 @@ class CategoryServiceImplTest {
 
     @Test
     void should_delete_work_category() {
-        Category category = getWork();
-        Category newCategory = service.createNewCategory(category);
+        ServiceCategory category = getWork();
+        ServiceCategory newCategory = service.createNewCategory(category);
         service.deleteWork(newCategory.getId());
         NotFoundCategory notFoundCategory = assertThrows(NotFoundCategory.class, () -> service.getCategoryByIdResponse(newCategory.getId()));
         assertEquals("Work not found", notFoundCategory.getMessage());
@@ -71,42 +71,42 @@ class CategoryServiceImplTest {
 
     @Test
     void should_return_all_works() {
-        Category category1 = getWork();
-        Category category2 = getWork();
+        ServiceCategory category1 = getWork();
+        ServiceCategory category2 = getWork();
         service.createNewCategory(category1);
         service.createNewCategory(category2);
-        List<Category> categories = service.getAllCategories();
+        List<ServiceCategory> categories = service.getAllCategories();
         assertEquals(2, categories.size());
 
     }
 
     @Test
     void get_work_by_name() {
-        Category category = getWork();
-        Category newCategory = service.createNewCategory(category);
-        Category categoryByName = service.getAllCategoriesByName(newCategory.getName());
+        ServiceCategory category = getWork();
+        ServiceCategory newCategory = service.createNewCategory(category);
+        ServiceCategory categoryByName = service.getAllCategoriesByName(newCategory.getName());
         assertEquals(category.getName(), categoryByName.getName());
 
     }
 
-    private Category getWork() {
-        SubCategory sCategory1 = new SubCategory("barghkari",
+    private ServiceCategory getWork() {
+        SubServiceCategory sSubServiceCategory1 = new SubServiceCategory("barghkari",
                 "bargh is related to the house", 1500);
-        SubCategory sCategory2 = new SubCategory("barghkari",
+        SubServiceCategory sSubServiceCategory2 = new SubServiceCategory("barghkari",
                 "bargh is related to the house", 1600);
-        SubCategory sCategory3 = new SubCategory("barghkari",
+        SubServiceCategory sSubServiceCategory3 = new SubServiceCategory("barghkari",
                 "bargh is related to the house", 1700);
-        List<SubCategory> subCategories = new ArrayList<>();
-        subCategories.add(sCategory1);
-        subCategories.add(sCategory2);
-        subCategories.add(sCategory3);
+        List<SubServiceCategory> subCategories = new ArrayList<>();
+        subCategories.add(sSubServiceCategory1);
+        subCategories.add(sSubServiceCategory2);
+        subCategories.add(sSubServiceCategory3);
 
-        return new Category("House", subCategories);
+        return new ServiceCategory("House", subCategories);
     }
 
     @AfterEach
     public void delete_table_After_each_test() {
-        categoryRepository.deleteAll();
+        serviceCategoryRepository.deleteAll();
     }
 
 }

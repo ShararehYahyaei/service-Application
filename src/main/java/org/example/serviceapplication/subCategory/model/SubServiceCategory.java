@@ -6,7 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.serviceapplication.Category.model.Category;
+import org.example.serviceapplication.Category.model.ServiceCategory;
+import org.example.serviceapplication.user.model.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -14,7 +18,7 @@ import org.example.serviceapplication.Category.model.Category;
 @AllArgsConstructor
 @Getter
 @Setter
-public class SubCategory {
+public class SubServiceCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,9 +27,13 @@ public class SubCategory {
     private double price;
 
     @ManyToOne
-    private Category category;
+    private ServiceCategory category;
+    @ManyToMany
+    List<User> users=new ArrayList<>();
 
-    public SubCategory(String name, String description, double price, Category category) {
+    public SubServiceCategory(String name, String description,
+                              double price,
+                              ServiceCategory category) {
         this.name = name;
         this.description = description;
         this.price = price;

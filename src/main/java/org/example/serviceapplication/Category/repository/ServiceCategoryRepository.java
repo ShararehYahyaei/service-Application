@@ -1,15 +1,15 @@
 package org.example.serviceapplication.Category.repository;
 
-import org.example.serviceapplication.Category.model.Category;
+import org.example.serviceapplication.Category.model.ServiceCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface ServiceCategoryRepository extends JpaRepository<ServiceCategory, Long> {
 
-    List<Category> findByNameContainingIgnoreCase(String name);
+    List<ServiceCategory> findByNameContainingIgnoreCase(String name);
     boolean existsByName(String name);
 
 }

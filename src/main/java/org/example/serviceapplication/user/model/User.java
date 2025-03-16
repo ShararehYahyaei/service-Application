@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.serviceapplication.Category.model.Category;
+import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
 
@@ -42,7 +42,7 @@ public class User {
     byte[] profileImage;
 
     @ManyToMany(fetch = FetchType.EAGER ,mappedBy = "users")
-    private List<Category> categories=new ArrayList<>();
+    private List<SubServiceCategory> subServiceCategories=new ArrayList<>();
 
     public User(String address, String phone, String name, String lastName,
                 String userName, String email, String password, Role role,

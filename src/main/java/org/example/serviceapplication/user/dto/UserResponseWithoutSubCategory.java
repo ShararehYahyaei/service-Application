@@ -1,14 +1,9 @@
 package org.example.serviceapplication.user.dto;
 
-
-
-import java.util.List;
-
-public record UserResponseWithCategory(
+public record UserResponseWithoutSubCategory(
         String name,
         String lastName,
         String userName,
-        boolean active,
-        List<String> categories
+        boolean active
 ) {
 }

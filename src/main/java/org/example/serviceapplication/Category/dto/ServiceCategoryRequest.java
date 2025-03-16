@@ -1,6 +1,4 @@
 package org.example.serviceapplication.Category.dto;
 
-public record CategoryRequest(
-        String name
-) {
+public record ServiceCategoryRequest(String name) {
 }

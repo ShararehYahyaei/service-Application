@@ -1,16 +1,14 @@
 package org.example.serviceapplication.user.controller;
 
 
-import jakarta.validation.Valid;
 import org.example.serviceapplication.user.dto.UserRequest;
 import org.example.serviceapplication.user.dto.UserResponse;
-import org.example.serviceapplication.user.dto.UserResponseWithCategory;
-import org.example.serviceapplication.user.enumPackage.Role;
+import org.example.serviceapplication.user.dto.UserResponseWithSubCategory;
+import org.example.serviceapplication.user.dto.UserResponseWithoutSubCategory;
 import org.example.serviceapplication.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -56,20 +54,29 @@ public class UserController {
     public UserResponse getUserById(@PathVariable Long id) {
         return userService.findById(id);
     }
+
     @GetMapping("/getByIdForShowCategory/{id}")
-    public UserResponseWithCategory getUserByIdForShowCategory(@PathVariable Long id) {
+    public UserResponseWithSubCategory getUserByIdForShowCategory(@PathVariable Long id) {
         return userService.getUserWithCategory(id);
     }
 
 
-
     @PutMapping("/addCategoryToUser/{userId}/{categoryId}")
-    public ResponseEntity<UserResponseWithCategory> addCategoryToUser(
+    public ResponseEntity<UserResponseWithSubCategory> addCategoryToUser(
             @PathVariable Long userId,
             @PathVariable Long categoryId) {
 
-        UserResponseWithCategory userResponseWithCategory = userService.addCategoryToSpecialist(userId, categoryId);
-        return ResponseEntity.ok(userResponseWithCategory);
+        UserResponseWithSubCategory userResponseWithSubCategory = userService.addCategoryToSpecialist(userId, categoryId);
+        return ResponseEntity.ok(userResponseWithSubCategory);
+    }
+
+    @PutMapping("/removeCategoryFromUser/{userId}/{categoryId}")
+    public ResponseEntity<UserResponseWithoutSubCategory> removeCategoryFromUser(
+            @PathVariable Long userId,
+            @PathVariable Long categoryId) {
+
+        UserResponseWithoutSubCategory user = userService.deleteCategoryFromSpecialist(userId, categoryId);
+        return ResponseEntity.ok(user);
     }
 
 

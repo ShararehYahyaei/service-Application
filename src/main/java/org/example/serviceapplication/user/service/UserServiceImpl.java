@@ -2,13 +2,15 @@ package org.example.serviceapplication.user.service;
 
 
 import org.example.serviceapplication.Category.exception.NoActiveUsersFound;
-import org.example.serviceapplication.Category.model.Category;
-import org.example.serviceapplication.Category.service.CategoryService;
+import org.example.serviceapplication.Category.exception.NotFoundCategory;
+import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
 import org.example.serviceapplication.user.dto.UserRequest;
 import org.example.serviceapplication.user.dto.UserResponse;
-import org.example.serviceapplication.user.dto.UserResponseWithCategory;
+import org.example.serviceapplication.user.dto.UserResponseWithSubCategory;
+import org.example.serviceapplication.user.dto.UserResponseWithoutSubCategory;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
+import org.example.serviceapplication.user.exception.UserHasNoAnyService;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.exception.UserNotFond;
 import org.example.serviceapplication.user.model.User;
@@ -28,9 +30,9 @@ public class UserServiceImpl implements UserService {
 
 
     private final UserRepository userRepository;
-    private final CategoryService categoryService;
+    private final ServiceCategoryInterface categoryService;
 
-    public UserServiceImpl(UserRepository userRepository, CategoryService categoryService) {
+    public UserServiceImpl(UserRepository userRepository, ServiceCategoryInterface categoryService) {
 
         this.userRepository = userRepository;
         this.categoryService = categoryService;
@@ -92,19 +94,19 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseWithCategory addCategoryToSpecialist(Long idSpecialist, Long categoryId) {
+    public UserResponseWithSubCategory addCategoryToSpecialist(Long idSpecialist, Long categoryId) {
 
         Optional<User> userFound = userRepository.findById(idSpecialist);
 
         if (userFound.isPresent()) {
             User user = userFound.get();
             if (user.getRole() == Role.Specialist) {
-                Category categoryFound = categoryService.getCatgeoryById(categoryId);
-                user.getCategories().add(categoryFound);
-                User userSave = userRepository.save(user);
-                categoryFound.getUsers().add(userSave);
-                categoryService.updateCategory(categoryFound);
-                return convertEntityToResponseWithCategory(userSave);
+                org.example.serviceapplication.Category.model.ServiceCategory categoryFound = categoryService.getCategoryById(categoryId);
+//                user.getCategories().add(categoryFound);
+//                User userSave = userRepository.save(user);
+//                categoryFound.getUsers().add(userSave);
+//                categoryService.updateCategory(categoryFound);
+                return null;//convertEntityToResponseWithCategory(userSave);
             } else {
                 throw new UserHasWrongRole("User is not a Specialist");
             }
@@ -115,15 +117,40 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
-    public UserResponseWithCategory getUserWithCategory(Long id) {
+    public UserResponseWithSubCategory getUserWithCategory(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFond("User not found"));
 
-        if (user.getRole() != Role.Specialist || user.getCategories() == null || user.getCategories().isEmpty()) {
-            throw new UserNotFond("User has no specialty or services available");
-        }
+//        if (user.getRole() != Role.Specialist || user.getCategories() == null || user.getCategories().isEmpty()) {
+//            throw new UserNotFond("User has no specialty or services available");
+//        }
 
         return convertEntityToResponseWithCategory(user);
+    }
+
+    @Transactional
+    @Override
+    public UserResponseWithoutSubCategory deleteCategoryFromSpecialist(Long idSpecialist, Long categoryId) {
+        User user = userRepository.findById(idSpecialist)
+                .orElseThrow(() -> new UserNotFond("Specialist not found"));
+
+        if (user.getRole() != Role.Specialist) {
+            throw new UserHasWrongRole("User is not a Specialist");
+        }
+
+        org.example.serviceapplication.Category.model.ServiceCategory category = categoryService.getCategoryById(categoryId);
+        if (category == null) {
+            throw new NotFoundCategory("Category not found");
+        }
+//        if (user.getCategories().contains(category)) {
+//            user.getCategories().remove(category);
+//        } else {
+//            throw new UserHasNoAnyService("Specialist does not have this category");
+//        }
+
+        User saveUser = userRepository.save(user);
+        categoryService.updateCategory(category);
+        return convertEntityToWithoutCategory(saveUser);
     }
 
 
@@ -173,19 +200,31 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    private UserResponseWithCategory convertEntityToResponseWithCategory(User user) {
-        List<String> categoryNames = user.getCategories().stream()
-                .map(Category::getName)
-                .toList();
-        return new UserResponseWithCategory(
+    private UserResponseWithSubCategory convertEntityToResponseWithCategory(User user) {
+        return null;
+//        List<String> categoryNames = user.getCategories().stream()
+//                .map(org.example.serviceapplication.Category.model.ServiceCategory::getName)
+//                .toList();
+//        return new UserResponseWithSubCategory(
+//                user.getName(),
+//                user.getLastName(),
+//                user.getUserName(),
+//                user.isActive(),
+//                categoryNames
+//
+//        );
+    }
+
+    private UserResponseWithoutSubCategory convertEntityToWithoutCategory(User user) {
+        return new UserResponseWithoutSubCategory(
                 user.getName(),
                 user.getLastName(),
                 user.getUserName(),
-                user.isActive(),
-                categoryNames
+                user.isActive()
 
         );
     }
+
 
     private String convertByteArrayToBase64(byte[] bytes) {
         return bytes != null ? Base64.getEncoder().encodeToString(bytes) : null;
