@@ -2,6 +2,7 @@ package org.example.serviceapplication.user.service;
 
 import org.example.serviceapplication.user.dto.UserRequest;
 import org.example.serviceapplication.user.dto.UserResponse;
+import org.example.serviceapplication.user.dto.UserResponseWithCategory;
 import org.example.serviceapplication.user.model.User;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,5 +27,5 @@ public interface UserService {
     List<UserResponse> getAllActiveUsers();
 
     @Transactional
-    void addCategoryToSpecialist(Long idSpecialist, Long categoryId);
+    UserResponseWithCategory addCategoryToSpecialist(Long idSpecialist, Long categoryId);
 }

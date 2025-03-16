@@ -4,6 +4,7 @@ package org.example.serviceapplication.user.controller;
 import jakarta.validation.Valid;
 import org.example.serviceapplication.user.dto.UserRequest;
 import org.example.serviceapplication.user.dto.UserResponse;
+import org.example.serviceapplication.user.dto.UserResponseWithCategory;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -19,27 +20,17 @@ import java.util.List;
 public class UserController {
 
 
-
     private final UserService userService;
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
     @PostMapping(value = "/create", consumes = "multipart/form-data")
     public UserResponse save(
-            @RequestParam String address,
-            @RequestParam String phone,
-            @RequestParam String name,
-            @RequestParam String lastName,
-            @RequestParam String userName,
-            @RequestParam String email,
-            @RequestParam String password,
-            @RequestParam Role role,
-            @RequestParam MultipartFile profileImage
+            @ModelAttribute UserRequest userRequest
     ) {
-        UserRequest request = new UserRequest(
-                address, phone, name, lastName, userName, email, password, role, profileImage
-        );
-        return userService.userCreate(request);
+        return userService.userCreate(userRequest);
     }
 
 
@@ -59,6 +50,13 @@ public class UserController {
     public ResponseEntity<List<UserResponse>> getUsersByName(@RequestParam String name) {
         List<UserResponse> allUsers = userService.getUsersByName(name);
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
+    }
+
+    @PutMapping("/addCategoryToUser/{userId}/{categoryId}")
+    public ResponseEntity<UserResponseWithCategory> addCategoryToUser( @RequestParam Long userId,
+                                                                      @RequestParam Long categoryId  ) {
+        UserResponseWithCategory userResponseWithCategory = userService.addCategoryToSpecialist(userId, categoryId);
+        return new ResponseEntity<>(userResponseWithCategory, HttpStatus.OK);
     }
 
 

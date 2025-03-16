@@ -6,6 +6,7 @@ import org.example.serviceapplication.Category.model.Category;
 import org.example.serviceapplication.Category.service.CategoryService;
 import org.example.serviceapplication.user.dto.UserRequest;
 import org.example.serviceapplication.user.dto.UserResponse;
+import org.example.serviceapplication.user.dto.UserResponseWithCategory;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
@@ -90,7 +91,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void addCategoryToSpecialist(Long idSpecialist, Long categoryId) {
+    public UserResponseWithCategory addCategoryToSpecialist(Long idSpecialist, Long categoryId) {
 
         Optional<User> userFound = userRepository.findById(idSpecialist);
 
@@ -100,7 +101,8 @@ public class UserServiceImpl implements UserService {
             if (user.getRole() != Role.Specialist) {
                 Category categoryFound = categoryService.getCatgeoryById(categoryId);
                 user.getCategories().add(categoryFound);
-                userRepository.save(user);
+                User userSave = userRepository.save(user);
+                return convertEntityToResponseWithCategory(userSave);
             } else {
                 throw new UserHasWrongRole("User is not a Specialist");
             }
@@ -152,6 +154,20 @@ public class UserServiceImpl implements UserService {
 
         );
     }
+    private UserResponseWithCategory convertEntityToResponseWithCategory(User user) {
+        List<String> categoryNames = user.getCategories().stream()
+                .map(Category::getName)
+                .toList();
+        return new UserResponseWithCategory(
+              user.getName(),
+                user.getLastName(),
+                user.getUserName(),
+                user.isActive(),
+                categoryNames
+
+        );
+    }
+
 
 
 }
