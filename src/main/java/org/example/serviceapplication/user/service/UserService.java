@@ -24,7 +24,7 @@ public interface UserService {
     List<UserResponseDto> getAllActiveUsers();
 
     @Transactional
-    UserResponseWithSubCategory addCategoryToSpecialist(Long idSpecialist, Long categoryId);
+    void addSubCategory(Long idSpecialist, Long categoryId);
 
     @Transactional(readOnly = true)
     UserResponseWithSubCategory getUserWithCategory(Long id);

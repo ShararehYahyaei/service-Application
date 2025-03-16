@@ -50,7 +50,12 @@ public class UserServiceImpl implements UserService {
         user.setActive(false);
         user.setStatus(Status.newJoiner);
         user.setCreatedAt(LocalDateTime.now());
-        return convertUserToResponseDto(user);
+        if (user.getRole() == Role.Customer) {
+            userResponse = customerService.createCustomer(user);
+        } else if (user.getRole() == Role.Specialist) {
+            userResponse = specialistService.createSpecialist(user);
+        }
+        return userResponse;
 
     }
 
@@ -84,8 +89,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-
     @Transactional(readOnly = true)
     @Override
     public List<UserResponseDto> getAllActiveUsers() {
@@ -99,28 +102,23 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-//todo
+    //todo
     @Transactional
     @Override
-    public UserResponseWithSubCategory addCategoryToSpecialist(Long idSpecialist, Long categoryId) {
+    public void addSubCategory(Long idSpecialist, Long categoryId) {
 
         Optional<User> userFound = userRepository.findById(idSpecialist);
-
-        if (userFound.isPresent()) {
-            User user = userFound.get();
-            if (user.getRole() == Role.Specialist) {
-                org.example.serviceapplication.Category.model.ServiceCategory categoryFound = categoryService.getCategoryById(categoryId);
-//                user.getCategories().add(categoryFound);
-//                User userSave = userRepository.save(user);
-//                categoryFound.getUsers().add(userSave);
-//                categoryService.updateCategory(categoryFound);
-                return null;//convertEntityToResponseWithCategory(userSave);
-            } else {
-                throw new UserHasWrongRole("User is not a Specialist");
-            }
-        } else {
+        if (userFound.isEmpty()) {
             throw new UserNotFond("User not found");
         }
+
+
+        if (userFound.get().getRole() == Role.Customer || userFound.get().getRole() == Role.Admin) {
+            throw new UserHasWrongRole("User has wrong role");
+
+        }
+        specialistService.addSubCategoryToSpecialist(userFound.get(), categoryId);
+
     }
 
     @Transactional(readOnly = true)
@@ -216,8 +214,7 @@ public class UserServiceImpl implements UserService {
         UserResponseDto userResponseDto = null;
         if (user.getRole() == Role.Customer) {
             userResponseDto = customerService.convertEntityToResponseDto(user);
-        }
-        else if (user.getRole() == Role.Specialist) {
+        } else if (user.getRole() == Role.Specialist) {
             userResponseDto = specialistService.convertEntityToResponseDto(user);
         }
         return userResponseDto;

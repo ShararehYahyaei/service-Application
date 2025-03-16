@@ -1,8 +1,7 @@
 package org.example.serviceapplication.subCategory.service;
 
-import org.example.serviceapplication.Category.dto.ServiceCategoryRequest;
-import org.example.serviceapplication.Category.dto.ServiceCategoryResponse;
 import org.example.serviceapplication.Category.model.ServiceCategory;
+import org.example.serviceapplication.subCategory.exception.SubServiceCategoryIsNotFound;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.subCategory.repsitory.SubServiceCategoryRepository;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategoryRequest;
@@ -11,6 +10,7 @@ import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -51,6 +51,17 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
         return subCategories.stream()
                 .map(this::convertSubCategoryToResponse)
                 .collect(Collectors.toList());
+    }
+
+
+    @Transactional(readOnly = true)
+    @Override
+    public SubServiceCategory getSubServiceCategoryById(long id) {
+        Optional<SubServiceCategory> byId = subServiceCategoryRepository.findById(id);
+        if (byId.isPresent()) {
+            return byId.get();
+        }
+        throw  new SubServiceCategoryIsNotFound("Sub Service Category Not Found");
     }
 
 

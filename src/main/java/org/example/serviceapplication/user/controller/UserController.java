@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/create", consumes = "multipart/form-data")
-    public UserResponseDto  save(
+    public UserResponseDto save(
             @ModelAttribute UserRequest userRequest
     ) {
         return userService.createUser(userRequest);
@@ -59,12 +59,11 @@ public class UserController {
 
 
     @PutMapping("/addCategoryToUser/{userId}/{categoryId}")
-    public ResponseEntity<UserResponseWithSubCategory> addCategoryToUser(
+    public ResponseEntity addCategoryToUser(
             @PathVariable Long userId,
             @PathVariable Long categoryId) {
-
-        UserResponseWithSubCategory userResponseWithSubCategory = userService.addCategoryToSpecialist(userId, categoryId);
-        return ResponseEntity.ok(userResponseWithSubCategory);
+        userService.addSubCategory(userId, categoryId);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PutMapping("/removeCategoryFromUser/{userId}/{categoryId}")

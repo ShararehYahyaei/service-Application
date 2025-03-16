@@ -29,6 +29,11 @@ public class SubServiceCategory {
     @ManyToOne
     private ServiceCategory category;
     @ManyToMany
+    @JoinTable(
+            name = "sub_service_category_users",
+            joinColumns = @JoinColumn(name = "sub_service_categories_id"),
+            inverseJoinColumns = @JoinColumn(name = "users_id")
+    )
     List<User> users=new ArrayList<>();
 
     public SubServiceCategory(String name, String description,
