@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -144,22 +145,26 @@ public class UserServiceImpl implements UserService {
 
 
     private UserResponse convertEntityToResponseDto(User user) {
+        String profileImageBase64 = convertByteArrayToBase64(user.getProfileImage());
         return new UserResponse(
                 user.getAddress(),
                 user.getPhone(),
                 user.getName(),
                 user.isActive(),
                 user.getRole(),
-                user.getStatus()
+                user.getStatus(),
+                profileImageBase64
+
 
         );
     }
+
     private UserResponseWithCategory convertEntityToResponseWithCategory(User user) {
         List<String> categoryNames = user.getCategories().stream()
                 .map(Category::getName)
                 .toList();
         return new UserResponseWithCategory(
-              user.getName(),
+                user.getName(),
                 user.getLastName(),
                 user.getUserName(),
                 user.isActive(),
@@ -168,6 +173,9 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    private String convertByteArrayToBase64(byte[] bytes) {
+        return bytes != null ? Base64.getEncoder().encodeToString(bytes) : null;
+    }
 
 
 }

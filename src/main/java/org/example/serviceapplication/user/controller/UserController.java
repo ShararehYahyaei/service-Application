@@ -52,12 +52,19 @@ public class UserController {
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
+    @GetMapping("/getById/{id}")
+    public UserResponse getUserById(@PathVariable Long id) {
+        return userService.findById(id);
+    }
+
+
     @PutMapping("/addCategoryToUser/{userId}/{categoryId}")
     public ResponseEntity<UserResponseWithCategory> addCategoryToUser( @RequestParam Long userId,
                                                                       @RequestParam Long categoryId  ) {
         UserResponseWithCategory userResponseWithCategory = userService.addCategoryToSpecialist(userId, categoryId);
         return new ResponseEntity<>(userResponseWithCategory, HttpStatus.OK);
     }
+
 
 
 }
