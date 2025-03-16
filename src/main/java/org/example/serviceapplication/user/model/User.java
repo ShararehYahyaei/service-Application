@@ -41,7 +41,7 @@ public class User {
     @Lob
     byte[] profileImage;
 
-    @ManyToMany(fetch = FetchType.LAZY ,mappedBy = "users")
+    @ManyToMany(fetch = FetchType.LAZY ,mappedBy = "users",cascade = CascadeType.ALL)
     private List<SubServiceCategory> subServiceCategories=new ArrayList<>();
 
     public User(String address, String phone, String name, String lastName,

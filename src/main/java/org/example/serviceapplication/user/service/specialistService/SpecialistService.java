@@ -42,6 +42,7 @@ public class SpecialistService {
     public void addSubCategoryToSpecialist(User user, Long subCategoryId) {
         SubServiceCategory subService = subServiceCategory.getSubServiceCategoryById(subCategoryId);
         user.getSubServiceCategories().add(subService);
+        subService.getUsers().add(user);
         userRepository.save(user);
 
 

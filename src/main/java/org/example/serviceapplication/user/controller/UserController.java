@@ -58,7 +58,7 @@ public class UserController {
     }
 
 
-    @PutMapping("/addCategoryToUser/{userId}/{categoryId}")
+    @PutMapping ("/addCategoryToUser/{userId}/{categoryId}")
     public ResponseEntity addCategoryToUser(
             @PathVariable Long userId,
             @PathVariable Long categoryId) {

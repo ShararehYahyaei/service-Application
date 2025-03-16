@@ -9,6 +9,7 @@ import org.example.serviceapplication.subCategory.dto.SubServiceCategoryResponse
 import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,11 +33,11 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
         ServiceCategory serviceCategory = serviceCategoryInterface.getCategoryById(subServiceCategoryRequest.categoryId());
         serviceCategory.getSubServiceCategoryList().add(
                 new SubServiceCategory(
-                subServiceCategoryRequest.name(),
-                subServiceCategoryRequest.description(),
-                subServiceCategoryRequest.price(),
-                serviceCategory
-        ));
+                        subServiceCategoryRequest.name(),
+                        subServiceCategoryRequest.description(),
+                        subServiceCategoryRequest.price(),
+                        serviceCategory
+                ));
 
         serviceCategoryInterface.updateCategory(serviceCategory);
         return convertSubServiceCategoryRequestToServiceCategory(subServiceCategoryRequest);
@@ -61,8 +62,9 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
         if (byId.isPresent()) {
             return byId.get();
         }
-        throw  new SubServiceCategoryIsNotFound("Sub Service Category Not Found");
+        throw new SubServiceCategoryIsNotFound("Sub Service Category Not Found");
     }
+
 
 
     private SubServiceCategoryResponse convertSubServiceCategoryRequestToServiceCategory
@@ -87,7 +89,6 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
 
         );
     }
-
 
 
 }

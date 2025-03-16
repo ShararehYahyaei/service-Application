@@ -16,4 +16,6 @@ public interface SubServiceCategoryInterface {
 
     @Transactional(readOnly = true)
     SubServiceCategory getSubServiceCategoryById(long id);
+
+
 }
