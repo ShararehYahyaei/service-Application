@@ -79,17 +79,16 @@ public class UserServiceImpl implements UserService {
     private User convertRequestIntoEntity(UserRequest userRequest) {
 
         try {
-            // بررسی اینکه تصویر موجود است یا نه
+
             if (userRequest.profileImage() == null || userRequest.profileImage().isEmpty()) {
                 throw new IllegalArgumentException("Profile image is required");
             }
 
-            // بررسی حجم فایل (۳۰۰ کیلوبایت = 300 * 1024 بایت)
+
             if (userRequest.profileImage().getSize() > 300 * 1024) {
                 throw new IllegalArgumentException("Image size exceeds 300KB");
             }
 
-            // تبدیل فایل به آرایه بایت
             byte[] profileImageBytes = userRequest.profileImage().getBytes();
         return new User(
                 userRequest.address(),
@@ -105,13 +104,6 @@ public class UserServiceImpl implements UserService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to process profile image", e);
         }
-    }
-
-    private byte[] convertBase64ToByteArray(String base64String) {
-        if (base64String == null || base64String.isEmpty()) {
-            return null;
-        }
-        return Base64.getDecoder().decode(base64String);
     }
 
 
