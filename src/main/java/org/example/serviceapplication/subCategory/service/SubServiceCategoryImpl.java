@@ -1,5 +1,6 @@
 package org.example.serviceapplication.subCategory.service;
 
+import org.example.serviceapplication.Category.dto.ServiceCategoryRequest;
 import org.example.serviceapplication.Category.dto.ServiceCategoryResponse;
 import org.example.serviceapplication.Category.model.ServiceCategory;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
@@ -9,7 +10,6 @@ import org.example.serviceapplication.subCategory.dto.SubServiceCategoryResponse
 import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,9 +29,9 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
     @Override
     public SubServiceCategoryResponse createSubServiceCategory(SubServiceCategoryRequest subServiceCategoryRequest) {
 
-
         ServiceCategory serviceCategory = serviceCategoryInterface.getCategoryById(subServiceCategoryRequest.categoryId());
-        serviceCategory.getSubServiceCategoryList().add(new SubServiceCategory(
+        serviceCategory.getSubServiceCategoryList().add(
+                new SubServiceCategory(
                 subServiceCategoryRequest.name(),
                 subServiceCategoryRequest.description(),
                 subServiceCategoryRequest.price(),
@@ -76,6 +76,7 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
 
         );
     }
+
 
 
 }

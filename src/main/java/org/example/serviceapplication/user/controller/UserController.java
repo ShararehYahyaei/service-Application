@@ -1,10 +1,7 @@
 package org.example.serviceapplication.user.controller;
 
 
-import org.example.serviceapplication.user.dto.UserRequest;
-import org.example.serviceapplication.user.dto.UserResponse;
-import org.example.serviceapplication.user.dto.UserResponseWithSubCategory;
-import org.example.serviceapplication.user.dto.UserResponseWithoutSubCategory;
+import org.example.serviceapplication.user.dto.*;
 import org.example.serviceapplication.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,33 +22,33 @@ public class UserController {
     }
 
     @PostMapping(value = "/create", consumes = "multipart/form-data")
-    public UserResponse save(
+    public UserResponseDto  save(
             @ModelAttribute UserRequest userRequest
     ) {
-        return userService.userCreate(userRequest);
+        return userService.createUser(userRequest);
     }
 
 
     @GetMapping("/getAllUsers")
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> getAllUsers = userService.getAllUsers();
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        List<UserResponseDto> getAllUsers = userService.getAllUsers();
         return new ResponseEntity<>(getAllUsers, HttpStatus.OK);
     }
 
     @GetMapping("/getActiveUsers")
-    public ResponseEntity<List<UserResponse>> getActiveUsers() {
-        List<UserResponse> getAllUsers = userService.getAllActiveUsers();
+    public ResponseEntity<List<UserResponseDto>> getActiveUsers() {
+        List<UserResponseDto> getAllUsers = userService.getAllActiveUsers();
         return new ResponseEntity<>(getAllUsers, HttpStatus.OK);
     }
 
     @GetMapping("/getUsersByName")
-    public ResponseEntity<List<UserResponse>> getUsersByName(@RequestParam String name) {
-        List<UserResponse> allUsers = userService.getUsersByName(name);
+    public ResponseEntity<List<UserResponseDto>> getUsersByName(@RequestParam String name) {
+        List<UserResponseDto> allUsers = userService.getUsersByName(name);
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
     @GetMapping("/getById/{id}")
-    public UserResponse getUserById(@PathVariable Long id) {
+    public UserResponseDto getUserById(@PathVariable Long id) {
         return userService.findById(id);
     }
 

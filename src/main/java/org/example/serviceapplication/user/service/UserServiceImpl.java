@@ -4,23 +4,20 @@ package org.example.serviceapplication.user.service;
 import org.example.serviceapplication.Category.exception.NoActiveUsersFound;
 import org.example.serviceapplication.Category.exception.NotFoundCategory;
 import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
-import org.example.serviceapplication.user.dto.UserRequest;
-import org.example.serviceapplication.user.dto.UserResponse;
-import org.example.serviceapplication.user.dto.UserResponseWithSubCategory;
-import org.example.serviceapplication.user.dto.UserResponseWithoutSubCategory;
+import org.example.serviceapplication.user.dto.*;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
-import org.example.serviceapplication.user.exception.UserHasNoAnyService;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.exception.UserNotFond;
 import org.example.serviceapplication.user.model.User;
+import org.example.serviceapplication.user.service.customerService.CustomerService;
+import org.example.serviceapplication.user.service.specialistService.SpecialistService;
 import org.example.serviceapplication.user.userRepository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,67 +28,78 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ServiceCategoryInterface categoryService;
+    private final CustomerService customerService;
+    private final SpecialistService specialistService;
 
-    public UserServiceImpl(UserRepository userRepository, ServiceCategoryInterface categoryService) {
+    public UserServiceImpl(UserRepository userRepository,
+                           ServiceCategoryInterface categoryService,
+                           CustomerService customerService,
+                           SpecialistService specialistService) {
 
         this.userRepository = userRepository;
         this.categoryService = categoryService;
+        this.customerService = customerService;
+        this.specialistService = specialistService;
     }
 
     @Transactional
     @Override
-    public UserResponse userCreate(UserRequest userRequest) {
+    public UserResponseDto createUser(UserRequest userRequest) {
+        UserResponseDto userResponse = null;
         User user = convertRequestIntoEntity(userRequest);
         user.setActive(false);
         user.setStatus(Status.newJoiner);
         user.setCreatedAt(LocalDateTime.now());
-        User saveUser = userRepository.save(user);
-        return convertEntityToResponseDto(saveUser);
+        return convertUserToResponseDto(user);
+
     }
 
     @Transactional(readOnly = true)
     @Override
-    public UserResponse findById(Long id) {
+    public UserResponseDto findById(Long id) {
         Optional<User> userFound = userRepository.findById(id);
         if (userFound.isPresent()) {
-            return convertEntityToResponseDto(userFound.get());
+            return convertUserToResponseDto(userFound.get());
         }
         throw new RuntimeException("User not found");
     }
 
+
     @Transactional(readOnly = true)
     @Override
-    public List<UserResponse> getUsersByName(String name) {
+    public List<UserResponseDto> getUsersByName(String name) {
         List<User> users = userRepository.findByNameContainingIgnoreCase(name);
         return users.stream()
-                .map(this::convertEntityToResponseDto)
+                .map(this::convertUserToResponseDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<UserResponse> getAllUsers() {
+    public List<UserResponseDto> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map(this::convertEntityToResponseDto)
+                .map(this::convertUserToResponseDto)
                 .collect(Collectors.toList());
     }
 
 
+
+
     @Transactional(readOnly = true)
     @Override
-    public List<UserResponse> getAllActiveUsers() {
+    public List<UserResponseDto> getAllActiveUsers() {
         List<User> allUsers = userRepository.findByActiveTrue();
 
         if (allUsers.isEmpty()) {
             throw new NoActiveUsersFound("No active users found.");
         }
         return allUsers.stream()
-                .map(this::convertEntityToResponseDto)
+                .map(this::convertUserToResponseDto)
                 .collect(Collectors.toList());
     }
 
-
+//todo
     @Transactional
     @Override
     public UserResponseWithSubCategory addCategoryToSpecialist(Long idSpecialist, Long categoryId) {
@@ -155,50 +163,28 @@ public class UserServiceImpl implements UserService {
 
 
     private User convertRequestIntoEntity(UserRequest userRequest) {
-
+        byte[] image = null;
         try {
-
-            if (userRequest.profileImage() == null || userRequest.profileImage().isEmpty()) {
-                throw new IllegalArgumentException("Profile image is required");
+            if (userRequest.profileImage() != null) {
+                image = userRequest.profileImage().getBytes();
             }
-
-
-            if (userRequest.profileImage().getSize() > 300 * 1024) {
-                throw new IllegalArgumentException("Image size exceeds 300KB");
-            }
-
-            byte[] profileImageBytes = userRequest.profileImage().getBytes();
-            return new User(
-                    userRequest.address(),
-                    userRequest.phone(),
-                    userRequest.name(),
-                    userRequest.lastName(),
-                    userRequest.userName(),
-                    userRequest.email(),
-                    userRequest.password(),
-                    userRequest.role(),
-                    profileImageBytes
-            );
         } catch (IOException e) {
-            throw new RuntimeException("Failed to process profile image", e);
+            e.printStackTrace();
+
         }
-    }
-
-
-    private UserResponse convertEntityToResponseDto(User user) {
-        String profileImageBase64 = convertByteArrayToBase64(user.getProfileImage());
-        return new UserResponse(
-                user.getAddress(),
-                user.getPhone(),
-                user.getName(),
-                user.isActive(),
-                user.getRole(),
-                user.getStatus(),
-                profileImageBase64
-
-
+        return new User(
+                userRequest.address(),
+                userRequest.phone(),
+                userRequest.name(),
+                userRequest.lastName(),
+                userRequest.userName(),
+                userRequest.email(),
+                userRequest.password(),
+                userRequest.role(),
+                image
         );
     }
+
 
     private UserResponseWithSubCategory convertEntityToResponseWithCategory(User user) {
         return null;
@@ -226,9 +212,15 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    private String convertByteArrayToBase64(byte[] bytes) {
-        return bytes != null ? Base64.getEncoder().encodeToString(bytes) : null;
+    private UserResponseDto convertUserToResponseDto(User user) {
+        UserResponseDto userResponseDto = null;
+        if (user.getRole() == Role.Customer) {
+            userResponseDto = customerService.convertEntityToResponseDto(user);
+        }
+        else if (user.getRole() == Role.Specialist) {
+            userResponseDto = specialistService.convertEntityToResponseDto(user);
+        }
+        return userResponseDto;
     }
-
 
 }

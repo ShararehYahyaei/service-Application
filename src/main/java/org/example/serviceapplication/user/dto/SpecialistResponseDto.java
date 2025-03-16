@@ -2,13 +2,11 @@ package org.example.serviceapplication.user.dto;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.experimental.SuperBuilder;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
 
 
-public record UserResponse(
-
+public record SpecialistResponseDto(
         String address,
         String phone,
         String name,
@@ -18,7 +16,5 @@ public record UserResponse(
         @Enumerated(EnumType.STRING)
         Status status,
         String profileImage
-
-
-) {
+) implements UserResponseDto {
 }
