@@ -1,4 +1,4 @@
-package org.example.serviceapplication.enumPackage;
+package org.example.serviceapplication.user.enumPackage;
 
 public enum Status {
 

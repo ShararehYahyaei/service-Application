@@ -1,23 +1,6 @@
 package org.example.serviceapplication.Cusotmer.service;
 
 
-import org.example.serviceapplication.Cusotmer.Exception.NotFoundCustomer;
-import org.example.serviceapplication.Cusotmer.model.Customer;
-import org.example.serviceapplication.Cusotmer.repository.CustomerRepository;
-import org.example.serviceapplication.enumPackage.Role;
-import org.example.serviceapplication.enumPackage.Status;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.multipart.MultipartFile;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-
-import static org.junit.jupiter.api.Assertions.*;
 /*
 @ActiveProfiles("test")
 @SpringBootTest

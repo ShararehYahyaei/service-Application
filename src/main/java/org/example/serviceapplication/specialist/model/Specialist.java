@@ -3,8 +3,8 @@ package org.example.serviceapplication.specialist.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import org.example.serviceapplication.enumPackage.Role;
-import org.example.serviceapplication.enumPackage.Status;
+import org.example.serviceapplication.user.enumPackage.Role;
+import org.example.serviceapplication.user.enumPackage.Status;
 
 @Entity
 @AllArgsConstructor

@@ -1,7 +1,7 @@
 package org.example.serviceapplication.specialist.service;
 
-import org.example.serviceapplication.enumPackage.Role;
-import org.example.serviceapplication.enumPackage.Status;
+import org.example.serviceapplication.user.enumPackage.Role;
+import org.example.serviceapplication.user.enumPackage.Status;
 import org.example.serviceapplication.specialist.model.Specialist;
 import org.example.serviceapplication.specialist.repository.SpecialistRepository;
 import org.junit.jupiter.api.Test;
