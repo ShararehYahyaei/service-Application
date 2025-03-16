@@ -2,7 +2,6 @@ package org.example.serviceapplication.user.service;
 
 
 import org.example.serviceapplication.Category.exception.NoActiveUsersFound;
-import org.example.serviceapplication.Category.exception.NotFoundCategory;
 import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
 import org.example.serviceapplication.user.dto.*;
 import org.example.serviceapplication.user.enumPackage.Role;
@@ -102,22 +101,13 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    //todo
+
     @Transactional
     @Override
     public void addSubCategory(Long idSpecialist, Long categoryId) {
 
-        Optional<User> userFound = userRepository.findById(idSpecialist);
-        if (userFound.isEmpty()) {
-            throw new UserNotFond("User not found");
-        }
-
-
-        if (userFound.get().getRole() == Role.Customer || userFound.get().getRole() == Role.Admin) {
-            throw new UserHasWrongRole("User has wrong role");
-
-        }
-        specialistService.addSubCategoryToSpecialist(userFound.get(), categoryId);
+     User userFound = getUserSpecialistById(idSpecialist);
+        specialistService.addSubCategoryToSpecialist(userFound, categoryId);
 
     }
 
@@ -136,27 +126,23 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseWithoutSubCategory deleteCategoryFromSpecialist(Long idSpecialist, Long categoryId) {
-        User user = userRepository.findById(idSpecialist)
-                .orElseThrow(() -> new UserNotFond("Specialist not found"));
+    public void removeSubCategoryForSpecialist(Long idSpecialist, Long subServiceCategory) {
+        User userFound = getUserSpecialistById(idSpecialist);
+        specialistService.removeSubCategory(userFound, subServiceCategory);
 
-        if (user.getRole() != Role.Specialist) {
-            throw new UserHasWrongRole("User is not a Specialist");
+    }
+
+    private User getUserSpecialistById(Long idSpecialist) {
+        Optional<User> userFound = userRepository.findById(idSpecialist);
+        if (userFound.isEmpty()) {
+            throw new UserNotFond("User not found");
         }
 
-        org.example.serviceapplication.Category.model.ServiceCategory category = categoryService.getCategoryById(categoryId);
-        if (category == null) {
-            throw new NotFoundCategory("Category not found");
-        }
-//        if (user.getCategories().contains(category)) {
-//            user.getCategories().remove(category);
-//        } else {
-//            throw new UserHasNoAnyService("Specialist does not have this category");
-//        }
+        if (userFound.get().getRole() == Role.Customer || userFound.get().getRole() == Role.Admin) {
+            throw new UserHasWrongRole("User has wrong role");
 
-        User saveUser = userRepository.save(user);
-        categoryService.updateCategory(category);
-        return convertEntityToWithoutCategory(saveUser);
+        }
+        return userFound.get();
     }
 
 

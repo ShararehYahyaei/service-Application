@@ -30,5 +30,5 @@ public interface UserService {
     UserResponseWithSubCategory getUserWithCategory(Long id);
 
     @Transactional
-    UserResponseWithoutSubCategory deleteCategoryFromSpecialist(Long idSpecialist, Long categoryId);
+    void removeSubCategoryForSpecialist(Long idSpecialist, Long categoryId);
 }

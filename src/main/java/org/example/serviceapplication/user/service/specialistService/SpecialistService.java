@@ -10,6 +10,7 @@ import org.example.serviceapplication.user.userRepository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
+import java.util.Optional;
 
 @Service
 public class SpecialistService {
@@ -69,4 +70,10 @@ public class SpecialistService {
         return bytes != null ? Base64.getEncoder().encodeToString(bytes) : null;
     }
 
+    public void removeSubCategory(User userFound, Long subServiceCategoryId) {
+        SubServiceCategory subService = subServiceCategory.getSubServiceCategoryById(subServiceCategoryId);
+        userFound.getSubServiceCategories().remove(subService);
+        userRepository.save(userFound);
+        subService.getUsers().remove(userFound);
+    }
 }

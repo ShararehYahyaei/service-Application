@@ -66,13 +66,13 @@ public class UserController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PutMapping("/removeCategoryFromUser/{userId}/{categoryId}")
-    public ResponseEntity<UserResponseWithoutSubCategory> removeCategoryFromUser(
+    @PutMapping("/removeCategoryFromUser/{userId}/{subServiceCategory}")
+    public ResponseEntity removeCategoryFromUser(
             @PathVariable Long userId,
-            @PathVariable Long categoryId) {
+            @PathVariable Long subServiceCategory) {
 
-        UserResponseWithoutSubCategory user = userService.deleteCategoryFromSpecialist(userId, categoryId);
-        return ResponseEntity.ok(user);
+       userService.removeSubCategoryForSpecialist(userId, subServiceCategory);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 
