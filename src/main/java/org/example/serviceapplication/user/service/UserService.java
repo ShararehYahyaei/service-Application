@@ -28,4 +28,7 @@ public interface UserService {
 
     @Transactional
     UserResponseWithCategory addCategoryToSpecialist(Long idSpecialist, Long categoryId);
+
+    @Transactional(readOnly = true)
+    UserResponseWithCategory getUserWithCategory(Long id);
 }

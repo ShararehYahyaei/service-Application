@@ -102,6 +102,8 @@ public class UserServiceImpl implements UserService {
                 Category categoryFound = categoryService.getCatgeoryById(categoryId);
                 user.getCategories().add(categoryFound);
                 User userSave = userRepository.save(user);
+                categoryFound.getUsers().add(userSave);
+                categoryService.updateCategory(categoryFound);
                 return convertEntityToResponseWithCategory(userSave);
             } else {
                 throw new UserHasWrongRole("User is not a Specialist");
@@ -109,6 +111,19 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new UserNotFond("User not found");
         }
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public UserResponseWithCategory getUserWithCategory(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFond("User not found"));
+
+        if (user.getRole() != Role.Specialist || user.getCategories() == null || user.getCategories().isEmpty()) {
+            throw new UserNotFond("User has no specialty or services available");
+        }
+
+        return convertEntityToResponseWithCategory(user);
     }
 
 

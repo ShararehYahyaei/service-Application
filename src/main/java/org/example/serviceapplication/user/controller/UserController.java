@@ -56,6 +56,11 @@ public class UserController {
     public UserResponse getUserById(@PathVariable Long id) {
         return userService.findById(id);
     }
+    @GetMapping("/getByIdForShowCategory/{id}")
+    public UserResponseWithCategory getUserByIdForShowCategory(@PathVariable Long id) {
+        return userService.getUserWithCategory(id);
+    }
+
 
 
     @PutMapping("/addCategoryToUser/{userId}/{categoryId}")
