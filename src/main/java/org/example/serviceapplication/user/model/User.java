@@ -6,12 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.serviceapplication.Category.model.Category;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -39,6 +41,9 @@ public class User {
     @Lob
     byte[] profileImage;
 
+    @ManyToMany(fetch = FetchType.EAGER ,mappedBy = "users")
+    private List<Category> categories=new ArrayList<>();
+
     public User(String address, String phone, String name, String lastName,
                 String userName, String email, String password, Role role,
                 byte[] profileImageBytes) {
@@ -52,7 +57,6 @@ public class User {
         this.role = role;
         this.profileImage = profileImageBytes;
     }
-
 
 
 }

@@ -24,4 +24,7 @@ public interface UserService {
 
     @Transactional(readOnly = true)
     List<UserResponse> getAllActiveUsers();
+
+    @Transactional
+    void addCategoryToSpecialist(Long idSpecialist, Long categoryId);
 }

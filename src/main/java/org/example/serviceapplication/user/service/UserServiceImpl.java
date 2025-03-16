@@ -1,9 +1,15 @@
 package org.example.serviceapplication.user.service;
 
 
+import org.example.serviceapplication.Category.exception.NoActiveUsersFound;
+import org.example.serviceapplication.Category.model.Category;
+import org.example.serviceapplication.Category.service.CategoryService;
 import org.example.serviceapplication.user.dto.UserRequest;
 import org.example.serviceapplication.user.dto.UserResponse;
+import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
+import org.example.serviceapplication.user.exception.UserHasWrongRole;
+import org.example.serviceapplication.user.exception.UserNotFond;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.userRepository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -11,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,9 +26,12 @@ public class UserServiceImpl implements UserService {
 
 
     private final UserRepository userRepository;
+    private final CategoryService categoryService;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, CategoryService categoryService) {
+
         this.userRepository = userRepository;
+        this.categoryService = categoryService;
     }
 
     @Transactional
@@ -70,9 +78,35 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponse> getAllActiveUsers() {
         List<User> allUsers = userRepository.findByActiveTrue();
+
+        if (allUsers.isEmpty()) {
+            throw new NoActiveUsersFound("No active users found.");
+        }
         return allUsers.stream()
                 .map(this::convertEntityToResponseDto)
                 .collect(Collectors.toList());
+    }
+
+
+    @Transactional
+    @Override
+    public void addCategoryToSpecialist(Long idSpecialist, Long categoryId) {
+
+        Optional<User> userFound = userRepository.findById(idSpecialist);
+
+        if (userFound.isPresent()) {
+            User user = userFound.get();
+
+            if (user.getRole() != Role.Specialist) {
+                Category categoryFound = categoryService.getCatgeoryById(categoryId);
+                user.getCategories().add(categoryFound);
+                userRepository.save(user);
+            } else {
+                throw new UserHasWrongRole("User is not a Specialist");
+            }
+        } else {
+            throw new UserNotFond("User not found");
+        }
     }
 
 
@@ -90,17 +124,17 @@ public class UserServiceImpl implements UserService {
             }
 
             byte[] profileImageBytes = userRequest.profileImage().getBytes();
-        return new User(
-                userRequest.address(),
-                userRequest.phone(),
-                userRequest.name(),
-                userRequest.lastName(),
-                userRequest.userName(),
-                userRequest.email(),
-                userRequest.password(),
-                userRequest.role(),
-                profileImageBytes
-        );
+            return new User(
+                    userRequest.address(),
+                    userRequest.phone(),
+                    userRequest.name(),
+                    userRequest.lastName(),
+                    userRequest.userName(),
+                    userRequest.email(),
+                    userRequest.password(),
+                    userRequest.role(),
+                    profileImageBytes
+            );
         } catch (IOException e) {
             throw new RuntimeException("Failed to process profile image", e);
         }

@@ -38,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional(readOnly = true)
     @Override
-    public CategoryResponse getCategoryById(Long id) {
+    public CategoryResponse getCategoryByIdResponse(Long id) {
         Optional<Category> categoryFoundById = categoryRepository.findById(id);
         if (categoryFoundById.isPresent()) {
             return convertEntityToResponseDto(categoryFoundById.get());
@@ -47,9 +47,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     }
 
+
     @Transactional(readOnly = true)
     @Override
-    public Category getCategoryByIdForCreateSubCategory(Long id) {
+    public Category getCatgeoryById(Long id) {
         Optional<Category> categoryFoundById = categoryRepository.findById(id);
         if (categoryFoundById.isPresent()) {
             return categoryFoundById.get();
@@ -100,6 +101,8 @@ public class CategoryServiceImpl implements CategoryService {
                 .collect(Collectors.toList());
 
     }
+
+
 
     private Category convertDtoToEntity(CategoryRequest categoryRequest) {
         return new Category(

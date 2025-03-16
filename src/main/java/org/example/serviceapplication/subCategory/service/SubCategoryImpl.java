@@ -47,7 +47,7 @@ public class SubCategoryImpl implements SubCategoryService {
 
     private SubCategory convertSubCategoryDtoToSubCategory
             (SubCategoryRequest subCategoryRequest) {
-        Category category = categoryService.getCategoryByIdForCreateSubCategory(subCategoryRequest.categoryId());
+        Category category = categoryService.getCatgeoryById(subCategoryRequest.categoryId());
         return new SubCategory(
                 subCategoryRequest.name(),
                 subCategoryRequest.description(),

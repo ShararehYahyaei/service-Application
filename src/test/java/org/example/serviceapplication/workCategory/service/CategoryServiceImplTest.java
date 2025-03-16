@@ -45,7 +45,7 @@ class CategoryServiceImplTest {
     void should_return_work_By_id() {
         Category category = getWork();
         Category newCategory = service.createNewCategory(category);
-        Category categoryById = service.getCategoryById(newCategory.getId());
+        Category categoryById = service.getCategoryByIdResponse(newCategory.getId());
         assertEquals(categoryById.getId(), newCategory.getId());
 
     }
@@ -54,7 +54,7 @@ class CategoryServiceImplTest {
     void should_return_exception_if_work_not_found() {
         Category category = getWork();
         service.createNewCategory(category);
-        NotFoundCategory notFoundCategory = assertThrows(NotFoundCategory.class, () -> service.getCategoryById(30L));
+        NotFoundCategory notFoundCategory = assertThrows(NotFoundCategory.class, () -> service.getCategoryByIdResponse(30L));
         assertEquals("Work not found", notFoundCategory.getMessage());
 
     }
@@ -65,7 +65,7 @@ class CategoryServiceImplTest {
         Category category = getWork();
         Category newCategory = service.createNewCategory(category);
         service.deleteWork(newCategory.getId());
-        NotFoundCategory notFoundCategory = assertThrows(NotFoundCategory.class, () -> service.getCategoryById(newCategory.getId()));
+        NotFoundCategory notFoundCategory = assertThrows(NotFoundCategory.class, () -> service.getCategoryByIdResponse(newCategory.getId()));
         assertEquals("Work not found", notFoundCategory.getMessage());
     }
 

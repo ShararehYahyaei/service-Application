@@ -13,10 +13,10 @@ public interface CategoryService {
     @Transactional
     Category createNewCategory(CategoryRequest categoryRequest);
 
-    CategoryResponse getCategoryById(Long id);
+    CategoryResponse getCategoryByIdResponse(Long id);
 
     @Transactional(readOnly = true)
-    Category getCategoryByIdForCreateSubCategory(Long id);
+    Category getCatgeoryById(Long id);
 
     @Transactional
     Category updateCategory(Category category);

@@ -4,6 +4,7 @@ package org.example.serviceapplication.Category.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.serviceapplication.subCategory.model.SubCategory;
+import org.example.serviceapplication.user.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,8 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<SubCategory> subCategoryList = new ArrayList<>();
+    @ManyToMany
+    private List<User>users = new ArrayList<>();
 
     public Category(String name) {
         this.name = name;

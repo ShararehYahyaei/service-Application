@@ -34,14 +34,13 @@ public class UserController {
             @RequestParam String email,
             @RequestParam String password,
             @RequestParam Role role,
-            @RequestParam MultipartFile profileImage // دریافت فایل از درخواست
+            @RequestParam MultipartFile profileImage
     ) {
         UserRequest request = new UserRequest(
                 address, phone, name, lastName, userName, email, password, role, profileImage
         );
         return userService.userCreate(request);
     }
-
 
 
     @GetMapping("/getAllUsers")
@@ -52,7 +51,7 @@ public class UserController {
 
     @GetMapping("/getActiveUsers")
     public ResponseEntity<List<UserResponse>> getActiveUsers() {
-        List<UserResponse> getAllUsers = userService.getAllUsers();
+        List<UserResponse> getAllUsers = userService.getAllActiveUsers();
         return new ResponseEntity<>(getAllUsers, HttpStatus.OK);
     }
 
