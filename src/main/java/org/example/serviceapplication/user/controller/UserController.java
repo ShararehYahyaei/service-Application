@@ -59,12 +59,13 @@ public class UserController {
 
 
     @PutMapping("/addCategoryToUser/{userId}/{categoryId}")
-    public ResponseEntity<UserResponseWithCategory> addCategoryToUser( @RequestParam Long userId,
-                                                                      @RequestParam Long categoryId  ) {
-        UserResponseWithCategory userResponseWithCategory = userService.addCategoryToSpecialist(userId, categoryId);
-        return new ResponseEntity<>(userResponseWithCategory, HttpStatus.OK);
-    }
+    public ResponseEntity<UserResponseWithCategory> addCategoryToUser(
+            @PathVariable Long userId,
+            @PathVariable Long categoryId) {
 
+        UserResponseWithCategory userResponseWithCategory = userService.addCategoryToSpecialist(userId, categoryId);
+        return ResponseEntity.ok(userResponseWithCategory);
+    }
 
 
 }

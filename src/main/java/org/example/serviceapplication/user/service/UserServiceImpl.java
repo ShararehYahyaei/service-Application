@@ -98,8 +98,7 @@ public class UserServiceImpl implements UserService {
 
         if (userFound.isPresent()) {
             User user = userFound.get();
-
-            if (user.getRole() != Role.Specialist) {
+            if (user.getRole() == Role.Specialist) {
                 Category categoryFound = categoryService.getCatgeoryById(categoryId);
                 user.getCategories().add(categoryFound);
                 User userSave = userRepository.save(user);
