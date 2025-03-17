@@ -41,5 +41,11 @@ public class ServiceCategoryController {
 
     }
 
+    @DeleteMapping("/deleteServiceCatgeory/{categoryId}")
+    public ResponseEntity deleteCategory(@PathVariable Long categoryId) {
+        categoryService.deleteServiceCategory(categoryId);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
 
 }

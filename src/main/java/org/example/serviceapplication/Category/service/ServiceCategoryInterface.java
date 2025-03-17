@@ -30,4 +30,6 @@ public interface ServiceCategoryInterface {
     List<ServiceCategoryResponse> getAllCategoriesByName(String name);
 
     void editServiceCategory(Long categoryId, String name);
+
+    void deleteServiceCategory(Long categoryId);
 }

@@ -109,10 +109,22 @@ public class ServiceCategoryImpl implements ServiceCategoryInterface {
         if (found.isPresent()) {
             found.get().setName(name);
             serviceCategoryRepository.save(found.get());
-        }else{
+        } else {
             throw new RuntimeException("Category not found");
         }
-      ;
+        ;
+    }
+
+    @Transactional
+    @Override
+    public void deleteServiceCategory(Long categoryId) {
+        Optional<ServiceCategory> foundCategory = serviceCategoryRepository.findById(categoryId);
+        if (foundCategory.isPresent()) {
+            serviceCategoryRepository.delete(foundCategory.get());
+        } else {
+            throw new RuntimeException("Category not found");
+        }
+
     }
 
 
