@@ -1,16 +1,21 @@
 package org.example.serviceapplication.user.service.specialistService;
 
+
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.dto.SpecialistResponseDto;
+import org.example.serviceapplication.user.dto.SpecialistWithSubService;
 import org.example.serviceapplication.user.exception.InvalidImageSize;
 import org.example.serviceapplication.user.exception.ProfileImageNull;
+import org.example.serviceapplication.user.exception.UserNotFond;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.userRepository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SpecialistService {
@@ -21,6 +26,15 @@ public class SpecialistService {
     public SpecialistService(UserRepository userRepository, SubServiceCategoryInterface subService) {
         this.userRepository = userRepository;
         this.subServiceCategory = subService;
+    }
+
+    public void editSubServiceCategory(User user,
+                                       Long subServiceCategoryOld,
+                                       Long subServiceCategoryNew) {
+        SubServiceCategory old = subServiceCategory.getSubServiceCategoryById(subServiceCategoryOld);
+        user.getSubServiceCategories().remove(old);
+        userRepository.save(user);
+        addSubCategoryToSpecialist(user, subServiceCategoryNew);
     }
 
     public SpecialistResponseDto createSpecialist(User user) {
@@ -51,7 +65,6 @@ public class SpecialistService {
 
 
     public SpecialistResponseDto convertEntityToResponseDto(User user) {
-
         String profileImageBase64 = convertByteArrayToBase64(user.getProfileImage());
         return new SpecialistResponseDto(
                 user.getAddress(),
@@ -61,7 +74,6 @@ public class SpecialistService {
                 user.getRole(),
                 user.getStatus(),
                 profileImageBase64
-
 
         );
     }
@@ -76,4 +88,21 @@ public class SpecialistService {
         userRepository.save(userFound);
         subService.getUsers().remove(userFound);
     }
+
+    public List<SpecialistWithSubService> getUserWithSubServiceCategory(User user) {
+        List<SubServiceCategory> subServiceCategories = user.getSubServiceCategories();
+       return getAllSubServiceCategory(subServiceCategories);
+    }
+
+
+    private List<SpecialistWithSubService> getAllSubServiceCategory(List<SubServiceCategory> subServices) {
+        return subServices.stream()
+                .map(subService -> new SpecialistWithSubService(
+                        subService.getName(),
+                        subService.getDescription(),
+                        subService.getPrice()
+                ))
+                .collect(Collectors.toList());
+    }
+
 }

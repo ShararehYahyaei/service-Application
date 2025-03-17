@@ -1,5 +1,6 @@
 package org.example.serviceapplication.user.service;
 
+import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.user.dto.*;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +27,9 @@ public interface UserService {
     @Transactional
     void addSubCategory(Long idSpecialist, Long categoryId);
 
-    @Transactional(readOnly = true)
-    UserResponseWithSubCategory getUserWithCategory(Long id);
-
+    List<SpecialistWithSubService>getUserWithSubServiceCategory(Long idSpecialist);
     @Transactional
     void removeSubCategoryForSpecialist(Long idSpecialist, Long categoryId);
+
+    void editSubServiceCategory(Long userId, Long subServiceCategoryOld, Long subServiceCategoryNew);
 }

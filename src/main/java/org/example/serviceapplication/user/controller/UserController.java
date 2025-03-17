@@ -1,6 +1,7 @@
 package org.example.serviceapplication.user.controller;
 
 
+import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.user.dto.*;
 import org.example.serviceapplication.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -52,13 +53,14 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @GetMapping("/getByIdForShowCategory/{id}")
-    public UserResponseWithSubCategory getUserByIdForShowCategory(@PathVariable Long id) {
-        return userService.getUserWithCategory(id);
+    @GetMapping("/getByIdForShowSubServiceCategory/{id}")
+    public ResponseEntity<List<SpecialistWithSubService>> getUserWithSubServiceCategory(@PathVariable Long id) {
+        List<SpecialistWithSubService> userWithSubServiceCategory = userService.getUserWithSubServiceCategory(id);
+        return new ResponseEntity<>(userWithSubServiceCategory, HttpStatus.OK);
     }
 
 
-    @PutMapping ("/addCategoryToUser/{userId}/{categoryId}")
+    @PutMapping("/addCategoryToUser/{userId}/{categoryId}")
     public ResponseEntity addCategoryToUser(
             @PathVariable Long userId,
             @PathVariable Long categoryId) {
@@ -71,9 +73,17 @@ public class UserController {
             @PathVariable Long userId,
             @PathVariable Long subServiceCategory) {
 
-       userService.removeSubCategoryForSpecialist(userId, subServiceCategory);
+        userService.removeSubCategoryForSpecialist(userId, subServiceCategory);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @PutMapping("/editSubServiceCategory/{userId}/{subServiceCategoryOld}/{subServiceCategoryNew}")
+    public ResponseEntity editSubServiceCategory(
+            @PathVariable Long userId,
+            @PathVariable Long subServiceCategoryOld,
+            @PathVariable Long subServiceCategoryNew) {
+        userService.editSubServiceCategory(userId, subServiceCategoryOld, subServiceCategoryNew);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
 
 }

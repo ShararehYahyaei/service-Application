@@ -3,9 +3,11 @@ package org.example.serviceapplication.user.service;
 
 import org.example.serviceapplication.Category.exception.NoActiveUsersFound;
 import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
+import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.user.dto.*;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
+import org.example.serviceapplication.user.exception.NotSubServiceCategory;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.exception.UserNotFond;
 import org.example.serviceapplication.user.model.User;
@@ -106,23 +108,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addSubCategory(Long idSpecialist, Long categoryId) {
 
-     User userFound = getUserSpecialistById(idSpecialist);
+        User userFound = getUserSpecialistById(idSpecialist);
         specialistService.addSubCategoryToSpecialist(userFound, categoryId);
 
     }
 
     @Transactional(readOnly = true)
     @Override
-    public UserResponseWithSubCategory getUserWithCategory(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFond("User not found"));
+    public List<SpecialistWithSubService> getUserWithSubServiceCategory(Long idSpecialist) {
+        User userSpecialistById = getUserSpecialistById(idSpecialist);
+        if (userSpecialistById.getSubServiceCategories()!=null) {
+          return   specialistService.getUserWithSubServiceCategory(userSpecialistById);
+        }
+        else{
+            throw new NotSubServiceCategory("No active users found.");
+        }
 
-//        if (user.getRole() != Role.Specialist || user.getCategories() == null || user.getCategories().isEmpty()) {
-//            throw new UserNotFond("User has no specialty or services available");
-//        }
-
-        return convertEntityToResponseWithCategory(user);
     }
+
 
     @Transactional
     @Override
@@ -130,6 +133,14 @@ public class UserServiceImpl implements UserService {
         User userFound = getUserSpecialistById(idSpecialist);
         specialistService.removeSubCategory(userFound, subServiceCategory);
 
+    }
+
+    @Transactional
+    @Override
+    public void editSubServiceCategory(Long userId, Long subServiceCategoryOld, Long subServiceCategoryNew) {
+
+        User user = getUserSpecialistById(userId);
+        specialistService.editSubServiceCategory(user, subServiceCategoryOld, subServiceCategoryNew);
     }
 
     private User getUserSpecialistById(Long idSpecialist) {
@@ -166,32 +177,6 @@ public class UserServiceImpl implements UserService {
                 userRequest.password(),
                 userRequest.role(),
                 image
-        );
-    }
-
-
-    private UserResponseWithSubCategory convertEntityToResponseWithCategory(User user) {
-        return null;
-//        List<String> categoryNames = user.getCategories().stream()
-//                .map(org.example.serviceapplication.Category.model.ServiceCategory::getName)
-//                .toList();
-//        return new UserResponseWithSubCategory(
-//                user.getName(),
-//                user.getLastName(),
-//                user.getUserName(),
-//                user.isActive(),
-//                categoryNames
-//
-//        );
-    }
-
-    private UserResponseWithoutSubCategory convertEntityToWithoutCategory(User user) {
-        return new UserResponseWithoutSubCategory(
-                user.getName(),
-                user.getLastName(),
-                user.getUserName(),
-                user.isActive()
-
         );
     }
 
