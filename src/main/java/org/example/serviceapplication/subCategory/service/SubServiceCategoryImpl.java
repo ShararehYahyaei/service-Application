@@ -1,6 +1,7 @@
 package org.example.serviceapplication.subCategory.service;
 
 import org.example.serviceapplication.Category.model.ServiceCategory;
+import org.example.serviceapplication.subCategory.dto.UpdateSubServiceCategory;
 import org.example.serviceapplication.subCategory.exception.SubServiceCategoryIsNotFound;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.subCategory.repsitory.SubServiceCategoryRepository;
@@ -64,7 +65,36 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
         }
         throw new SubServiceCategoryIsNotFound("Sub Service Category Not Found");
     }
+@Transactional
+    @Override
+    public void editSubServiceCategory(Long id, UpdateSubServiceCategory updateSubServiceCategory) {
+        Optional<SubServiceCategory> foundSubService = subServiceCategoryRepository.findById(id);
+        if (foundSubService.isEmpty()) {
+            throw new RuntimeException("SubServiceCategory not found with ID: " + id);
+        }
+        if (updateSubServiceCategory.name() != null) {
+            foundSubService.get().setName(updateSubServiceCategory.name());
+        }
+        if (updateSubServiceCategory.description() != null) {
+            foundSubService.get().setDescription(updateSubServiceCategory.description());
+        }
+        if (updateSubServiceCategory.price() != null) {
+            foundSubService.get().setPrice(updateSubServiceCategory.price());
+        }
 
+        subServiceCategoryRepository.save(foundSubService.get());
+    }
+@Transactional
+    @Override
+    public void deleteSubServiceCategory(Long id) {
+        Optional<SubServiceCategory> found = subServiceCategoryRepository.findById(id);
+        if (found.isPresent()) {
+            subServiceCategoryRepository.delete(found.get());
+        }else{
+            throw new SubServiceCategoryIsNotFound("Sub Service Category Not Found");
+        }
+
+    }
 
 
     private SubServiceCategoryResponse convertSubServiceCategoryRequestToServiceCategory

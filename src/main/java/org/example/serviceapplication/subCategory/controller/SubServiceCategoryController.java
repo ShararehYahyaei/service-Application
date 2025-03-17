@@ -1,6 +1,7 @@
 package org.example.serviceapplication.subCategory.controller;
 
 
+import org.example.serviceapplication.subCategory.dto.UpdateSubServiceCategory;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategoryRequest;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategoryResponse;
@@ -34,4 +35,19 @@ public class SubServiceCategoryController {
         return new ResponseEntity<>(subCategories, HttpStatus.OK);
     }
 
+    @PatchMapping  ("editSubServiceCategory/{id}")
+    public ResponseEntity updateSubCategory(@PathVariable Long id,
+                                            @RequestBody UpdateSubServiceCategory updateSubServiceCategory) {
+        subServiceCategoryInterface.editSubServiceCategory(id,updateSubServiceCategory);
+        return new ResponseEntity(HttpStatus.OK);
+
+    }
+    @DeleteMapping("deleteSubServiceCategory/{id}")
+    public ResponseEntity deleteSubCategory(@PathVariable Long id) {
+        subServiceCategoryInterface.deleteSubServiceCategory(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 }
+
+
