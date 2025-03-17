@@ -33,4 +33,13 @@ public class ServiceCategoryController {
     }
 
 
+    @PutMapping("/editServiceCategory/{categoryId}/{name}")
+    public ResponseEntity updateCategory(@PathVariable Long categoryId,
+                               @PathVariable String name) {
+        categoryService.editServiceCategory(categoryId,name);
+        return ResponseEntity.ok(HttpStatus.OK);
+
+    }
+
+
 }

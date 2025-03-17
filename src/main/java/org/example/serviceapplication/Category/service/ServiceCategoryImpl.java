@@ -8,6 +8,7 @@ import org.example.serviceapplication.Category.model.ServiceCategory;
 import org.example.serviceapplication.Category.repository.ServiceCategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -101,6 +102,18 @@ public class ServiceCategoryImpl implements ServiceCategoryInterface {
 
     }
 
+    @Transactional
+    @Override
+    public void editServiceCategory(Long categoryId, String name) {
+        Optional<ServiceCategory> found = serviceCategoryRepository.findById(categoryId);
+        if (found.isPresent()) {
+            found.get().setName(name);
+            serviceCategoryRepository.save(found.get());
+        }else{
+            throw new RuntimeException("Category not found");
+        }
+      ;
+    }
 
 
     private ServiceCategory convertDtoToEntity(ServiceCategoryRequest serviceCategoryRequest) {
