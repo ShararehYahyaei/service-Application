@@ -28,11 +28,12 @@ public class SubServiceCategory {
 
     @ManyToOne
     private ServiceCategory category;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "sub_service_category_users",
             joinColumns = @JoinColumn(name = "sub_service_categories_id"),
             inverseJoinColumns = @JoinColumn(name = "users_id")
+
     )
     List<User> users=new ArrayList<>();
 

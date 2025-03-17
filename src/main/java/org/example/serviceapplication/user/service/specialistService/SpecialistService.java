@@ -5,10 +5,9 @@ import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.dto.SpecialistResponseDto;
 import org.example.serviceapplication.user.dto.SpecialistWithSubService;
-import org.example.serviceapplication.user.exception.InvalidImageSize;
-import org.example.serviceapplication.user.exception.ProfileImageNull;
-import org.example.serviceapplication.user.exception.UserNotFond;
+import org.example.serviceapplication.user.exception.*;
 import org.example.serviceapplication.user.model.User;
+import org.example.serviceapplication.user.service.UserService;
 import org.example.serviceapplication.user.userRepository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,19 +22,43 @@ public class SpecialistService {
     private final UserRepository userRepository;
     private final SubServiceCategoryInterface subServiceCategory;
 
+
     public SpecialistService(UserRepository userRepository, SubServiceCategoryInterface subService) {
         this.userRepository = userRepository;
         this.subServiceCategory = subService;
+
     }
 
-    public void editSubServiceCategory(User user,
-                                       Long subServiceCategoryOld,
-                                       Long subServiceCategoryNew) {
-        SubServiceCategory old = subServiceCategory.getSubServiceCategoryById(subServiceCategoryOld);
-        user.getSubServiceCategories().remove(old);
+    public void editSubServiceCategory(User user, Long subServiceCategoryOld, Long subServiceCategoryNew) {
+        if (user.getSubServiceCategories() == null||user.getSubServiceCategories().isEmpty()) {
+            throw new NotSubServiceCategory("this list is empty");
+        }
+
+
+        SubServiceCategory oldCategory = subServiceCategory.getSubServiceCategoryById(subServiceCategoryOld);
+        SubServiceCategory newCategory = subServiceCategory.getSubServiceCategoryById(subServiceCategoryNew);
+
+        if (! user.getSubServiceCategories().contains(oldCategory)) {
+            throw new NotSubServiceCategory("User must have  this SubServiceCategory");
+        }
+
+
+        if (oldCategory != null) {
+            user.getSubServiceCategories().remove(oldCategory);
+            oldCategory.getUsers().remove(user);
+        }
+
+        if (newCategory != null) {
+            if (user.getSubServiceCategories().contains(newCategory)) {
+                throw new UserAlreadyHasThisSubService("User already has this SubServiceCategory");
+            }
+            user.getSubServiceCategories().add(newCategory);
+            newCategory.getUsers().add(user);
+        }
+
         userRepository.save(user);
-        addSubCategoryToSpecialist(user, subServiceCategoryNew);
     }
+
 
     public SpecialistResponseDto createSpecialist(User user) {
         if (user.getProfileImage() == null) {
@@ -85,13 +108,13 @@ public class SpecialistService {
     public void removeSubCategory(User userFound, Long subServiceCategoryId) {
         SubServiceCategory subService = subServiceCategory.getSubServiceCategoryById(subServiceCategoryId);
         userFound.getSubServiceCategories().remove(subService);
-        userRepository.save(userFound);
+        subService.getUsers().remove(userFound);
         subService.getUsers().remove(userFound);
     }
 
     public List<SpecialistWithSubService> getUserWithSubServiceCategory(User user) {
         List<SubServiceCategory> subServiceCategories = user.getSubServiceCategories();
-       return getAllSubServiceCategory(subServiceCategories);
+        return getAllSubServiceCategory(subServiceCategories);
     }
 
 
