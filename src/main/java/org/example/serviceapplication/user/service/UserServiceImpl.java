@@ -3,7 +3,6 @@ package org.example.serviceapplication.user.service;
 
 import org.example.serviceapplication.Category.exception.NoActiveUsersFound;
 import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
-import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.user.dto.*;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
@@ -191,4 +190,15 @@ public class UserServiceImpl implements UserService {
         return userResponseDto;
     }
 
+
+    @Transactional(readOnly = true)
+    @Override
+    public User getUserById(Long id) {
+        Optional<User> userFound = userRepository.findById(id);
+        if (userFound.isPresent()) {
+            return userFound.get();
+        }else{
+            throw new RuntimeException("User not found");
+        }
+    }
 }

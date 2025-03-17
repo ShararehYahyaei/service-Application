@@ -17,7 +17,6 @@ public interface SubServiceCategoryInterface {
     @Transactional(readOnly = true)
     SubServiceCategory getSubServiceCategoryById(long id);
 
-
     void editSubServiceCategory(Long id, UpdateSubServiceCategory updateSubServiceCategory);
 
     void deleteSubServiceCategory(Long id);

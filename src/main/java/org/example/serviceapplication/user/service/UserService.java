@@ -2,6 +2,7 @@ package org.example.serviceapplication.user.service;
 
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.user.dto.*;
+import org.example.serviceapplication.user.model.User;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -32,4 +33,7 @@ public interface UserService {
     void removeSubCategoryForSpecialist(Long idSpecialist, Long categoryId);
 
     void editSubServiceCategory(Long userId, Long subServiceCategoryOld, Long subServiceCategoryNew);
+
+    @Transactional(readOnly = true)
+    User getUserById(Long id);
 }
