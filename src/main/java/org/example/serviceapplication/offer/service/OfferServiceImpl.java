@@ -4,6 +4,7 @@ import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.offer.dto.OfferUpdateDto;
 import org.example.serviceapplication.offer.exception.OfferDateIsNotValid;
 import org.example.serviceapplication.offer.exception.OfferNotFound;
+import org.example.serviceapplication.offer.exception.OfferStatusIsNotCorrect;
 import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.offer.model.OfferStatus;
 import org.example.serviceapplication.offer.repository.OfferRepository;
@@ -41,13 +42,13 @@ public class OfferServiceImpl implements OfferServiceInterface {
         offer.setOfferDate(LocalDate.now());
         offer.setCreateTime(LocalDateTime.now());
         offerRepository.save(offer);
-       offer.getCustomerRequest().setRequestStatus(RequestStatus.AwaitingSelection);
+        offer.getCustomerRequest().setRequestStatus(RequestStatus.AwaitingSelection);
 
     }
 
     @Transactional
     @Override
-    public void updateOffer(Long  offerId, OfferUpdateDto offerUpdateDto) {
+    public void updateOffer(Long offerId, OfferUpdateDto offerUpdateDto) {
         Optional<Offer> byId = offerRepository.findById(offerId);
         if (byId.isEmpty()) {
             throw new OfferNotFound("Offer with id " + offerId + " not found");
@@ -62,8 +63,8 @@ public class OfferServiceImpl implements OfferServiceInterface {
 
     private Offer convertRequestIntoEntity(User specialist, OfferDto offerDto) {
         CustomerRequest requestOne = request.findRequestById(offerDto.customerRequestId());
-        if (requestOne.getRequestStatus()!=RequestStatus.InProgress
-               ) {
+        if (requestOne.getRequestStatus() != RequestStatus.InProgress
+        ) {
             if (offerDto.offerDate().isAfter(LocalDate.now())) {
                 return new Offer(
                         specialist,
@@ -133,6 +134,21 @@ public class OfferServiceImpl implements OfferServiceInterface {
         throw new OfferNotFound("OfferNotFound");
     }
 
+    @Transactional
+    @Override
+    public void deleteOffer(Long offerId) {
+        Optional<Offer> found = offerRepository.findById(offerId);
+        if (found.isEmpty()) {
+            throw new OfferNotFound("OfferNotFound");
+        }
+        if (found.get().getStatus() == OfferStatus.PENDING) {
+            offerRepository.deleteById(offerId);
+        }else{
+            throw new OfferStatusIsNotCorrect("OfferStatusIsNotCorrect");
+        }
 
-   }
+    }
+
+
+}
 

@@ -48,4 +48,6 @@ public interface SpecialistService {
     void changeOrderStatus(Long offerId);
 
     SpecialistResponseDto convertToRes(User user);
+
+    void deleteOffer(Long offerId);
 }

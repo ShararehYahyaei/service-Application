@@ -94,5 +94,14 @@ public class SpecialistController {
         return ResponseEntity.ok(HttpStatus.OK);
 
     }
+    @DeleteMapping("/deleteOffer/{userId}/{offerId}")
+    public void editOffer(  @PathVariable Long userId,@PathVariable Long offerId
+                            ) {
+        User specialist = specialistService.getById(userId);
+        if (specialist.getRole() != Role.Specialist) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+        specialistService.deleteOffer(offerId );
+    }
 
 }

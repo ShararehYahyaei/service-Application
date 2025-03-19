@@ -20,4 +20,6 @@ public interface OfferServiceInterface {
     List<OfferDto> getAllMyOfferWithAcceetedStatsus(Long userId);
 
     User getSpecialist(Long requestId);
+
+    void deleteOffer(Long offerId);
 }
