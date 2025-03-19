@@ -44,10 +44,12 @@ public class CustomerController {
     public List<OfferDto> getAllOffers(
             @RequestParam(name = "user_id") Long userId,
             @RequestParam(name = "customer_request_id") Long customerRequestId) {
+
         User customer = customerService.getUserById(userId);
         if (customer.getRole() != Role.Customer) {
             throw new UserHasWrongRole("User has wrong role");
         }
+
         return customerService.getAllOffers(customerRequestId);
     }
 
@@ -109,7 +111,6 @@ public class CustomerController {
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-
 
 
 }

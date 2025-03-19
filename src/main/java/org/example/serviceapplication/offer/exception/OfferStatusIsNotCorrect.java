@@ -1,7 +1,10 @@
 package org.example.serviceapplication.offer.exception;
 
-public class OfferStatusIsNotCorrect extends RuntimeException {
+import org.example.serviceapplication.exception.CustomApiException;
+import org.example.serviceapplication.exception.CustomApiExceptionType;
+
+public class OfferStatusIsNotCorrect extends CustomApiException {
     public OfferStatusIsNotCorrect(String message) {
-        super(message);
+        super(message, CustomApiExceptionType.BAD_REQUEST);
     }
 }

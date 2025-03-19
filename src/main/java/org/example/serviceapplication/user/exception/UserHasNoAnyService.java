@@ -1,7 +1,10 @@
 package org.example.serviceapplication.user.exception;
 
-public class UserHasNoAnyService extends RuntimeException {
+import org.example.serviceapplication.exception.CustomApiException;
+import org.example.serviceapplication.exception.CustomApiExceptionType;
+
+public class UserHasNoAnyService extends CustomApiException {
     public UserHasNoAnyService(String message) {
-        super(message);
+        super(message, CustomApiExceptionType.BAD_REQUEST);
     }
 }

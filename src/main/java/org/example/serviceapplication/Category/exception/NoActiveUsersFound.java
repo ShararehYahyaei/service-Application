@@ -1,7 +1,10 @@
 package org.example.serviceapplication.Category.exception;
 
-public class NoActiveUsersFound extends RuntimeException {
+import org.example.serviceapplication.exception.CustomApiException;
+import org.example.serviceapplication.exception.CustomApiExceptionType;
+
+public class NoActiveUsersFound extends CustomApiException {
     public NoActiveUsersFound(String message) {
-        super(message);
+        super(message, CustomApiExceptionType.BAD_REQUEST);
     }
 }

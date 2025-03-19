@@ -1,7 +1,10 @@
 package org.example.serviceapplication.user.exception;
 
-public class UserNotFond extends RuntimeException {
+import org.example.serviceapplication.exception.CustomApiException;
+import org.example.serviceapplication.exception.CustomApiExceptionType;
+
+public class UserNotFond extends CustomApiException {
     public UserNotFond(String message) {
-        super(message);
+        super(message, CustomApiExceptionType.NOT_FOUND);
     }
 }
