@@ -1,6 +1,7 @@
 package org.example.serviceapplication.user.controller;
 
 
+import jakarta.validation.Valid;
 import org.example.serviceapplication.user.dto.*;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
@@ -25,7 +26,7 @@ public class UserController {
 
     @PostMapping(value = "/create", consumes = "multipart/form-data")
     public UserResponseDto save(
-            @ModelAttribute UserRequest userRequest
+            @ModelAttribute  @Valid UserRequest userRequest
     ) {
         return userService.createUser(userRequest);
     }

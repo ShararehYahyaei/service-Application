@@ -2,6 +2,8 @@ package org.example.serviceapplication.user.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +34,10 @@ public class User {
     private String name;
     private String lastName;
     private String userName;
+    @Email(message = "InValid email")
     private String email;
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8}$",
+            message = "Password must be exactly 8 characters with at least one letter and one digit")
     private String password;
     private boolean active;
     @Enumerated(EnumType.STRING)

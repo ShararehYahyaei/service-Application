@@ -55,12 +55,14 @@ public class CustomerController {
 
 
     @GetMapping("getAllRequest/{user_Id}")
-    public List<CustomerRequestResponseDto> getAllRequest(@PathVariable Long user_Id) {
+    public ResponseEntity<List<CustomerRequestResponseDto>> getAllRequest(@PathVariable Long user_Id) {
         User customer = customerService.getUserById(user_Id);
         if (customer.getRole() != Role.Customer) {
             throw new UserHasWrongRole("User has wrong role");
         }
-        return customerService.getAllRequests(user_Id);
+
+        return ResponseEntity.accepted().body(customerService.getAllRequests(user_Id));
+
     }
 
 
