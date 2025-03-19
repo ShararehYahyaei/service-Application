@@ -34,16 +34,16 @@ public class ServiceCategoryController {
 
 
 
-    @PutMapping("/editServiceCategory/{categoryId}/{name}")
+    @PutMapping("/editServiceCategory/{categoryId}")
     public ResponseEntity updateCategory(@PathVariable Long categoryId,
-                               @PathVariable String name) {
+                               @RequestParam String name) {
         categoryService.editServiceCategory(categoryId,name);
         return ResponseEntity.ok(HttpStatus.OK);
 
     }
 
-    @DeleteMapping("/deleteServiceCatgeory/{categoryId}")
-    public ResponseEntity deleteCategory(@PathVariable Long categoryId) {
+    @DeleteMapping("/deleteServiceCategory")
+    public ResponseEntity deleteCategory(@RequestParam Long categoryId) {
         categoryService.deleteServiceCategory(categoryId);
         return ResponseEntity.ok(HttpStatus.OK);
     }

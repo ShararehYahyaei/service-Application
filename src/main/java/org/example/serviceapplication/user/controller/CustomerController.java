@@ -40,13 +40,15 @@ public class CustomerController {
 
     }
 
-    @GetMapping("/getAllOffers/{userId}/{customer_request_id}")
-    public List<OfferDto> getAllOffers(@PathVariable Long userId, @PathVariable Long customer_request_id) {
+    @GetMapping("/getAllOffers")
+    public List<OfferDto> getAllOffers(
+            @RequestParam(name = "user_id") Long userId,
+            @RequestParam(name = "customer_request_id") Long customerRequestId) {
         User customer = customerService.getUserById(userId);
         if (customer.getRole() != Role.Customer) {
             throw new UserHasWrongRole("User has wrong role");
         }
-        return customerService.getAllOffers(customer_request_id);
+        return customerService.getAllOffers(customerRequestId);
     }
 
 
