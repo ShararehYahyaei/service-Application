@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.user.enumPackage.Role;
@@ -41,6 +42,8 @@ public class User {
     private LocalDateTime createdAt;
     @Lob
     byte[] profileImage;
+    @OneToMany(mappedBy = "user")
+    private List<Offer> offers;
 
     @ManyToMany(fetch = FetchType.LAZY ,mappedBy = "users",cascade = CascadeType.ALL)
     private List<SubServiceCategory> subServiceCategories=new ArrayList<>();

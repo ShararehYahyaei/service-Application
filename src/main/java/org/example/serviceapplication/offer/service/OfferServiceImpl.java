@@ -41,7 +41,7 @@ public class OfferServiceImpl implements OfferServiceInterface {
         offer.setOfferDate(LocalDate.now());
         offer.setCreateTime(LocalDateTime.now());
         offerRepository.save(offer);
-        offer.getCustomerRequest().setRequestStatus(RequestStatus.AwaitingSelection);
+       offer.getCustomerRequest().setRequestStatus(RequestStatus.AwaitingSelection);
 
     }
 
@@ -55,7 +55,8 @@ public class OfferServiceImpl implements OfferServiceInterface {
 
     private Offer convertRequestIntoEntity(User specialist, OfferDto offerDto) {
         CustomerRequest requestOne = request.findRequestById(offerDto.customerRequestId());
-        if (requestOne.getRequestStatus() == RequestStatus.AwaitingOffers) {
+        if (requestOne.getRequestStatus()!=RequestStatus.InProgress
+               ) {
             if (offerDto.offerDate().isAfter(LocalDate.now())) {
                 return new Offer(
                         specialist,
@@ -118,7 +119,7 @@ public class OfferServiceImpl implements OfferServiceInterface {
 
     @Override
     public User getSpecialist(Long requestId) {
-        Optional<Offer> foundOffer = offerRepository.findFirstByCustomerRequestId(requestId);
+        Optional<Offer> foundOffer = offerRepository.findById(requestId);
         if (foundOffer.isPresent()) {
             return foundOffer.get().getUser();
         }

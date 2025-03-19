@@ -96,4 +96,18 @@ public class CustomerController {
 
     }
 
+    @PostMapping("customer/giveReview")
+    public ResponseEntity<Void> gtReview(@RequestBody ReviewDto reviewDto) {
+        User customer = customerService.getUserById(reviewDto.customerId());
+        if (customer.getRole() != Role.Customer) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+
+        customerService.addReview(customer, reviewDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
+
 }

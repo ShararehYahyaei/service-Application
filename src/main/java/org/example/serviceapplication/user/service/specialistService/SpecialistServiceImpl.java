@@ -112,6 +112,7 @@ public class SpecialistServiceImpl implements SpecialistService {
     public SpecialistResponseDto convertEntityToResponseDto(User user) {
         String profileImageBase64 = convertByteArrayToBase64(user.getProfileImage());
         return new SpecialistResponseDto(
+                user.getId(),
                 user.getAddress(),
                 user.getPhone(),
                 user.getName(),
@@ -207,6 +208,7 @@ public class SpecialistServiceImpl implements SpecialistService {
     public List<SpecialistResponseDto> convertEntitiesToResponseDtos(List<User> users) {
         return users.stream()
                 .map(user -> new SpecialistResponseDto(
+                        user.getId(),
                         user.getAddress(),
                         user.getPhone(),
                         user.getName(),
@@ -222,6 +224,7 @@ public class SpecialistServiceImpl implements SpecialistService {
     @Override
     public SpecialistResponseDto convertToRes(User user) {
         return new SpecialistResponseDto(
+                user.getId(),
                 user.getAddress(),
                 user.getPhone(),
                 user.getName(),

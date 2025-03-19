@@ -7,6 +7,7 @@ import org.example.serviceapplication.user.enumPackage.Status;
 
 
 public record SpecialistResponseDto(
+        Long id,
         String address,
         String phone,
         String name,
