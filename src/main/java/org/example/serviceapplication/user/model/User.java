@@ -42,8 +42,8 @@ public class User {
     private LocalDateTime createdAt;
     @Lob
     byte[] profileImage;
-    @OneToMany(mappedBy = "user")
-    private List<Offer> offers;
+//    @OneToMany(mappedBy = "user")
+//    private List<Offer> offers;
 
     @ManyToMany(fetch = FetchType.LAZY ,mappedBy = "users",cascade = CascadeType.ALL)
     private List<SubServiceCategory> subServiceCategories=new ArrayList<>();

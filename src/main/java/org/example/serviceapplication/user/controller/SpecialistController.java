@@ -54,17 +54,15 @@ public class SpecialistController {
         return specialistService.getAllRequests(specialist);
     }
 
-    @PutMapping("/editOffer")
-    public void editOffer(@RequestBody OfferUpdateDto offerUpdateDto) {
+    @PutMapping("/editOffer/{userId}/{offerId}")
+    public void editOffer(  @PathVariable Long userId,@PathVariable Long offerId,
+                            @RequestBody OfferUpdateDto offerDto  ) {
 
-        User specialist = specialistService.getById(offerUpdateDto.specialistId());
-        if (specialist == null) {
-            throw new UserNotFond("User not Found");
-        }
+        User specialist = specialistService.getById(userId);
         if (specialist.getRole() != Role.Specialist) {
             throw new UserHasWrongRole("User has wrong role");
         }
-        specialistService.editOffer(specialist, offerUpdateDto);
+        specialistService.editOffer(offerId ,offerDto);
     }
 
 

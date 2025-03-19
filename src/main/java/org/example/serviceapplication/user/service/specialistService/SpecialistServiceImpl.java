@@ -184,8 +184,8 @@ public class SpecialistServiceImpl implements SpecialistService {
 
     @Transactional
     @Override
-    public void editOffer(User specialist, OfferUpdateDto offerDto) {
-        offerService.updateOffer(specialist, offerDto);
+    public void editOffer(Long offerId, OfferUpdateDto offerDto) {
+        offerService.updateOffer(offerId, offerDto);
     }
 
 

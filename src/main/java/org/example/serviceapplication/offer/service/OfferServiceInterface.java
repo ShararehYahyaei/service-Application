@@ -12,7 +12,7 @@ public interface OfferServiceInterface {
     void createOffer(User customer, OfferDto offerDto);
 
     @Transactional
-    void updateOffer(User specialist, OfferUpdateDto offerUpdateDto);
+    void updateOffer(Long offerId, OfferUpdateDto offerUpdateDto);
     @Transactional(readOnly = true)
     List<OfferDto> getAllOffers( Long requestId);
     Offer getOfferById(Long offerId);

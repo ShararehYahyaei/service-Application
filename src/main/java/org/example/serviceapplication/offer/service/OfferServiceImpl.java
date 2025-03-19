@@ -47,8 +47,15 @@ public class OfferServiceImpl implements OfferServiceInterface {
 
     @Transactional
     @Override
-    public void updateOffer(User specialist, OfferUpdateDto offerUpdateDto) {
-        Offer offer = convertOfferDtoUpdateToEntity(specialist, offerUpdateDto);
+    public void updateOffer(Long  offerId, OfferUpdateDto offerUpdateDto) {
+        Optional<Offer> byId = offerRepository.findById(offerId);
+        if (byId.isEmpty()) {
+            throw new OfferNotFound("Offer with id " + offerId + " not found");
+        }
+        Offer offer = byId.get();
+        offer.setOfferPrice(offerUpdateDto.offerPrice());
+        offer.setOfferDate(offerUpdateDto.offerDate());
+        offer.setEstimationTime(offerUpdateDto.estimationTime());
         offerRepository.save(offer);
     }
 
@@ -127,29 +134,5 @@ public class OfferServiceImpl implements OfferServiceInterface {
     }
 
 
-    private Offer convertOfferDtoUpdateToEntity(User specialist, OfferUpdateDto offerUpdateDto) {
-        CustomerRequest requestById = request.findRequestById(offerUpdateDto.CustomerRequestId());
-        if (requestById == null) {
-            throw new RequestNotPresent("request not found");
-        }
-        Optional<Offer> offer = offerRepository.findByUserAndCustomerRequest(specialist, requestById);
-        if (offer.isEmpty()) {
-            throw new OfferNotFound("Offer Not found");
-        }
+   }
 
-        if (requestById.getRequestStatus() == RequestStatus.AwaitingSelection) {
-            if (offerUpdateDto.offerDate().isAfter(LocalDate.now())) {
-                return new Offer(
-                        offerUpdateDto.offerPrice(),
-                        offerUpdateDto.offerDate(),
-                        offerUpdateDto.estimationTime()
-                );
-            }
-            throw new OfferDateIsNotValid("OfferDateIsNotValid");
-        } else {
-            throw new RequestStatusIsNotCorrect("Request status is not correct");
-        }
-
-    }
-
-}

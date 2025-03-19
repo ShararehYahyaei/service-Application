@@ -3,6 +3,7 @@ package org.example.serviceapplication.request.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.user.model.User;
 
@@ -32,6 +33,8 @@ public class CustomerRequest {
     private String address;
     @Enumerated(EnumType.STRING)
     private RequestStatus requestStatus;
+    @OneToMany(mappedBy = "customerRequest", fetch = FetchType.LAZY)
+    private List<Offer> offers;
 
     public CustomerRequest(User userForRequest,
                            SubServiceCategory subServiceCategoryById,

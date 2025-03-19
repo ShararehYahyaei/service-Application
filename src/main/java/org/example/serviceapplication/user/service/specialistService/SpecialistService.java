@@ -39,7 +39,7 @@ public interface SpecialistService {
     List<CustomerRequestResponseDto> getAllRequests(User specialist);
 
 
-    void editOffer(User specialist, OfferUpdateDto offerUpdateDto);
+    void editOffer(Long offerId, OfferUpdateDto offerUpdateDto);
 
     List<SubServiceCategories> getAllSubServiceCategories();
 
