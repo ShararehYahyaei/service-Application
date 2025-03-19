@@ -4,6 +4,7 @@ import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.offer.model.OfferStatus;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.order.exception.OrderNotFound;
+import org.example.serviceapplication.order.exception.OrderStatusIsNotCorrect;
 import org.example.serviceapplication.order.model.Order;
 import org.example.serviceapplication.order.model.OrderDto;
 import org.example.serviceapplication.order.model.OrderStatus;
@@ -64,5 +65,23 @@ public class OrderServiceImpl implements OrderService {
             return found.get();
         }
         throw new OrderNotFound("order id not existed yeet...");
+    }
+
+    @Transactional
+    @Override
+    public void changeOrderStatus(Long offerId) {
+
+        Optional<Order> byOfferId = orderRepository.findByOfferId(offerId);
+        if (byOfferId.isPresent()) {
+            Order order = byOfferId.get();
+            if (order.getOrderStatus() == OrderStatus.CONFIRMED) {
+                order.setOrderStatus(OrderStatus.COMPLETED);
+                orderRepository.save(order);
+                return;
+            }
+            throw new OrderStatusIsNotCorrect("OrderStatusIsNotValid");
+        }
+        throw new OrderNotFound("order id not existed yeet...");
+
     }
 }

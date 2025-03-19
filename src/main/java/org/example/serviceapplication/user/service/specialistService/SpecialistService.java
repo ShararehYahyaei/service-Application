@@ -44,4 +44,6 @@ public interface SpecialistService {
     List<SubServiceCategories> getAllSubServiceCategories();
 
     List<OfferDto> getAllMyOffersWithAccepetedStatus(Long userId);
+
+    void changeOrderStatus(Long offerId);
 }

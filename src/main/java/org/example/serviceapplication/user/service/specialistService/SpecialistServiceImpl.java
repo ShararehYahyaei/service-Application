@@ -4,13 +4,14 @@ package org.example.serviceapplication.user.service.specialistService;
 import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.offer.dto.OfferUpdateDto;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
+import org.example.serviceapplication.order.service.OrderService;
 import org.example.serviceapplication.request.dto.CustomerRequestResponseDto;
 import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
-import org.example.serviceapplication.user.dto.CustomerResponseDto;
+
 import org.example.serviceapplication.user.dto.SpecialistResponseDto;
 import org.example.serviceapplication.user.dto.SpecialistWithSubService;
 import org.example.serviceapplication.user.exception.*;
@@ -28,16 +29,18 @@ import java.util.stream.Collectors;
 public class SpecialistServiceImpl implements SpecialistService {
     private final OfferServiceInterface offerService;
     private final CustomerRequestService customerRequestService;
+    private final OrderService orderService;
 
     private final UserRepository userRepository;
     private final SubServiceCategoryInterface subServiceCategory;
 
 
-    public SpecialistServiceImpl(OfferServiceInterface offerService, CustomerRequestService customerRequestService,
+    public SpecialistServiceImpl(OfferServiceInterface offerService, CustomerRequestService customerRequestService, OrderService orderService,
                                  UserRepository userRepository,
                                  SubServiceCategoryInterface subService) {
         this.offerService = offerService;
         this.customerRequestService = customerRequestService;
+        this.orderService = orderService;
         this.userRepository = userRepository;
         this.subServiceCategory = subService;
 
@@ -188,12 +191,18 @@ public class SpecialistServiceImpl implements SpecialistService {
 
     @Override
     public List<SubServiceCategories> getAllSubServiceCategories() {
-       return   subServiceCategory.getAllSubServiceCatgories();
+        return subServiceCategory.getAllSubServiceCatgories();
     }
 
     @Override
     public List<OfferDto> getAllMyOffersWithAccepetedStatus(Long userId) {
-    return   offerService.getAllMyOfferWithAcceetedStatsus(userId);
+        return offerService.getAllMyOfferWithAcceetedStatsus(userId);
+    }
+@Transactional
+    @Override
+    public void changeOrderStatus(Long offerId) {
+        orderService.changeOrderStatus(offerId);
+
     }
 
     public List<SpecialistResponseDto> convertEntitiesToResponseDtos(List<User> users) {

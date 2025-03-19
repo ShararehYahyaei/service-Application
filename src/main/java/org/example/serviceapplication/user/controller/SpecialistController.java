@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -81,6 +82,18 @@ public class SpecialistController {
             throw new UserHasWrongRole("User has wrong role");
         }
         return ResponseEntity.ok(specialistService.getAllMyOffersWithAccepetedStatus(userId));
+
+    }
+
+
+    @PutMapping("changeOrderStatus/{userId}/{offerId}")
+    public ResponseEntity changeOrderStatus(@PathVariable Long userId, @PathVariable Long offerId) {
+        User specialist = specialistService.getById(userId);
+        if (specialist.getRole() != Role.Specialist) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+         specialistService.changeOrderStatus(offerId);
+        return ResponseEntity.ok(HttpStatus.OK);
 
     }
 

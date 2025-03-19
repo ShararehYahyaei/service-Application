@@ -12,4 +12,6 @@ public interface OrderService {
 
     @Transactional(readOnly = true)
     Order getOrderById(Long orderId);
+
+    void changeOrderStatus(Long offerId);
 }
