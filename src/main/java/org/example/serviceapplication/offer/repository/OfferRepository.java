@@ -13,6 +13,7 @@ public interface OfferRepository extends CrudRepository<Offer, Long> {
         List<Offer> findByCustomerRequestId(Long customer_request_id);
         Optional<Offer> findByUserAndCustomerRequest(User user, CustomerRequest customerRequest);
         List<Offer> findByUserIdAndStatus(Long userId, OfferStatus status);
+        Optional<Offer> findFirstByCustomerRequestId(Long customerRequestId);
 
 
 }

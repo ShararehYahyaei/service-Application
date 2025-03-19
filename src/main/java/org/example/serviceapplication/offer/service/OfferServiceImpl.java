@@ -116,6 +116,15 @@ public class OfferServiceImpl implements OfferServiceInterface {
         return toOfferDTOList(byUserIdAndStatus);
     }
 
+    @Override
+    public User getSpecialist(Long requestId) {
+        Optional<Offer> foundOffer = offerRepository.findFirstByCustomerRequestId(requestId);
+        if (foundOffer.isPresent()) {
+            return foundOffer.get().getUser();
+        }
+        throw new OfferNotFound("OfferNotFound");
+    }
+
 
     private Offer convertOfferDtoUpdateToEntity(User specialist, OfferUpdateDto offerUpdateDto) {
         CustomerRequest requestById = request.findRequestById(offerUpdateDto.CustomerRequestId());

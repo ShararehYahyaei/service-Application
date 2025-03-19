@@ -46,4 +46,6 @@ public interface SpecialistService {
     List<OfferDto> getAllMyOffersWithAccepetedStatus(Long userId);
 
     void changeOrderStatus(Long offerId);
+
+    SpecialistResponseDto convertToRes(User user);
 }

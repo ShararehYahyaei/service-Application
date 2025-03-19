@@ -10,8 +10,10 @@ import org.example.serviceapplication.request.dto.CustomerRequestResponseDto;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.review.service.ReviewService;
 import org.example.serviceapplication.user.dto.CustomerResponseDto;
+import org.example.serviceapplication.user.dto.SpecialistResponseDto;
 import org.example.serviceapplication.user.exception.UserNotFond;
 import org.example.serviceapplication.user.model.User;
+import org.example.serviceapplication.user.service.specialistService.SpecialistService;
 import org.example.serviceapplication.user.userRepository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,17 +30,19 @@ public class CustomerService implements CustomerServiceInter {
     private final UserRepository userRepository;
     private final OrderService orderService;
     private final ReviewService reviewService;
+    private final SpecialistService specialistService;
 
     public CustomerService(UserRepository userRepository,
                            CustomerRequestService customerRequestService,
                            OfferServiceInterface offerService,
                            OrderService orderService,
-                           ReviewService reviewService) {
+                           ReviewService reviewService, SpecialistService specialistService) {
         this.customerRequestService = customerRequestService;
         this.userRepository = userRepository;
         this.offerService = offerService;
         this.orderService = orderService;
         this.reviewService = reviewService;
+        this.specialistService = specialistService;
     }
 
 
@@ -102,6 +106,7 @@ public class CustomerService implements CustomerServiceInter {
     public void addReview(User customer, ReviewDto reviewDto) {
         reviewService.addReview(customer, reviewDto);
     }
+
     public List<CustomerResponseDto> convertEntitiesToResponseDtos(List<User> users) {
         return users.stream()
                 .map(user -> new CustomerResponseDto(
@@ -113,5 +118,12 @@ public class CustomerService implements CustomerServiceInter {
                         user.getStatus()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public SpecialistResponseDto getSpecialistForMyRequest(Long requestId) {
+        User userForThisRequest = offerService.getSpecialist(requestId);
+      return    specialistService.convertToRes(userForThisRequest);
     }
 }

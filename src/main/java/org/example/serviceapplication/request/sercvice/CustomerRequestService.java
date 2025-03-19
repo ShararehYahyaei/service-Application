@@ -13,4 +13,6 @@ public interface CustomerRequestService {
     CustomerRequest findRequestById(Long id);
     List<CustomerRequestResponseDto> getAllRequestForSpecialist(List<SubServiceCategory>subServices);
     List<CustomerRequestResponseDto> getAllCustomerRequestDtoForCustomer(Long userId);
+
+
 }

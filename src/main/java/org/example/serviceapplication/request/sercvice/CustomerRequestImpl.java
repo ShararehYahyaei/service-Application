@@ -81,8 +81,7 @@ public class CustomerRequestImpl implements CustomerRequestService {
     }
 
 
-
-    private List<CustomerRequestResponseDto> convertEntityToResponse (List<CustomerRequest>  newRequests) {
+    private List<CustomerRequestResponseDto> convertEntityToResponse(List<CustomerRequest> newRequests) {
         List<CustomerRequestResponseDto> filteredRequests = newRequests.stream()
                 .filter(request -> request.getRequestStatus() == RequestStatus.AwaitingOffers)
                 .map(request -> new CustomerRequestResponseDto(
@@ -101,7 +100,6 @@ public class CustomerRequestImpl implements CustomerRequestService {
 
         return filteredRequests;
     }
-
 
 
 }

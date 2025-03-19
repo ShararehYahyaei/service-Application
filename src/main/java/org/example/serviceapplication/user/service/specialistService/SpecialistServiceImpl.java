@@ -6,7 +6,6 @@ import org.example.serviceapplication.offer.dto.OfferUpdateDto;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.order.service.OrderService;
 import org.example.serviceapplication.request.dto.CustomerRequestResponseDto;
-import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
@@ -220,5 +219,20 @@ public class SpecialistServiceImpl implements SpecialistService {
                 ))
                 .collect(Collectors.toList());
     }
+    @Override
+    public SpecialistResponseDto convertToRes(User user) {
+        return new SpecialistResponseDto(
+                user.getAddress(),
+                user.getPhone(),
+                user.getName(),
+                user.isActive(),
+                user.getRole(),
+                user.getStatus(),
+                (user.getProfileImage() != null && user.getProfileImage().length > 0)
+                        ? Base64.getEncoder().encodeToString(user.getProfileImage())
+                        : null
+        );
+    }
+
 
 }

@@ -6,6 +6,7 @@ import org.example.serviceapplication.order.model.OrderDto;
 import org.example.serviceapplication.request.dto.CustomerRequestDto;
 import org.example.serviceapplication.request.dto.CustomerRequestResponseDto;
 import org.example.serviceapplication.user.dto.CustomerResponseDto;
+import org.example.serviceapplication.user.dto.SpecialistResponseDto;
 import org.example.serviceapplication.user.model.User;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,4 +30,7 @@ public interface CustomerServiceInter {
     void createOrder(User customer, OrderDto orderDto);
 
     void addReview(User customer, ReviewDto reviewDto);
+
+    @Transactional(readOnly = true)
+    SpecialistResponseDto getSpecialistForMyRequest(Long requestId);
 }
