@@ -191,6 +191,11 @@ public class SpecialistServiceImpl implements SpecialistService {
        return   subServiceCategory.getAllSubServiceCatgories();
     }
 
+    @Override
+    public List<OfferDto> getAllMyOffersWithAccepetedStatus(Long userId) {
+    return   offerService.getAllMyOfferWithAcceetedStatsus(userId);
+    }
+
     public List<SpecialistResponseDto> convertEntitiesToResponseDtos(List<User> users) {
         return users.stream()
                 .map(user -> new SpecialistResponseDto(

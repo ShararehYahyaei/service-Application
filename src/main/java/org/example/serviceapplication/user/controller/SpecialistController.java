@@ -45,7 +45,7 @@ public class SpecialistController {
 
 
     @GetMapping("/getAllRequests/{userId}")
-    public List<CustomerRequestResponseDto> getAllRequests (@PathVariable Long userId) {
+    public List<CustomerRequestResponseDto> getAllRequests(@PathVariable Long userId) {
         User specialist = specialistService.getById(userId);
         if (specialist.getRole() != Role.Specialist) {
             throw new UserHasWrongRole("User has wrong role");
@@ -57,23 +57,31 @@ public class SpecialistController {
     public void editOffer(@RequestBody OfferUpdateDto offerUpdateDto) {
 
         User specialist = specialistService.getById(offerUpdateDto.specialistId());
-        if (specialist==null){
+        if (specialist == null) {
             throw new UserNotFond("User not Found");
         }
         if (specialist.getRole() != Role.Specialist) {
             throw new UserHasWrongRole("User has wrong role");
         }
-        specialistService.editOffer(specialist,offerUpdateDto);
+        specialistService.editOffer(specialist, offerUpdateDto);
     }
 
 
     @GetMapping("getAllSubServiceCategories")
-    public ResponseEntity<List<SubServiceCategories>>  getAllSubServiceCategories() {
-         return ResponseEntity.ok(specialistService.getAllSubServiceCategories());
+    public ResponseEntity<List<SubServiceCategories>> getAllSubServiceCategories() {
+        return ResponseEntity.ok(specialistService.getAllSubServiceCategories());
 
     }
 
 
+    @GetMapping("/getAllMyOffers/{userId}")
+    public ResponseEntity<List<OfferDto>> getAllMyOfferWihAcceptedStatus(@PathVariable Long userId) {
+        User specialist = specialistService.getById(userId);
+        if (specialist.getRole() != Role.Specialist) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+        return ResponseEntity.ok(specialistService.getAllMyOffersWithAccepetedStatus(userId));
 
+    }
 
 }

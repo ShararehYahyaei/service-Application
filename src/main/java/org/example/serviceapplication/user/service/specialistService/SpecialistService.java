@@ -42,4 +42,6 @@ public interface SpecialistService {
     void editOffer(User specialist, OfferUpdateDto offerUpdateDto);
 
     List<SubServiceCategories> getAllSubServiceCategories();
+
+    List<OfferDto> getAllMyOffersWithAccepetedStatus(Long userId);
 }

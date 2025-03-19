@@ -106,6 +106,16 @@ public class OfferServiceImpl implements OfferServiceInterface {
         throw new OfferNotFound("Offer Not found");
     }
 
+    @Override
+    public List<OfferDto> getAllMyOfferWithAcceetedStatsus(Long userId) {
+        List<Offer> byUserIdAndStatus = offerRepository.findByUserIdAndStatus(userId, OfferStatus.ACCEPTED);
+        if (byUserIdAndStatus.isEmpty()) {
+            throw new OfferNotFound("OfferNotFound");
+        }
+
+        return toOfferDTOList(byUserIdAndStatus);
+    }
+
 
     private Offer convertOfferDtoUpdateToEntity(User specialist, OfferUpdateDto offerUpdateDto) {
         CustomerRequest requestById = request.findRequestById(offerUpdateDto.CustomerRequestId());

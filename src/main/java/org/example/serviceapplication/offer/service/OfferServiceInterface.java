@@ -16,4 +16,6 @@ public interface OfferServiceInterface {
     @Transactional(readOnly = true)
     List<OfferDto> getAllOffers( Long requestId);
     Offer getOfferById(Long offerId);
+
+    List<OfferDto> getAllMyOfferWithAcceetedStatsus(Long userId);
 }
