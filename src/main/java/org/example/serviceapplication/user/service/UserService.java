@@ -36,4 +36,8 @@ public interface UserService {
 
     @Transactional(readOnly = true)
     User getUserById(Long id);
+
+    List<CustomerResponseDto> getAllCustomers();
+
+    List<SpecialistResponseDto> getAllSpecialists();
 }

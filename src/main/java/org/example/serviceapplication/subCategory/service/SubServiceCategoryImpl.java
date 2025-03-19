@@ -1,6 +1,7 @@
 package org.example.serviceapplication.subCategory.service;
 
 import org.example.serviceapplication.Category.model.ServiceCategory;
+import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.dto.UpdateSubServiceCategory;
 import org.example.serviceapplication.subCategory.exception.SubServiceCategoryIsNotFound;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
@@ -30,7 +31,6 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
     @Transactional
     @Override
     public SubServiceCategoryResponse createSubServiceCategory(SubServiceCategoryRequest subServiceCategoryRequest) {
-
         ServiceCategory serviceCategory = serviceCategoryInterface.getCategoryById(subServiceCategoryRequest.categoryId());
         serviceCategory.getSubServiceCategoryList().add(
                 new SubServiceCategory(
@@ -65,7 +65,8 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
         }
         throw new SubServiceCategoryIsNotFound("Sub Service Category Not Found");
     }
-@Transactional
+
+    @Transactional
     @Override
     public void editSubServiceCategory(Long id, UpdateSubServiceCategory updateSubServiceCategory) {
         Optional<SubServiceCategory> foundSubService = subServiceCategoryRepository.findById(id);
@@ -84,15 +85,23 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
 
         subServiceCategoryRepository.save(foundSubService.get());
     }
-@Transactional
+
+    @Transactional
     @Override
     public void deleteSubServiceCategory(Long id) {
         Optional<SubServiceCategory> found = subServiceCategoryRepository.findById(id);
         if (found.isPresent()) {
             subServiceCategoryRepository.delete(found.get());
-        }else{
+        } else {
             throw new SubServiceCategoryIsNotFound("Sub Service Category Not Found");
         }
+
+    }
+
+    @Override
+    public List<SubServiceCategories> getAllSubServiceCatgories() {
+        List<SubServiceCategory> all = subServiceCategoryRepository.findAll();
+        return convertSubCategoryToRes(all);
 
     }
 
@@ -112,12 +121,25 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
     private SubServiceCategoryResponse convertSubCategoryToResponse
             (SubServiceCategory subServiceCategory) {
         return new SubServiceCategoryResponse(
+
                 subServiceCategory.getName(),
                 subServiceCategory.getDescription(),
                 subServiceCategory.getPrice(),
                 subServiceCategory.getCategory().getName()
 
         );
+    }
+
+    private List<SubServiceCategories> convertSubCategoryToRes(List<SubServiceCategory> subServiceCategory) {
+        return subServiceCategory.stream()
+                .map(sub -> new SubServiceCategories(
+                        sub.getId(),
+                        sub.getName(),
+                        sub.getDescription(),
+                        sub.getPrice(),
+                        sub.getCategory().getName()
+                ))
+                .collect(Collectors.toList());
     }
 
 

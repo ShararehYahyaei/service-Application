@@ -1,8 +1,8 @@
 package org.example.serviceapplication.user.controller;
 
 
-import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.user.dto.*;
+import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +15,12 @@ import java.util.List;
 @RequestMapping("/api/v1/user")
 public class UserController {
 
-
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService
+                        ) {
         this.userService = userService;
+
     }
 
     @PostMapping(value = "/create", consumes = "multipart/form-data")
@@ -60,11 +61,11 @@ public class UserController {
     }
 
 
-    @PutMapping("/addCategoryToUser/{userId}/{categoryId}")
+    @PutMapping("/addCategoryToUser/{userId}/{subCategoryId}")
     public ResponseEntity addCategoryToUser(
             @PathVariable Long userId,
-            @PathVariable Long categoryId) {
-        userService.addSubCategory(userId, categoryId);
+            @PathVariable Long subCategoryId) {
+        userService.addSubCategory(userId, subCategoryId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -85,5 +86,19 @@ public class UserController {
         userService.editSubServiceCategory(userId, subServiceCategoryOld, subServiceCategoryNew);
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
+    @GetMapping("getAllCustomers")
+    public ResponseEntity<List<CustomerResponseDto>> getAllCustomers() {
+        List<CustomerResponseDto> allCustomers = userService.getAllCustomers();
+        return new ResponseEntity<>(allCustomers, HttpStatus.OK);
+    }
+    @GetMapping("getAllSpecialist")
+    public ResponseEntity<List<SpecialistResponseDto>> getAllSpecialists() {
+        List<SpecialistResponseDto> allSpecialists = userService.getAllSpecialists();
+        return new ResponseEntity<>(allSpecialists, HttpStatus.OK);
+
+    }
+
+
 
 }

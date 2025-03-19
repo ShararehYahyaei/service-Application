@@ -3,13 +3,12 @@ package org.example.serviceapplication.request.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.serviceapplication.request.enumPackage.RequestStatus;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
-import org.example.serviceapplication.user.dto.UserResponseDto;
 import org.example.serviceapplication.user.model.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -20,9 +19,11 @@ public class CustomerRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sub_service_category_id")
     private SubServiceCategory subServiceCategory;
     private double RequestPrice;
     private LocalDateTime RequestDate;
@@ -48,4 +49,6 @@ public class CustomerRequest {
     public CustomerRequest() {
 
     }
+
+
 }

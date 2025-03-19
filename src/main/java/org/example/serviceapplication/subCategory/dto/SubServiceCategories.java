@@ -1,7 +1,7 @@
 package org.example.serviceapplication.subCategory.dto;
 
-public record SubServiceCategoryResponse(
-
+public record SubServiceCategories(
+        Long id,
         String name,
         String description,
         double price,

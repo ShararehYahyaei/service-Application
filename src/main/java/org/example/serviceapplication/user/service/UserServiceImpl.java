@@ -11,7 +11,7 @@ import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.exception.UserNotFond;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
-import org.example.serviceapplication.user.service.specialistService.SpecialistService;
+import org.example.serviceapplication.user.service.specialistService.SpecialistServiceImpl;
 import org.example.serviceapplication.user.userRepository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,12 +29,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ServiceCategoryInterface categoryService;
     private final CustomerService customerService;
-    private final SpecialistService specialistService;
+    private final SpecialistServiceImpl specialistService;
 
     public UserServiceImpl(UserRepository userRepository,
                            ServiceCategoryInterface categoryService,
                            CustomerService customerService,
-                           SpecialistService specialistService) {
+                           SpecialistServiceImpl specialistService) {
 
         this.userRepository = userRepository;
         this.categoryService = categoryService;
@@ -116,10 +116,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<SpecialistWithSubService> getUserWithSubServiceCategory(Long idSpecialist) {
         User userSpecialistById = getUserSpecialistById(idSpecialist);
-        if (userSpecialistById.getSubServiceCategories()!=null) {
-          return   specialistService.getUserWithSubServiceCategory(userSpecialistById);
-        }
-        else{
+        if (userSpecialistById.getSubServiceCategories() != null) {
+            return specialistService.getUserWithSubServiceCategory(userSpecialistById);
+        } else {
             throw new NotSubServiceCategory("No active users found.");
         }
 
@@ -137,7 +136,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void editSubServiceCategory(Long userId, Long subServiceCategoryOld, Long subServiceCategoryNew) {
-
         User user = getUserSpecialistById(userId);
         specialistService.editSubServiceCategory(user, subServiceCategoryOld, subServiceCategoryNew);
     }
@@ -150,7 +148,6 @@ public class UserServiceImpl implements UserService {
 
         if (userFound.get().getRole() == Role.Customer || userFound.get().getRole() == Role.Admin) {
             throw new UserHasWrongRole("User has wrong role");
-
         }
         return userFound.get();
     }
@@ -197,8 +194,26 @@ public class UserServiceImpl implements UserService {
         Optional<User> userFound = userRepository.findById(id);
         if (userFound.isPresent()) {
             return userFound.get();
-        }else{
+        } else {
             throw new RuntimeException("User not found");
         }
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<CustomerResponseDto> getAllCustomers() {
+        List<User> byRole = userRepository.findByRole(Role.Customer);
+        return customerService.
+                convertEntitiesToResponseDtos(byRole);
+
+    }
+@Transactional(readOnly = true)
+    @Override
+    public List<SpecialistResponseDto> getAllSpecialists() {
+        List<User> byRole = userRepository.findByRole(Role.Specialist);
+        return specialistService.convertEntitiesToResponseDtos(byRole);
+
+    }
+
+
 }

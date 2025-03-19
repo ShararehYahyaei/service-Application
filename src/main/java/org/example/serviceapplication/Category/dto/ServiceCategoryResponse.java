@@ -4,5 +4,8 @@ import org.example.serviceapplication.subCategory.dto.SubServiceCategoryResponse
 
 import java.util.List;
 
-public record ServiceCategoryResponse(String name, List<SubServiceCategoryResponseDto> subCategotyList) {
+public record ServiceCategoryResponse(
+        Long id,
+        String name,
+        List<SubServiceCategoryResponseDto> subCategotyList) {
 }

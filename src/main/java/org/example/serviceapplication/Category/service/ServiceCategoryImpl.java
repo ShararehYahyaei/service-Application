@@ -137,8 +137,8 @@ public class ServiceCategoryImpl implements ServiceCategoryInterface {
 
     private ServiceCategoryResponse convertEntityToResponseDto(ServiceCategory category) {
 
-
         return new ServiceCategoryResponse(
+                category.getId(),
                 category.getName(),
                 category.getSubServiceCategoryList().stream()
                         .map(subCategory -> new SubServiceCategoryResponseDto(
