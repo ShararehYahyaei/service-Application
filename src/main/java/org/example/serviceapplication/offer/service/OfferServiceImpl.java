@@ -13,6 +13,7 @@ import org.example.serviceapplication.request.exception.RequestStatusIsNotCorrec
 import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.request.model.RequestStatus;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
+import org.example.serviceapplication.review.service.ReviewService;
 import org.example.serviceapplication.user.model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,11 +28,13 @@ import java.util.stream.Collectors;
 public class OfferServiceImpl implements OfferServiceInterface {
     private final OfferRepository offerRepository;
     private final CustomerRequestService request;
+    private final ReviewService reviewService;
 
     public OfferServiceImpl(OfferRepository offerRepository,
-                            CustomerRequestService request) {
+                            CustomerRequestService request, ReviewService reviewService) {
         this.offerRepository = offerRepository;
         this.request = request;
+        this.reviewService = reviewService;
     }
 
     @Transactional
@@ -82,15 +85,17 @@ public class OfferServiceImpl implements OfferServiceInterface {
 
     }
 
-    private static List<OfferDto> toOfferDTOList(List<Offer> offers) {
+    private List<OfferDto> toOfferDTOList(List<Offer> offers) {
         return offers.stream()
                 .map(offer -> new OfferDto(
                         offer.getId(),
-                        offer.getId(),
+                        offer.getUser().getId(),
                         offer.getOfferPrice(),
                         offer.getOfferDate(),
                         offer.getEstimationTime(),
-                        offer.getCustomerRequest().getId()
+                        offer.getCustomerRequest().getId(),
+                        reviewService.getRateForSpecialist(offer.getUser().getId()) != null ?
+                                reviewService.getRateForSpecialist(offer.getUser().getId()) : 0
 
                 ))
                 .collect(Collectors.toList());
@@ -143,7 +148,7 @@ public class OfferServiceImpl implements OfferServiceInterface {
         }
         if (found.get().getStatus() == OfferStatus.PENDING) {
             offerRepository.deleteById(offerId);
-        }else{
+        } else {
             throw new OfferStatusIsNotCorrect("OfferStatusIsNotCorrect");
         }
 

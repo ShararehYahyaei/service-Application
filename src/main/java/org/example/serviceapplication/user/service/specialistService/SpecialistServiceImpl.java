@@ -91,6 +91,7 @@ public class SpecialistServiceImpl implements SpecialistService {
         if (imageSizeInKB > 300 * 1024) {
             throw new InvalidImageSize("InvalidImageSize ");
         }
+
         User specialist = userRepository.save(user);
         return convertEntityToResponseDto(specialist);
 

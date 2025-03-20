@@ -6,12 +6,13 @@ import java.time.LocalDate;
 
 public record OfferDto(
         Long offerId,
-        Long userId,
+        Long specialistId,
         double offerPrice,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         LocalDate offerDate,
         int estimationTime,
-        Long customerRequestId
+        Long customerRequestId,
+        Double rate
 
 
 ) {

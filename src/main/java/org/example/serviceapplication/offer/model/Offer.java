@@ -31,6 +31,9 @@ public class Offer {
     @Enumerated(EnumType.STRING)
     OfferStatus status;
 
+    public Offer(Long id) {
+        this.id = id;
+    }
 
     public Offer(User specialist,
                  CustomerRequest requestOne,

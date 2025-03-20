@@ -1,14 +1,9 @@
 package org.example.serviceapplication.review.service;
 
-import org.example.serviceapplication.offer.dto.OfferDto;
-import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.order.exception.OrderStatusIsNotCorrect;
 import org.example.serviceapplication.order.model.Order;
 import org.example.serviceapplication.order.model.OrderStatus;
 import org.example.serviceapplication.order.service.OrderService;
-import org.example.serviceapplication.request.exception.RequestStatusIsNotCorrect;
-import org.example.serviceapplication.request.model.CustomerRequest;
-import org.example.serviceapplication.request.model.RequestStatus;
 import org.example.serviceapplication.review.model.Review;
 import org.example.serviceapplication.review.model.ReviewDto;
 import org.example.serviceapplication.review.repository.ReviewRepository;
@@ -50,4 +45,8 @@ public class ReviewServiceImpl implements ReviewService {
         }
         throw new OrderStatusIsNotCorrect("OrderStatusIsNotCorrect");
     }
+    @Override
+    public Double  getRateForSpecialist(Long specialistId) {
+       return reviewRepository.findAverageRatingBySpecialistId(specialistId);
+   }
 }

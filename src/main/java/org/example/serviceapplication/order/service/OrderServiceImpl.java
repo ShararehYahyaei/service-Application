@@ -1,5 +1,6 @@
 package org.example.serviceapplication.order.service;
 
+import org.example.serviceapplication.offer.exception.OfferNotFound;
 import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.offer.model.OfferStatus;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
@@ -23,33 +24,40 @@ import java.util.Optional;
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final OfferServiceInterface offerService;
     private final CustomerRequestService customerRequestService;
 
-    public OrderServiceImpl(OrderRepository orderRepository, OfferServiceInterface offerService, CustomerRequestService customerRequestService) {
+    public OrderServiceImpl(OrderRepository orderRepository, CustomerRequestService customerRequestService) {
         this.orderRepository = orderRepository;
-        this.offerService = offerService;
+
         this.customerRequestService = customerRequestService;
     }
 
     @Transactional
     @Override
     public void createOrder(User customer, OrderDto orderDto) {
-        Order order = convertDtoToEntity(customer, orderDto);
-        order.setOrderDate(LocalDateTime.now());
-        order.getOffer().setStatus(OfferStatus.ACCEPTED);
-        order.getCustomerRequest().setRequestStatus(RequestStatus.InProgress);
-        order.setOrderStatus(OrderStatus.CONFIRMED);
-        orderRepository.save(order);
+        CustomerRequest request = customerRequestService.findRequestById(orderDto.customerRequestId());
+        User customerForOrder = request.getUser();
+        Optional<Offer> offer = request.getOffers().stream().filter(c -> c.getId().equals(orderDto.offerId())).
+                findFirst();
+        if (offer.isEmpty()) {
+            throw new OfferNotFound("Offer not found");
+        } else {
+            Order order = new Order(customerForOrder, offer.get(), request);
+            order.setOrderDate(LocalDateTime.now());
+            order.getOffer().setStatus(OfferStatus.ACCEPTED);
+            order.getCustomerRequest().setRequestStatus(RequestStatus.InProgress);
+            order.setOrderStatus(OrderStatus.CONFIRMED);
+            orderRepository.save(order);
+        }
+
+
     }
 
-    private Order convertDtoToEntity(User customer, OrderDto orderDto) {
-        Offer offer = offerService.getOfferById(orderDto.offerId());
+    private Order convertDtoToOrder(User customer, OrderDto orderDto) {
         CustomerRequest request = customerRequestService.findRequestById(orderDto.customerRequestId());
         if (request.getRequestStatus() == RequestStatus.AwaitingSelection) {
             return new Order(
                     customer,
-                    offer,
                     request
             );
         } else {

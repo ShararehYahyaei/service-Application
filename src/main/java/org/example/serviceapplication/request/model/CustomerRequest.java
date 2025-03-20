@@ -23,7 +23,7 @@ public class CustomerRequest {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sub_service_category_id")
     private SubServiceCategory subServiceCategory;
     private double RequestPrice;

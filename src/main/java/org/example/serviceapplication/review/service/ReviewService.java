@@ -5,4 +5,6 @@ import org.example.serviceapplication.user.model.User;
 
 public interface ReviewService {
     void addReview(User customer, ReviewDto reviewDto);
+
+    Double  getRateForSpecialist(Long specialistId);
 }

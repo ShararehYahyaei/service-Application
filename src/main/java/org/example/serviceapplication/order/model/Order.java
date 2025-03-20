@@ -36,4 +36,9 @@ public class Order {
         this.offer = offer;
         this.customerRequest = request;
     }
+
+    public Order(User customer, CustomerRequest request) {
+        this.customer = customer;
+        this.customerRequest = request;
+    }
 }

@@ -29,7 +29,7 @@ public class ServiceCategoryImpl implements ServiceCategoryInterface {
     @Override
     public ServiceCategory createNewCategory(ServiceCategoryRequest serviceCategoryRequest) {
         ServiceCategory category = convertDtoToEntity(serviceCategoryRequest);
-        if (serviceCategoryRepository.existsByName(category.getName())) {
+        if (serviceCategoryRepository.existsByName(category.getName())){
             throw new DuplicateCategoryName("Duplicate category name");
         }
         return serviceCategoryRepository.save(category);
