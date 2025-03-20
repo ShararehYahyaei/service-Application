@@ -207,7 +207,8 @@ public class UserServiceImpl implements UserService {
                 convertEntitiesToResponseDtos(byRole);
 
     }
-@Transactional(readOnly = true)
+
+    @Transactional(readOnly = true)
     @Override
     public List<SpecialistResponseDto> getAllSpecialists() {
         List<User> byRole = userRepository.findByRole(Role.Specialist);
@@ -215,6 +216,17 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    @Transactional
+    public void updatePassword(PasswordUserRequest changePasswordRequest) {
+        if (changePasswordRequest.password().equals(changePasswordRequest.confirmPassword())) {
+            User user = userRepository.findById(changePasswordRequest.userId()).get();
+            user.setPassword(changePasswordRequest.password());
+            userRepository.saveAndFlush(user);
+        } else
+            throw new RuntimeException("the password is not equal");
+
+    }
 
 
 }

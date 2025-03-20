@@ -40,4 +40,6 @@ public interface UserService {
     List<CustomerResponseDto> getAllCustomers();
 
     List<SpecialistResponseDto> getAllSpecialists();
+
+    void updatePassword(PasswordUserRequest changePasswordRequest);
 }

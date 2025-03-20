@@ -45,6 +45,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Status status;
     private LocalDateTime createdAt;
+
     @Lob
     byte[] profileImage;
 
