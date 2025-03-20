@@ -6,6 +6,7 @@ import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
 import org.example.serviceapplication.user.dto.*;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
+import org.example.serviceapplication.user.exception.EmailNotUniqueException;
 import org.example.serviceapplication.user.exception.NotSubServiceCategory;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.exception.UserNotFond;
@@ -163,6 +164,9 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
 
         }
+        if (!isEmailUnique(userRequest.email())) {
+            throw new EmailNotUniqueException("The email is already taken.");
+        }
         return new User(
                 userRequest.address(),
                 userRequest.phone(),
@@ -227,6 +231,10 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("the password is not equal");
 
     }
+    public boolean isEmailUnique(String email) {
+        return userRepository.findByEmail(email) == null;
+    }
+
 
 
 }
