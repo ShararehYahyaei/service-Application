@@ -30,6 +30,7 @@ public class UserController {
     ) {
         return userService.createUser(userRequest);
     }
+
     @PostMapping(value = "/changePassword")
     public ResponseEntity updatePassword(
             @RequestBody PasswordUserRequest changePasswordRequest

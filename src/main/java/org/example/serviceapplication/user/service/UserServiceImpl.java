@@ -4,6 +4,7 @@ package org.example.serviceapplication.user.service;
 import org.example.serviceapplication.Category.exception.NoActiveUsersFound;
 import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
 import org.example.serviceapplication.user.dto.*;
+
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
 import org.example.serviceapplication.user.exception.EmailNotUniqueException;
@@ -234,6 +235,7 @@ public class UserServiceImpl implements UserService {
     public boolean isEmailUnique(String email) {
         return userRepository.findByEmail(email) == null;
     }
+
 
 
 

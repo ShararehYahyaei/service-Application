@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+</head>
+<body>
+
+<h1>Users</h1>
+<table>
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th>Active</th>
+        <th>Role</th>
+        <th>Status</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${listUsers}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.address}"></td>
+        <td th:text="${user.phone}"></td>
+        <td th:text="${user.active}"></td>
+        <td th:text="${user.role}"></td>
+        <td th:text="${user.status}"></td>
+
+    </tr>
+    </tbody>
+</table>
+
+
+</body>
+</html>
