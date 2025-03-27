@@ -39,9 +39,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     private Review convertRequestIntoEntity(User customer, ReviewDto reviewDto) {
         Order order = orderService.getOrderById(reviewDto.orderId());
-        if (order != null) {
-            throw new OrderIsDuplicated("OrderIsDuplicated");
-        }
         if (order.getOrderStatus() == OrderStatus.COMPLETED) {
             return new Review(
                     customer,
