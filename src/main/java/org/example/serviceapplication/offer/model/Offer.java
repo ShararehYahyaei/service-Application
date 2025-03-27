@@ -4,7 +4,6 @@ package org.example.serviceapplication.offer.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.serviceapplication.request.dto.CustomerRequestDto;
 import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.user.model.User;
 

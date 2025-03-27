@@ -54,7 +54,7 @@ public class OfferServiceImpl implements OfferServiceInterface {
     public void updateOffer(Long offerId, OfferUpdateDto offerUpdateDto) {
         Optional<Offer> byId = offerRepository.findById(offerId);
         if (byId.isEmpty()) {
-            throw new OfferNotFound("Offer with id " + offerId + " not found");
+            throw new OfferNotFound("Offer with customerRequestNumber " + offerId + " not found");
         }
         Offer offer = byId.get();
         offer.setOfferPrice(offerUpdateDto.offerPrice());

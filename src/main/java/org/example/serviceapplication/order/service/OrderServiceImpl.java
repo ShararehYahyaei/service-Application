@@ -72,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
         if (found.isPresent()) {
             return found.get();
         }
-        throw new OrderNotFound("order id not existed yeet...");
+        throw new OrderNotFound("order customerRequestNumber not existed yeet...");
     }
 
     @Transactional
@@ -89,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
             }
             throw new OrderStatusIsNotCorrect("OrderStatusIsNotValid");
         }
-        throw new OrderNotFound("order id not existed yeet...");
+        throw new OrderNotFound("order customerRequestNumber not existed yeet...");
 
     }
 }

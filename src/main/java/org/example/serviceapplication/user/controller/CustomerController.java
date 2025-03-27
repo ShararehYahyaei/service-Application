@@ -8,7 +8,6 @@ import org.example.serviceapplication.request.dto.CustomerRequestResponseDto;
 import org.example.serviceapplication.user.dto.SpecialistResponseDto;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
-import org.example.serviceapplication.user.exception.UserNotFond;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
 import org.springframework.http.HttpStatus;
@@ -30,7 +29,7 @@ public class CustomerController {
 
     @PostMapping("/addRequest")
     public ResponseEntity createRequest(@RequestBody CustomerRequestDto customerRequest) {
-        Long idUser = customerRequest.userId();
+        Long idUser = customerRequest.customerId();
         User customer = customerService.getUserById(idUser);
         if (customer.getRole() != Role.Customer) {
             throw new UserHasWrongRole("User has wrong role");

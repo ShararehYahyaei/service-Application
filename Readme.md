@@ -1,27 +1,27 @@
 **Service API**
 
-**Introduction**
+****Introduction****
 
 This is a REST API for a service management system.
 The API allows users to manage services, handle requests, 
 and track service statuses.
 
 
-**Technologies Used**
+***Technologies Used***
 
-Java 23
-Spring Boot 
-Maven
-PostgresSQL
-JPA & Hibernate
+- Java 23
+- Spring Boot 
+- Maven
+- PostgresSQL
+- JPA & Hibernate
 
 
 
 **Requirements**
 
 Before running the project, ensure you have:
-Java  installed
-Maven installed
+Java  installed,
+Maven installed,
 PostgresSQL running
 
 **API Workflow**
@@ -79,23 +79,28 @@ review for that_
 **Create a new user**
 POST http://localhost:8081/api/v1/user/create
 _Just one point only Specialist should add a picture for himself_
+```json
+{
+  "address": "123 Main St",
+  "phone": "+1234567890",
+  "name": "John",
+  "lastName": "Doe",
+  "userName": "johndoe",
+  "email": "johndoe@example.com",
+  "password": "securePassword123",
+  "role": "CUSTOMER",
+  "profileImage": "(Binary File)"
+}
+```
 
-`{
-"address": "123 Main St",
-"phone": "+1234567890",
-"name": "John",
-"lastName": "Doe",
-"userName": "johndoe",
-"email": "johndoe@example.com",
-"password": "securePassword123",
-"role": "CUSTOMER",
-"profileImage": "(Binary File)"
-}`
 
 **Response**
-`{
+```json
+{
 "message": "User registered successfully"
-}`
+}
+```
+
 _**can be different based on role**_
 
 
@@ -111,25 +116,27 @@ POST http://localhost:8081/api/v1/category/create
 POST http://localhost:8081/api/v1/subCategory/create
  _any uer can create sub Service category and when you are creating a new sub Service
 you have to add it  to one category_
-
-`{
+```json
+{
 "name": "خدمات نظافت منزل",
 "description": "تمیزکاری کامل منزل با مواد شوینده باکیفیت",
 "price": 300.0,
 "categoryId": 6
 }
-`
+```
 
 **Get All SubService that already there are in system**
 GET http://localhost:8081/api/v1/specialist/getAllSubServiceCategories
-
-`{
+```json
+{
 "id": 2,
 "name": "دکوراسیون داخلی",
 "description": "طراحی و اجرای دکوراسیون داخلی منزل و محل کار",
 "price": 1500.0,
 "categoryName": "\"بهداشششت\""
-},
+}
+```
+```json
 {
 "id": 3,
 "name": "تعمیرات لوله‌کشی",
@@ -137,7 +144,7 @@ GET http://localhost:8081/api/v1/specialist/getAllSubServiceCategories
 "price": 800.0,
 "categoryName": "تاسیسات ساختمان"
 }
-`
+```
 
 
 **Add a sub service category to a specialist**
@@ -151,7 +158,8 @@ POST http://localhost:8081/api/v1/customer/addRequest
 
 _in this system first a customer based on what it needed can submit a request 
 and then any specialist according their expertise can see all requests_
-`{
+```json
+{
 "userId": 2,
 "subServiceCategory": 1,
 "price": 1111.0,
@@ -159,19 +167,20 @@ and then any specialist according their expertise can see all requests_
 "deadLineTime": "2025-03-30",
 "address": "123 Main St, Amsterdam"
 }
- `
+ ```
 **Create An Offer for Specialist**
 POST http://localhost:8081/api/v1/specialist/addOffer
 _With this Url you can send an offer based on your skills_ 
 
-`{
+```json
+{
 "specialistId": 7,
 "offerPrice": 2222.50,
 "offerDate": "2025-03-25",
 "estimationTime": 7,
 "customerRequestId":10
 }
-`
+```
 **See All Offers for Customer's Request** 
 GET http://localhost:8081/api/v1/customer/getAllOffers?
 user_id={{$random.integer(100)}}&
@@ -187,12 +196,13 @@ _With this url can choose on of the offers and  create an order
 in this step change all status for request and offer and order_ 
 
 
-`{
+```json
+{
 "userId": 2,
 "offerId": 11,
 "customerRequestId": 9
 }
-`
+```
 
 
 **leave a comment and review**
@@ -200,7 +210,7 @@ POST http://localhost:8081/api/v1/customer/giveReview
 _after completing all orders by specialist customer can add comment 
 and put rate and reviews for specialist_
 
-`
+```json
 {
 "customerId": 8,
 "userId": 6,
@@ -208,7 +218,7 @@ and put rate and reviews for specialist_
 "rating": 4,
 "comment": "Great product!"
 }
-`
+```
 
 
 `All steps should be passed step by step,

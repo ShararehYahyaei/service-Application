@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 
 public record CustomerRequestDto(
-        Long userId,
+        Long customerId,
         Long subServiceCategory,
         double price,
         String description,
