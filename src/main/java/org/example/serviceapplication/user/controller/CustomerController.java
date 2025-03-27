@@ -67,7 +67,7 @@ public class CustomerController {
 
     @PostMapping("createOrder")
     public ResponseEntity createOrder(@RequestBody OrderDto orderDto) {
-        Long idUser = orderDto.userId();
+        Long idUser = orderDto.customerId();
         User customer = customerService.getUserById(idUser);
         if (customer.getRole() != Role.Customer) {
             throw new UserHasWrongRole("User has wrong role");

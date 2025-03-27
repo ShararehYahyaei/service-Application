@@ -1,5 +1,6 @@
 package org.example.serviceapplication.review.service;
 
+import org.example.serviceapplication.order.exception.OrderIsDuplicated;
 import org.example.serviceapplication.order.exception.OrderStatusIsNotCorrect;
 import org.example.serviceapplication.order.model.Order;
 import org.example.serviceapplication.order.model.OrderStatus;
@@ -8,6 +9,7 @@ import org.example.serviceapplication.review.model.Review;
 import org.example.serviceapplication.review.model.ReviewDto;
 import org.example.serviceapplication.review.repository.ReviewRepository;
 import org.example.serviceapplication.user.model.User;
+import org.example.serviceapplication.user.service.specialistService.SpecialistService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +20,12 @@ public class ReviewServiceImpl implements ReviewService {
     private final OrderService orderService;
     private final ReviewRepository reviewRepository;
 
-    public ReviewServiceImpl(OrderService orderService, ReviewRepository reviewRepository) {
+
+    public ReviewServiceImpl(OrderService orderService, ReviewRepository reviewRepository
+         ) {
         this.orderService = orderService;
         this.reviewRepository = reviewRepository;
+
     }
 
     @Transactional
@@ -34,6 +39,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     private Review convertRequestIntoEntity(User customer, ReviewDto reviewDto) {
         Order order = orderService.getOrderById(reviewDto.orderId());
+        if (order != null) {
+            throw new OrderIsDuplicated("OrderIsDuplicated");
+        }
         if (order.getOrderStatus() == OrderStatus.COMPLETED) {
             return new Review(
                     customer,

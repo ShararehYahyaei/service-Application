@@ -1,7 +1,7 @@
 package org.example.serviceapplication.order.model;
 
 public record OrderDto(
-       Long userId,
+       Long customerId,
        Long offerId,
        Long customerRequestId
 
