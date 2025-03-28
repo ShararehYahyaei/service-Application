@@ -8,6 +8,7 @@ import org.example.serviceapplication.request.dto.CustomerRequestResponseDto;
 import org.example.serviceapplication.user.dto.CustomerResponseDto;
 import org.example.serviceapplication.user.dto.SpecialistResponseDto;
 import org.example.serviceapplication.user.model.User;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public interface CustomerServiceInter {
     void createRequest(User customer, CustomerRequestDto customerRequest);
 
     @Transactional
-    List<OfferDto> getAllOffers(Long requestId);
+    List<OfferDto> getAllOffers(Long requestId, Sort sort);
 
     List<CustomerRequestResponseDto> getAllRequests(Long userId);
 

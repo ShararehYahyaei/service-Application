@@ -10,6 +10,7 @@ import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +50,9 @@ public class CustomerController {
             throw new UserHasWrongRole("User has wrong role");
         }
 
-        return customerService.getAllOffers(customerRequestId);
+
+        Sort sort = Sort.by(Sort.Direction.ASC, "offerPrice");
+        return customerService.getAllOffers(customerRequestId,sort);
     }
 
 

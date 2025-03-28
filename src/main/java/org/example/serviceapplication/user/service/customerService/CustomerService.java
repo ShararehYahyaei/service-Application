@@ -16,6 +16,7 @@ import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.specialistService.SpecialistService;
 import org.example.serviceapplication.user.userRepository.UserRepository;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,8 +88,8 @@ public class CustomerService implements CustomerServiceInter {
 
     @Transactional
     @Override
-    public List<OfferDto> getAllOffers(Long requestId) {
-        return offerService.getAllOffers(requestId);
+    public List<OfferDto> getAllOffers(Long requestId, Sort sort) {
+        return offerService.getAllOffers(requestId,sort);
     }
 
     @Override

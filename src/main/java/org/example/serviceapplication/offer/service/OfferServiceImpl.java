@@ -15,6 +15,7 @@ import org.example.serviceapplication.request.model.RequestStatus;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.review.service.ReviewService;
 import org.example.serviceapplication.user.model.User;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,8 +104,8 @@ public class OfferServiceImpl implements OfferServiceInterface {
 
     @Transactional(readOnly = true)
     @Override
-    public List<OfferDto> getAllOffers(Long requestId) {
-        List<Offer> offers = offerRepository.findByCustomerRequestId(requestId);
+    public List<OfferDto> getAllOffers(Long requestId, Sort sort) {
+        List<Offer> offers = offerRepository.findByCustomerRequestId(requestId,sort);
         if (offers.isEmpty()) {
             throw new OfferNotFound("OfferNotFound");
         }
