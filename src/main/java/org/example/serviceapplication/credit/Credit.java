@@ -1,4 +1,4 @@
-package org.example.serviceapplication;
+package org.example.serviceapplication.credit;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
