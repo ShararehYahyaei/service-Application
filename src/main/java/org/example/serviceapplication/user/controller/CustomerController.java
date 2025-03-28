@@ -91,7 +91,8 @@ public class CustomerController {
 
 
     @GetMapping("getUserSpecialistForRating/{userId}/{requestId}")
-    public ResponseEntity<SpecialistResponseDto> getMyCompletedOrder(@PathVariable Long userId, @PathVariable Long requestId) {
+    public ResponseEntity<SpecialistResponseDto> getMyCompletedOrder(@PathVariable Long userId,
+                                                                     @PathVariable Long requestId) {
         User userById = customerService.getUserById(userId);
         if (userById.getRole() != Role.Customer) {
             throw new UserHasWrongRole("User has wrong role");
