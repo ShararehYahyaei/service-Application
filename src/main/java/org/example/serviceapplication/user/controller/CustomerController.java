@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -52,7 +53,11 @@ public class CustomerController {
 
 
         Sort sort = Sort.by(Sort.Direction.ASC, "offerPrice");
-        return customerService.getAllOffers(customerRequestId,sort);
+        List<OfferDto> allOffers = customerService.getAllOffers(customerRequestId, sort);
+        allOffers.sort(Comparator
+                .comparing(OfferDto::rate, Comparator.reverseOrder())
+                .thenComparing(OfferDto::offerPrice));
+        return allOffers;
     }
 
 
