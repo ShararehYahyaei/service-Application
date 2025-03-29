@@ -4,6 +4,7 @@ import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.user.dto.*;
 import org.example.serviceapplication.user.model.User;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface UserService {
 
 
     @Transactional
-    UserResponseDto createUser(UserRequest userRequest);
+    UserResponseDto createUser(UserRequest userRequest, MultipartFile profileImage);
 
     @Transactional(readOnly = true)
     UserResponseDto findById(Long id);

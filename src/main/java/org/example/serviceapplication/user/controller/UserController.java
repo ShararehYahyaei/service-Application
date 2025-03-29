@@ -19,25 +19,25 @@ public class UserController {
     private final UserService userService;
 
     public UserController(UserService userService
-                        ) {
+    ) {
         this.userService = userService;
 
     }
 
-    @PostMapping(value = "/create", consumes = "multipart/form-data")
-    public UserResponseDto save(
-            @ModelAttribute  @Valid UserRequest userRequest
-    ) {
-        return userService.createUser(userRequest);
-    }
+//    @PostMapping(value = "/create", consumes = "multipart/form-data")
+//    public UserResponseDto save(
+//            @ModelAttribute @Valid UserRequest userRequest
+//    ) {
+//        return userService.createUser(userRequest);
+//    }
+
     @PostMapping(value = "/changePassword")
     public ResponseEntity updatePassword(
             @RequestBody PasswordUserRequest changePasswordRequest
     ) {
         userService.updatePassword(changePasswordRequest);
-         return  ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
-
 
 
     @GetMapping("/getAllUsers")
@@ -101,13 +101,13 @@ public class UserController {
         List<CustomerResponseDto> allCustomers = userService.getAllCustomers();
         return new ResponseEntity<>(allCustomers, HttpStatus.OK);
     }
+
     @GetMapping("getAllSpecialist")
     public ResponseEntity<List<SpecialistResponseDto>> getAllSpecialists() {
         List<SpecialistResponseDto> allSpecialists = userService.getAllSpecialists();
         return new ResponseEntity<>(allSpecialists, HttpStatus.OK);
 
     }
-
 
 
 }

@@ -16,6 +16,7 @@ import org.example.serviceapplication.user.service.specialistService.SpecialistS
 import org.example.serviceapplication.user.userRepository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseDto createUser(UserRequest userRequest) {
+    public UserResponseDto createUser(UserRequest userRequest, MultipartFile profileImage) {
         UserResponseDto userResponse = null;
         User user = convertRequestIntoEntity(userRequest);
         user.setActive(false);
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
         user.setCreatedAt(LocalDateTime.now());
         if (user.getRole() == Role.Customer) {
             userResponse = customerService.createCustomer(user);
-        } else if (user.getRole() == Role.Specialist) {
+        } else if (user.getRole() == Role.Specialist && profileImage != null) {
             userResponse = specialistService.createSpecialist(user);
         }
         return userResponse;
