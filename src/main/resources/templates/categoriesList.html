@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست دسته‌بندی‌ها</title>
+    <style>
+        body {
+            font-family: 'Vazirmatn', Arial, sans-serif;
+            background-color: #f4f7fb;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .container {
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            width: 80%;
+            max-width: 1000px;
+            text-align: center;
+        }
+
+        .add-category-btn {
+            background-color: #6200ea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .add-category-btn:hover {
+            background-color: #3700b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+
+        table th {
+            background-color: #6200ea;
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #e8e8e8;
+        }
+
+        table td ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        table td ul li {
+            background-color: #f1f8e9;
+            padding: 5px 10px;
+            border-radius: 6px;
+            margin: 5px 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>لیست دسته‌بندی‌ها</h1>
+
+    <a href="addServiceCategory" class="add-category-btn">افزودن دسته‌بندی جدید</a>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>نام دسته‌بندی</th>
+            <th>زیرمجموعه‌ها</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <th:block th:each="category : ${categories}">
+            <tr>
+                <td th:text="${category.id}"></td>
+                <td th:text="${category.name}"></td>
+                <td>
+
+                    <ul>
+                        <th:block th:each="subCategory : ${category.subCategotyList}">
+                            <li th:text="${subCategory.name}"></li>
+                        </th:block>
+                    </ul>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

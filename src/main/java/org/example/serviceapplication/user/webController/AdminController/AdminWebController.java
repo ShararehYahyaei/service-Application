@@ -1,7 +1,9 @@
 package org.example.serviceapplication.user.webController.AdminController;
 
+import org.example.serviceapplication.Category.dto.ServiceCategoryRequest;
 import org.example.serviceapplication.Category.dto.ServiceCategoryResponse;
 import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
+import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.user.dto.CustomerResponseDto;
 import org.example.serviceapplication.user.dto.SpecialistResponseDto;
 import org.example.serviceapplication.user.service.UserService;
@@ -10,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -25,7 +29,6 @@ public class AdminWebController {
         this.userService = userService;
         this.categoryService = categoryService;
     }
-
 
 
     @GetMapping("/all-customers")
@@ -51,11 +54,30 @@ public class AdminWebController {
         return "specialist-list";
     }
 
+    @GetMapping("/categoriesListPage")
+    public String showCategoriesList(Model model) {
 
-    @GetMapping("/getAllCategories")
-    public ResponseEntity<List<ServiceCategoryResponse>> getAllCategories() {
         List<ServiceCategoryResponse> allCategories = categoryService.getAllCategories();
-        return new ResponseEntity<>(allCategories, HttpStatus.OK);
+        model.addAttribute("categories", allCategories);
+        model.addAttribute("showList", true);
+        return "categoriesList";
     }
+
+
+    @GetMapping("/addServiceCategory")
+    public String addServiceCategoryForm(Model model) {
+        model.addAttribute("serviceCategoryRequest", new ServiceCategoryRequest(""));
+        return "addServiceCategory";
+    }
+
+    @PostMapping("/createCategory")
+    public String createCategory(@ModelAttribute ServiceCategoryRequest serviceCategoryRequest) {
+        categoryService.createNewCategory(serviceCategoryRequest);
+        return "redirect:/servicesList";
+    }
+
+
+
+
 
 }

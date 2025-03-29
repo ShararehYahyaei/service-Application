@@ -29,8 +29,8 @@
             backdrop-filter: blur(10px);
         }
 
-        .sidebar button {
-            background: linear-gradient(135deg, #7b1fa2, #ab47bc);
+        .sidebar form button {
+            background: linear-gradient(135deg, #d81b60, #f06292);
             color: white;
             border: none;
             padding: 12px;
@@ -40,13 +40,13 @@
             transition: all 0.3s ease-in-out;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             width: 100%;
+            margin-bottom: 10px;
         }
 
-        .sidebar button:hover {
+        .sidebar form button:hover {
             transform: translateY(-5px);
-            background: linear-gradient(135deg, #8e24aa, #7b1fa2);
+            background: linear-gradient(135deg, #c2185b, #ad1457);
         }
-
 
         .main-content {
             flex: 1;
@@ -56,22 +56,33 @@
             flex-direction: column;
         }
 
-
         .service-list {
             list-style: none;
             padding: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
             margin-top: 20px;
         }
 
-        .service-item {
+        .category-item {
             background: linear-gradient(135deg, #f8bbd0, #f48fb1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            margin-bottom: 25px;
+        }
+
+        .category-item h3 {
+            font-size: 24px;
+            color: black;
+            margin-bottom: 10px;
+        }
+
+        .service-item {
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0);
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s, box-shadow 0.3s;
+            margin: 15px 0;
         }
 
         .service-item:hover {
@@ -82,27 +93,30 @@
         .service-item h3 {
             margin-top: 0;
             font-size: 20px;
-            color: #880e4f;
+            color: black;
             margin-bottom: 10px;
         }
 
         .service-item p {
-            margin: 6px 0;
-            color: #4e4e4e;
+            margin: 12px 0;
+            color: black;
             font-size: 14px;
         }
 
         .service-item span:first-child {
             font-weight: bold;
-            color: #6a1b9a;
+            color: black;
         }
     </style>
 </head>
 
 <body>
 
-
 <div class="sidebar">
+    <form th:action="@{/categoriesListPage}" method="get">
+        <button type="submit">لیست دسته‌بندی‌ها</button>
+    </form>
+
     <form th:action="@{/servicesList}" method="get">
         <button type="submit">لیست خدمات</button>
     </form>
@@ -120,15 +134,22 @@
     </form>
 </div>
 
-
 <div class="main-content">
     <ul class="service-list" th:if="${showList}">
-        <li class="service-item" th:each="service : ${services}">
-            <h3 th:text="${service.name}"></h3>
-            <p><span>کد خدمت:</span> <span th:text="${service.id}"></span></p>
-            <p><span>توضیحات:</span> <span th:text="${service.description}"></span></p>
-            <p><span>قیمت:</span> <span th:text="${service.price}"></span> تومان</p>
-            <p><span>دسته‌بندی:</span> <span th:text="${service.categoryName}"></span></p>
+        <li class="category-item" th:each="entry : ${subCategories}">
+            <h3 th:text="${entry.key}">نام دسته‌بندی</h3>
+            <ul>
+                <li class="service-item" th:each="service : ${entry.value}">
+                    <h3 th:text="${service.name}"></h3>
+                    <p><span>کد خدمت:</span> <span th:text="${service.id}"></span></p>
+                    <p><span>توضیحات:</span> <span th:text="${service.description}"></span></p>
+                    <p><span>قیمت:</span> <span th:text="${service.price}"></span> تومان</p>
+                    <p><span>دسته‌بندی:</span> <span th:text="${service.categoryName}"></span></p>
+                    <form th:action="@{/all-customers/${service.id}}" method="get">
+                        <button type="submit">افزودن زیر خدمت جدید</button>
+                    </form>
+                </li>
+            </ul>
         </li>
     </ul>
 </div>

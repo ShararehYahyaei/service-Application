@@ -101,7 +101,7 @@ public class UserController {
 //        List<CustomerResponseDto> allCustomers = userService.getAllCustomers();
 //        return new ResponseEntity<>(allCustomers, HttpStatus.OK);
 //    }
-
+//
 //    @GetMapping("getAllSpecialist")
 //    public ResponseEntity<List<SpecialistResponseDto>> getAllSpecialists() {
 //        List<SpecialistResponseDto> allSpecialists = userService.getAllSpecialists();

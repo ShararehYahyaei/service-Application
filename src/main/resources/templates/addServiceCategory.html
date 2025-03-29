@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>افزودن دسته‌بندی جدید</title>
+    <style>
+        /* استایل‌ها */
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background-color: #e9f1f5; /* رنگ زمینه روشن و ملایم */
+            direction: rtl;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #3b3b3b;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            font-size: 18px;
+            color: #5f6368;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 5px;
+            background-color: #f9f9f9; /* زمینه ورودی روشن */
+            color: #333;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4CAF50; /* رنگ حاشیه هنگام فوکوس */
+            background-color: #fff; /* رنگ زمینه روشن‌تر هنگام فوکوس */
+        }
+
+        .form-group input::placeholder {
+            color: #bbb; /* رنگ متن placeholder */
+            font-style: italic;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>افزودن دسته‌بندی جدید</h1>
+
+    <form action="createCategory" method="POST">
+        <div class="form-group">
+            <label for="name">نام دسته‌بندی</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <button type="submit" class="submit-btn">افزودن دسته‌بندی</button>
+    </form>
+
+</div>
+
+</body>
+</html>

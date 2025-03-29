@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+  <meta charset="UTF-8">
+  <title>گروه خدمات</title>
+  <style>
+    body {
+      font-family: 'Vazirmatn', Arial, sans-serif;
+      background: rgba(255, 182, 193, 0.5) url('/image/img.png') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      direction: rtl;
+    }
+
+    .sidebar {
+      width: 220px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      position: relative;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .sidebar button {
+      background: linear-gradient(135deg, #7b1fa2, #ab47bc);
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 100%;
+    }
+
+    .sidebar button:hover {
+      transform: translateY(-5px);
+      background: linear-gradient(135deg, #8e24aa, #7b1fa2);
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .category-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+
+    .category-item {
+      background: linear-gradient(135deg, #f8bbd0, #f48fb1);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      margin-bottom: 10px;
+    }
+
+    .category-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .category-item h3 {
+      font-size: 20px;
+      color: #880e4f;
+    }
+
+    .category-item p {
+      color: #4e4e4e;
+      font-size: 14px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+  <form th:action="@{/servicesList}" method="get">
+    <button type="submit">مشاهده گروه خدمات</button>
+  </form>
+
+  <form th:action="@{/addServiceCategory}" method="get">
+    <button type="submit">افزودن گروه خدمات</button>
+  </form>
+</div>
+
+<div class="main-content">
+  <h2>گروه‌های خدمات</h2>
+  <ul class="category-list" th:if="${categories}">
+    <li class="category-item" th:each="category : ${categories}">
+      <h3 th:text="${category.name}"></h3>
+      <p><span>توضیحات:</span> <span th:text="${category.description}"></span></p>
+      <form th:action="@{/addSubCategory/{categoryId}(categoryId=${category.id})}" method="get">
+        <button type="submit">افزودن زیرگروه</button>
+      </form>
+    </li>
+  </ul>
+</div>
+
+</body>
+
+</html>
