@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <meta charset="UTF-8">
+    <title>لیست خدمات</title>
+    <style>
+        body {
+            font-family: 'Vazirmatn', Arial, sans-serif;
+            background: linear-gradient(to right, #e0f7fa, #e1bee7);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            direction: rtl;
+        }
+
+        .button-container {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #4caf50, #81c784);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #43a047, #66bb6a);
+        }
+
+        .service-list {
+            list-style: none;
+            padding: 0;
+            width: 60%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .service-item {
+            background: white;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            border-right: 5px solid #4caf50;
+        }
+
+        .service-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-right: 5px solid #43a047;
+        }
+
+        .service-item h3 {
+            color: #333;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .service-item p {
+            color: #555;
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .service-item span {
+            font-weight: bold;
+            color: #222;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="button-container">
+    <form th:action="@{/servicesList}" method="get">
+        <button type="submit">لیست خدمات</button>
+    </form>
+
+    <form th:action="@{/register}" method="get">
+        <button type="submit">ثبت‌نام</button>
+    </form>
+</div>
+
+<ul class="service-list" th:if="${showList}">
+    <li class="service-item" th:each="service : ${services}">
+        <h3 th:text="${service.name}"></h3>
+        <p><span>کد خدمت:</span> <span th:text="${service.id}"></span></p>
+        <p><span>توضیحات:</span> <span th:text="${service.description}"></span></p>
+        <p><span>قیمت:</span> <span th:text="${service.price}"></span></p>
+        <p><span>دسته‌بندی:</span> <span th:text="${service.categoryName}"></span></p>
+    </li>
+</ul>
+
+</body>
+
+</html>
