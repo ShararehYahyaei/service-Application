@@ -7,91 +7,102 @@
     <style>
         body {
             font-family: 'Vazirmatn', Arial, sans-serif;
-            background: url('/image/img.png') no-repeat center center fixed;
+            background: rgba(255, 182, 193, 0.5) url('/image/img.png') no-repeat center center fixed;
             background-size: cover;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
             direction: rtl;
         }
 
-        .button-container {
-            position: absolute;
-            left: 20px;
-            top: 20px;
+        .sidebar {
+            width: 220px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 15px;
+            position: relative;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
         }
 
-        button {
-            background: linear-gradient(45deg, #4caf50, #81c784);
+        .sidebar button {
+            background: linear-gradient(135deg, #7b1fa2, #ab47bc);
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 12px;
             font-size: 16px;
             cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
         }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-            background: linear-gradient(45deg, #43a047, #66bb6a);
+        .sidebar button:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(135deg, #8e24aa, #7b1fa2);
         }
+
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
 
         .service-list {
             list-style: none;
             padding: 0;
-            width: 60%;
-            max-height: 80vh;
-            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
         }
 
         .service-item {
-            background: white;
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, #f8bbd0, #f48fb1);
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
-            border-right: 5px solid #4caf50;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .service-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            border-right: 5px solid #43a047;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
         .service-item h3 {
-            color: #333;
+            margin-top: 0;
+            font-size: 20px;
+            color: #880e4f;
             margin-bottom: 10px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
         }
 
         .service-item p {
-            color: #555;
-            margin: 8px 0;
-            line-height: 1.6;
+            margin: 6px 0;
+            color: #4e4e4e;
+            font-size: 14px;
         }
 
-        .service-item span {
+        .service-item span:first-child {
             font-weight: bold;
-            color: #222;
+            color: #6a1b9a;
         }
     </style>
 </head>
 
 <body>
 
-<div class="button-container">
+
+<div class="sidebar">
     <form th:action="@{/servicesList}" method="get">
         <button type="submit">لیست خدمات</button>
     </form>
@@ -99,65 +110,28 @@
     <form th:action="@{/register}" method="get">
         <button type="submit">ثبت‌نام</button>
     </form>
+
     <form th:action="@{/all-customers}" method="get">
         <button type="submit">لیست مشتریان</button>
     </form>
+
     <form th:action="@{/all-specialists}" method="get">
         <button type="submit">لیست متخصصان</button>
     </form>
-
 </div>
-<ul class="service-list" th:if="${showList}">
-    <li class="service-item" th:each="service : ${services}">
-        <h3 th:text="${service.name}"></h3>
-        <p><span>کد خدمت:</span> <span th:text="${service.id}"></span></p>
-        <p><span>توضیحات:</span> <span th:text="${service.description}"></span></p>
-        <p><span>قیمت:</span> <span th:text="${service.price}"></span> تومان</p>
-        <p><span>دسته‌بندی:</span> <span th:text="${service.categoryName}"></span></p>
-    </li>
-</ul>
 
-<style>
-    .service-list {
-        list-style: none;
-        padding: 0;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
-        margin-top: 20px;
-    }
 
-    .service-item {
-        background: linear-gradient(135deg, #f8bbd0, #f48fb1);
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .service-item:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
-
-    .service-item h3 {
-        margin-top: 0;
-        font-size: 20px;
-        color: #880e4f;
-        margin-bottom: 10px;
-    }
-
-    .service-item p {
-        margin: 6px 0;
-        color: #4e4e4e;
-        font-size: 14px;
-    }
-
-    .service-item span:first-child {
-        font-weight: bold;
-        color: #6a1b9a;
-    }
-</style>
+<div class="main-content">
+    <ul class="service-list" th:if="${showList}">
+        <li class="service-item" th:each="service : ${services}">
+            <h3 th:text="${service.name}"></h3>
+            <p><span>کد خدمت:</span> <span th:text="${service.id}"></span></p>
+            <p><span>توضیحات:</span> <span th:text="${service.description}"></span></p>
+            <p><span>قیمت:</span> <span th:text="${service.price}"></span> تومان</p>
+            <p><span>دسته‌بندی:</span> <span th:text="${service.categoryName}"></span></p>
+        </li>
+    </ul>
+</div>
 
 </body>
 
