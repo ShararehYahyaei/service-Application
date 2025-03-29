@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <meta charset="UTF-8">
+    <title>لیست مشتری‌ها</title>
+    <style>
+        body {
+            direction: rtl;
+            font-family: 'Vazirmatn', sans-serif;
+            background: linear-gradient(to right, #fceabb, #f8b500);
+            padding: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #ffd54f;
+            color: #333;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fff8e1;
+        }
+
+        tr:hover {
+            background-color: #ffe082;
+            transition: background-color 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+<h2>لیست مشتری‌ها</h2>
+<table>
+    <thead>
+    <tr>
+        <th>نام</th>
+        <th>آدرس</th>
+        <th>تلفن</th>
+        <th>فعال</th>
+        <th>نقش</th>
+        <th>وضعیت</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="customer : ${customers}">
+        <td th:text="${customer.name}"></td>
+        <td th:text="${customer.address}"></td>
+        <td th:text="${customer.phone}"></td>
+        <td th:text="${customer.active ? 'بله' : 'خیر'}"></td>
+        <td th:text="${customer.role}"></td>
+        <td th:text="${customer.status}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+
+</html>

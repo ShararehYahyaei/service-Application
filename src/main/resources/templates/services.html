@@ -98,6 +98,13 @@
     <form th:action="@{/register}" method="get">
         <button type="submit">ثبت‌نام</button>
     </form>
+    <form th:action="@{/all-customers}" method="get">
+        <button type="submit">لیست مشتریان</button>
+    </form>
+    <form th:action="@{/all-specialists}" method="get">
+        <button type="submit">لیست متخصصان</button>
+    </form>
+
 </div>
 
 <ul class="service-list" th:if="${showList}">

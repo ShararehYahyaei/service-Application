@@ -96,18 +96,18 @@ public class UserController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("getAllCustomers")
-    public ResponseEntity<List<CustomerResponseDto>> getAllCustomers() {
-        List<CustomerResponseDto> allCustomers = userService.getAllCustomers();
-        return new ResponseEntity<>(allCustomers, HttpStatus.OK);
-    }
+//    @GetMapping("getAllCustomers")
+//    public ResponseEntity<List<CustomerResponseDto>> getAllCustomers() {
+//        List<CustomerResponseDto> allCustomers = userService.getAllCustomers();
+//        return new ResponseEntity<>(allCustomers, HttpStatus.OK);
+//    }
 
-    @GetMapping("getAllSpecialist")
-    public ResponseEntity<List<SpecialistResponseDto>> getAllSpecialists() {
-        List<SpecialistResponseDto> allSpecialists = userService.getAllSpecialists();
-        return new ResponseEntity<>(allSpecialists, HttpStatus.OK);
-
-    }
+//    @GetMapping("getAllSpecialist")
+//    public ResponseEntity<List<SpecialistResponseDto>> getAllSpecialists() {
+//        List<SpecialistResponseDto> allSpecialists = userService.getAllSpecialists();
+//        return new ResponseEntity<>(allSpecialists, HttpStatus.OK);
+//
+//    }
 
 
 }
