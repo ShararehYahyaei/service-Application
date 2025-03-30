@@ -105,6 +105,15 @@
         form button:hover {
             background-color: #3700b3;
         }
+
+        .delete-btn {
+            background-color: red;
+            margin-top: 5px;
+        }
+
+        .delete-btn:hover {
+            background-color: #c2185b;
+        }
     </style>
 </head>
 <body>
@@ -117,10 +126,11 @@
     <table>
         <thead>
         <tr>
-            <th>ID</th>
+            <th>ردیف</th>
             <th>نام دسته‌بندی</th>
             <th>زیرمجموعه‌ها</th>
             <th>افزودن زیرخدمت</th>
+
         </tr>
         </thead>
         <tbody>
@@ -128,6 +138,7 @@
         <th:block th:each="category : ${categories}">
             <tr>
                 <td th:text="${category.id}"></td>
+
                 <td th:text="${category.name}"></td>
                 <td>
                     <ul>
@@ -140,7 +151,6 @@
                     <form th:action="@{/add-sub-service/by-id/{categoryId}(categoryId=${category.id})}" method="get">
                         <button type="submit">افزودن زیر خدمت جدید</button>
                     </form>
-
                 </td>
             </tr>
         </th:block>

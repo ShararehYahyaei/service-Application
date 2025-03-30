@@ -26,11 +26,11 @@ public class ServiceCategoryController {
 
     }
 
-//    @GetMapping("/getAllCategories")
-//    public ResponseEntity<List<ServiceCategoryResponse>> getAllCategories() {
-//        List<ServiceCategoryResponse> allCategories = categoryService.getAllCategories();
-//        return new ResponseEntity<>(allCategories, HttpStatus.OK);
-//    }
+    @GetMapping("/getAllCategories")
+    public ResponseEntity<List<ServiceCategoryResponse>> getAllCategories() {
+        List<ServiceCategoryResponse> allCategories = categoryService.getAllCategories();
+        return new ResponseEntity<>(allCategories, HttpStatus.OK);
+    }
 
 
 

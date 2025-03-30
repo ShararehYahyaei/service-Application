@@ -38,7 +38,7 @@ public class AdminWebController {
         this.subServiceCategoryInterface = subServiceCategoryInterface;
     }
 
-
+    //todo show all customers
     @GetMapping("/all-customers")
     public String getAllCustomers(Model model) {
         String role = "ADMIN";
@@ -51,6 +51,8 @@ public class AdminWebController {
         return "customer-list";
     }
 
+    //todo show all specialists
+
     @GetMapping("/all-specialists")
     public String getAllSpecialists(Model model) {
         String role = "ADMIN";
@@ -62,22 +64,28 @@ public class AdminWebController {
         return "specialist-list";
     }
 
+    //todo show all categories
+
     @GetMapping("/categoriesListPage")
     public String showCategoriesList(Model model) {
 
         List<ServiceCategoryResponse> allCategories = categoryService.getAllCategories();
         model.addAttribute("categories", allCategories);
         model.addAttribute("showList", true);
+
         return "categoriesList";
     }
 
 
+
+    //todo add subService category
     @GetMapping("/addServiceCategory")
     public String addServiceCategoryForm(Model model) {
         model.addAttribute("serviceCategoryRequest", new ServiceCategoryRequest(""));
         return "addServiceCategory";
     }
 
+    //todo add category Service to show page
     @PostMapping("/createCategory")
     public String createCategory(@ModelAttribute ServiceCategoryRequest serviceCategoryRequest) {
         categoryService.createNewCategory(serviceCategoryRequest);
@@ -85,6 +93,8 @@ public class AdminWebController {
     }
 
 
+
+    //todo add sub ServiceCategory to each category in the sub Service age
     @GetMapping("/add-sub-service/{categoryKey}")
     public String showAddSubServiceForm(@PathVariable String categoryKey, Model model) {
         Long categoryId = categoryService.findIdByName(categoryKey)
@@ -95,6 +105,7 @@ public class AdminWebController {
         return "add-sub-service";
     }
 
+    //todo add sub ServiceCategory to each category in the category list page
     @GetMapping("/add-sub-service/by-id/{categoryId}")
     public String addSubService(@PathVariable Long categoryId, Model model) {
         SubServiceCategoryRequest subServiceRequest = new SubServiceCategoryRequest(
@@ -104,15 +115,13 @@ public class AdminWebController {
         return "add-sub-service";
     }
 
+
+    //todo add new sub service category
     @PostMapping("/save-sub-service")
     public String saveSubService(@ModelAttribute @Valid SubServiceCategoryRequest subServiceRequest) {
-
         subServiceCategoryInterface.createSubServiceCategory(subServiceRequest);
         return "redirect:/servicesList";
     }
-
-
-
 
 
 }

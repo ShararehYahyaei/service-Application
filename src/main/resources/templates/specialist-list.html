@@ -29,6 +29,16 @@
         tr:nth-child(even) {
             background: #fafafa;
         }
+        .add-subservice-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        .add-subservice-btn:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -42,6 +52,7 @@
         <th>فعال</th>
         <th>نقش</th>
         <th>وضعیت</th>
+        <th>عملیات</th>
     </tr>
     </thead>
     <tbody>
@@ -52,8 +63,13 @@
         <td th:text="${specialist.active ? 'بله' : 'خیر'}"></td>
         <td th:text="${specialist.role}"></td>
         <td th:text="${specialist.status}"></td>
-    </tr>
+        <td>
 
+            <form th:action="@{/add-subservice}" method="post">
+                <button type="submit" class="add-subservice-btn">افزودن زیر خدمت</button>
+            </form>
+        </td>
+    </tr>
     </tbody>
 </table>
 </body>
