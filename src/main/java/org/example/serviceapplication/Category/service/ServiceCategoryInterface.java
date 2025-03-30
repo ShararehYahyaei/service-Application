@@ -3,9 +3,11 @@ package org.example.serviceapplication.Category.service;
 import org.example.serviceapplication.Category.dto.ServiceCategoryRequest;
 import org.example.serviceapplication.Category.dto.ServiceCategoryResponse;
 import org.example.serviceapplication.Category.model.ServiceCategory;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ServiceCategoryInterface {
 
@@ -32,4 +34,5 @@ public interface ServiceCategoryInterface {
     void editServiceCategory(Long categoryId, String name);
 
     void deleteServiceCategory(Long categoryId);
+    Optional<Long> findIdByName(@Param("name") String name);
 }

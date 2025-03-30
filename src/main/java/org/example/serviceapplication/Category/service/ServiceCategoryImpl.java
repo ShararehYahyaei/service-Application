@@ -127,6 +127,15 @@ public class ServiceCategoryImpl implements ServiceCategoryInterface {
 
     }
 
+    @Override
+    public Optional<Long> findIdByName(String name) {
+        Optional<Long> idByName = serviceCategoryRepository.findIdByName(name);
+        if (idByName.isPresent()) {
+            return idByName;
+        }
+        throw new RuntimeException("Category not found");
+    }
+
 
     private ServiceCategory convertDtoToEntity(ServiceCategoryRequest serviceCategoryRequest) {
         return new ServiceCategory(

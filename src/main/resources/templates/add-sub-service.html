@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>افزودن زیر خدمت جدید</title>
+    <style>
+        body {
+            font-family: "Tahoma", sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 10px 0 5px;
+            text-align: right;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: none;
+            height: 70px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>افزودن زیر خدمت جدید</h1>
+    <form th:action="@{/save-sub-service}" th:object="${subServiceRequest}" method="post">
+        <label>نام خدمت:</label>
+        <input type="text" th:field="*{name}" required>
+
+        <label>توضیحات:</label>
+        <textarea th:field="*{description}" required></textarea>
+
+        <label>قیمت:</label>
+        <input type="number" th:field="*{price}" step="0.01" required>
+
+        <input type="hidden" th:field="*{categoryId}">
+
+        <button type="submit">ذخیره</button>
+    </form>
+</div>
+
+</body>
+</html>

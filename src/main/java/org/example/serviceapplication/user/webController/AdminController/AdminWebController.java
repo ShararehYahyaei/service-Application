@@ -1,9 +1,13 @@
 package org.example.serviceapplication.user.webController.AdminController;
 
+import jakarta.validation.Valid;
 import org.example.serviceapplication.Category.dto.ServiceCategoryRequest;
 import org.example.serviceapplication.Category.dto.ServiceCategoryResponse;
+import org.example.serviceapplication.Category.exception.NotFoundCategory;
 import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
+import org.example.serviceapplication.subCategory.dto.SubServiceCategoryRequest;
+import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.dto.CustomerResponseDto;
 import org.example.serviceapplication.user.dto.SpecialistResponseDto;
 import org.example.serviceapplication.user.service.UserService;
@@ -13,21 +17,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class AdminWebController {
 
     private final UserService userService;
     private final ServiceCategoryInterface categoryService;
+    private final SubServiceCategoryInterface subServiceCategoryInterface;
 
 
     public AdminWebController(UserService userService,
-                              ServiceCategoryInterface categoryService) {
+                              ServiceCategoryInterface categoryService, SubServiceCategoryInterface subServiceCategoryInterface) {
         this.userService = userService;
         this.categoryService = categoryService;
+        this.subServiceCategoryInterface = subServiceCategoryInterface;
     }
 
 
@@ -73,6 +81,28 @@ public class AdminWebController {
     @PostMapping("/createCategory")
     public String createCategory(@ModelAttribute ServiceCategoryRequest serviceCategoryRequest) {
         categoryService.createNewCategory(serviceCategoryRequest);
+        return "redirect:/servicesList";
+    }
+
+
+    @GetMapping("/add-sub-service/{categoryKey}")
+    public String showAddSubServiceForm(@PathVariable String categoryKey, Model model) {
+
+
+        Long categoryId = categoryService.findIdByName(categoryKey)
+                .orElseThrow(() -> new NotFoundCategory("Category Not Found "));
+        SubServiceCategoryRequest subServiceRequest = new SubServiceCategoryRequest(
+                null, "", "", 0.0, categoryId);
+        model.addAttribute("subServiceRequest", subServiceRequest);
+        return "add-sub-service";
+    }
+
+
+
+    @PostMapping("/save-sub-service")
+    public String saveSubService(@ModelAttribute @Valid SubServiceCategoryRequest subServiceRequest) {
+
+        subServiceCategoryInterface.createSubServiceCategory(subServiceRequest);
         return "redirect:/servicesList";
     }
 

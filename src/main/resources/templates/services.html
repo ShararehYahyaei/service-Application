@@ -145,9 +145,10 @@
                     <p><span>توضیحات:</span> <span th:text="${service.description}"></span></p>
                     <p><span>قیمت:</span> <span th:text="${service.price}"></span> تومان</p>
                     <p><span>دسته‌بندی:</span> <span th:text="${service.categoryName}"></span></p>
-                    <form th:action="@{/all-customers/${service.id}}" method="get">
+                    <form th:action="@{/add-sub-service/{categoryId}(categoryId=${entry.key})}" method="get">
                         <button type="submit">افزودن زیر خدمت جدید</button>
                     </form>
+
                 </li>
             </ul>
         </li>
