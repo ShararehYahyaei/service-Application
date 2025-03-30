@@ -16,7 +16,8 @@ public record UserRequest(
         String password,
         @Enumerated(EnumType.STRING)
         Role role,
-        MultipartFile profileImage
+        MultipartFile profileImage,
+        Long subServiceCategoryId
 
 ) {
 }
