@@ -87,8 +87,6 @@ public class AdminWebController {
 
     @GetMapping("/add-sub-service/{categoryKey}")
     public String showAddSubServiceForm(@PathVariable String categoryKey, Model model) {
-
-
         Long categoryId = categoryService.findIdByName(categoryKey)
                 .orElseThrow(() -> new NotFoundCategory("Category Not Found "));
         SubServiceCategoryRequest subServiceRequest = new SubServiceCategoryRequest(
@@ -97,7 +95,14 @@ public class AdminWebController {
         return "add-sub-service";
     }
 
-
+    @GetMapping("/add-sub-service/by-id/{categoryId}")
+    public String addSubService(@PathVariable Long categoryId, Model model) {
+        SubServiceCategoryRequest subServiceRequest = new SubServiceCategoryRequest(
+                null, "", "", 0.0, categoryId);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("subServiceRequest", subServiceRequest);
+        return "add-sub-service";
+    }
 
     @PostMapping("/save-sub-service")
     public String saveSubService(@ModelAttribute @Valid SubServiceCategoryRequest subServiceRequest) {

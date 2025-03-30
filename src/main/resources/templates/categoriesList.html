@@ -4,24 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لیست دسته‌بندی‌ها</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            font-family: 'Vazirmatn', Arial, sans-serif;
+            font-family: 'Vazirmatn', sans-serif;
             background-color: #f4f7fb;
             margin: 0;
             padding: 0;
             direction: rtl;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
         }
 
         h1 {
             text-align: center;
             color: #333;
             margin-bottom: 20px;
-            font-size: 24px;
+            font-size: 28px;
+            margin-top: 20px;
         }
 
         .container {
@@ -31,7 +30,7 @@
             padding: 30px;
             width: 80%;
             max-width: 1000px;
-            text-align: center;
+            margin: 0 auto;
         }
 
         .add-category-btn {
@@ -56,10 +55,12 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         table th, table td {
-            padding: 15px;
+            padding: 12px;
             text-align: center;
             border: 1px solid #ddd;
             font-size: 16px;
@@ -90,6 +91,20 @@
             margin: 5px 0;
         }
 
+        form button {
+            background-color: #6200ea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #3700b3;
+        }
     </style>
 </head>
 <body>
@@ -97,7 +112,7 @@
 <div class="container">
     <h1>لیست دسته‌بندی‌ها</h1>
 
-    <a href="addServiceCategory" class="add-category-btn">افزودن دسته‌بندی جدید</a>
+    <a href="addServiceCategory" class="add-category-btn"><i class="fas fa-plus"></i> افزودن دسته‌بندی جدید</a>
 
     <table>
         <thead>
@@ -105,6 +120,7 @@
             <th>ID</th>
             <th>نام دسته‌بندی</th>
             <th>زیرمجموعه‌ها</th>
+            <th>افزودن زیرخدمت</th>
         </tr>
         </thead>
         <tbody>
@@ -114,12 +130,17 @@
                 <td th:text="${category.id}"></td>
                 <td th:text="${category.name}"></td>
                 <td>
-
                     <ul>
                         <th:block th:each="subCategory : ${category.subCategotyList}">
                             <li th:text="${subCategory.name}"></li>
                         </th:block>
                     </ul>
+                </td>
+                <td>
+                    <form th:action="@{/add-sub-service/by-id/{categoryId}(categoryId=${category.id})}" method="get">
+                        <button type="submit">افزودن زیر خدمت جدید</button>
+                    </form>
+
                 </td>
             </tr>
         </th:block>
