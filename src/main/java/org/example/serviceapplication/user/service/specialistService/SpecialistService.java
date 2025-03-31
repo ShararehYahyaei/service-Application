@@ -17,7 +17,7 @@ public interface SpecialistService {
     void editSubServiceCategory(User user, Long subServiceCategoryOld, Long subServiceCategoryNew);
 
     @Transactional
-    SpecialistResponseDto createSpecialist(User user);
+    SpecialistResponseDto createSpecialist(User user,Long subServiceId);
 
     @Transactional
     void addSubCategoryToSpecialist(User user, Long subCategoryId);

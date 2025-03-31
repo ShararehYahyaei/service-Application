@@ -9,6 +9,7 @@ import org.example.serviceapplication.request.dto.CustomerRequestResponseDto;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
+import org.example.serviceapplication.subCategory.repsitory.SubServiceCategoryRepository;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 
 import org.example.serviceapplication.user.dto.SpecialistResponseDto;
@@ -32,17 +33,20 @@ public class SpecialistServiceImpl implements SpecialistService {
 
     private final UserRepository userRepository;
     private final SubServiceCategoryInterface subServiceCategory;
+    private final SubServiceCategoryRepository subServiceCategoryRepository;
 
 
     public SpecialistServiceImpl(OfferServiceInterface offerService, CustomerRequestService customerRequestService, OrderService orderService,
                                  UserRepository userRepository,
-                                 SubServiceCategoryInterface subService) {
+                                 SubServiceCategoryInterface subService,
+                                 SubServiceCategoryRepository subServiceCategoryRepository) {
         this.offerService = offerService;
         this.customerRequestService = customerRequestService;
         this.orderService = orderService;
         this.userRepository = userRepository;
         this.subServiceCategory = subService;
 
+        this.subServiceCategoryRepository = subServiceCategoryRepository;
     }
 
     @Transactional
@@ -79,7 +83,7 @@ public class SpecialistServiceImpl implements SpecialistService {
 
     @Transactional
     @Override
-    public SpecialistResponseDto createSpecialist(User user) {
+    public SpecialistResponseDto createSpecialist(User user, Long subServiceId) {
         if (user.getProfileImage() == null) {
             throw new ProfileImageNull("Profile image is null");
         }
@@ -93,6 +97,10 @@ public class SpecialistServiceImpl implements SpecialistService {
         }
 
         User specialist = userRepository.save(user);
+        SubServiceCategory subService = subServiceCategory.getSubServiceCategoryById(subServiceId);
+        subService.getUsers().add(specialist);
+        specialist.getSubServiceCategories() .add(subService);
+        userRepository.saveAndFlush(specialist);
         return convertEntityToResponseDto(specialist);
 
     }
@@ -199,7 +207,8 @@ public class SpecialistServiceImpl implements SpecialistService {
     public List<OfferDto> getAllMyOffersWithAccepetedStatus(Long userId) {
         return offerService.getAllMyOfferWithAcceetedStatsus(userId);
     }
-@Transactional
+
+    @Transactional
     @Override
     public void changeOrderStatus(Long offerId) {
         orderService.changeOrderStatus(offerId);
@@ -222,6 +231,7 @@ public class SpecialistServiceImpl implements SpecialistService {
                 ))
                 .collect(Collectors.toList());
     }
+
     @Override
     public SpecialistResponseDto convertToRes(User user) {
         return new SpecialistResponseDto(

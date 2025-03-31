@@ -3,6 +3,9 @@ package org.example.serviceapplication.user.service;
 
 import org.example.serviceapplication.Category.exception.NoActiveUsersFound;
 import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
+import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
+import org.example.serviceapplication.subCategory.model.SubServiceCategory;
+import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.dto.*;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
@@ -32,16 +35,18 @@ public class UserServiceImpl implements UserService {
     private final ServiceCategoryInterface categoryService;
     private final CustomerService customerService;
     private final SpecialistServiceImpl specialistService;
+    private final SubServiceCategoryInterface subService;
 
     public UserServiceImpl(UserRepository userRepository,
                            ServiceCategoryInterface categoryService,
                            CustomerService customerService,
-                           SpecialistServiceImpl specialistService) {
+                           SpecialistServiceImpl specialistService, SubServiceCategoryInterface subService) {
 
         this.userRepository = userRepository;
         this.categoryService = categoryService;
         this.customerService = customerService;
         this.specialistService = specialistService;
+        this.subService = subService;
     }
 
     @Transactional
@@ -55,7 +60,8 @@ public class UserServiceImpl implements UserService {
         if (user.getRole() == Role.Customer) {
             userResponse = customerService.createCustomer(user);
         } else if (user.getRole() == Role.Specialist && profileImage != null) {
-            userResponse = specialistService.createSpecialist(user);
+            Long Id = userRequest.subServiceCategoryId();
+            userResponse = specialistService.createSpecialist(user,Id);
         }
         return userResponse;
 
@@ -232,10 +238,10 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("the password is not equal");
 
     }
+
     public boolean isEmailUnique(String email) {
         return userRepository.findByEmail(email) == null;
     }
-
 
 
 }
