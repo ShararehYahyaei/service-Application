@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -94,7 +95,8 @@ public class SpecialistWebController {
     }
 
     @PostMapping("/offer")
-    public String createOffer(@ModelAttribute OfferDto offerDto, Model model) {
+    public String createOffer(@ModelAttribute OfferDto offerDto, Model model
+    , RedirectAttributes redirectAttributes) {
         Long specialistId = offerDto.specialistId();
         User specialist = specialistService.getById(specialistId);
         model.addAttribute("specialist", offerDto);
@@ -103,7 +105,13 @@ public class SpecialistWebController {
         }
 
         specialistService.createOffer(specialist, offerDto);
-        return "redirect:/offer";
+        redirectAttributes.addFlashAttribute("message", "پیشنهاد با موفقیت ثبت شد");
+        return "redirect:/offer/success";
+    }
+
+    @GetMapping("/offer/success")
+    public String offerSuccessPage() {
+        return "offer-success";
     }
 
 

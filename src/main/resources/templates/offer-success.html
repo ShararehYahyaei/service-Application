@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fa" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتیجه ارسال پیشنهاد</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            direction: rtl;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #2c3e50;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #3498db, #1abc9c);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #1abc9c, #3498db);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>پیشنهاد ثبت شد!</h2>
+    <p class="message" th:text="${message}">پیشنهاد شما با موفقیت ثبت شد.</p>
+    <a href="/services" class="btn">بازگشت به صفحه اصلی</a>
+</div>
+</body>
+</html>
