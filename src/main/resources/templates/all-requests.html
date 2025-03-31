@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>همه درخواست‌ها</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .requests-container {
+            width: 85%;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+        }
+
+        .request-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .request-item:hover {
+            transform: translateY(-5px);
+            background: #eef1f6;
+        }
+
+        .request-item p {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+
+        .request-item span {
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .btn-back {
+            display: block;
+            margin: 30px auto;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #3498db, #1abc9c);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            width: 180px;
+            transition: background 0.3s;
+        }
+
+        .btn-back:hover {
+            background: linear-gradient(135deg, #1abc9c, #3498db);
+        }
+    </style>
+</head>
+<body>
+
+<h1>لیست درخواست‌های شما</h1>
+
+<div class="requests-container">
+    <ul style="list-style: none; padding: 0;">
+        <li th:each="request : ${requests}" class="request-item">
+            <p>شماره درخواست: <span th:text="${request.requestNumber}"></span></p>
+            <p>قیمت: <span th:text="${request.price}"></span></p>
+            <p>توضیحات: <span th:text="${request.description}"></span></p>
+            <p>تاریخ پایان: <span th:text="${request.formattedDeadLineTime}"></span></p>
+            <p>آدرس: <span th:text="${request.address}"></span></p>
+            <p>وضعیت درخواست: <span th:text="${request.requestStatus}"></span></p>
+        </li>
+    </ul>
+</div>
+
+<a href="/requests-form" class="btn-back">بازگشت</a>
+
+</body>
+</html>
