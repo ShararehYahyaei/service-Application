@@ -55,21 +55,23 @@
             color: #3498db;
         }
 
-        .btn-back {
+        .btn-back, .btn-suggest {
             display: block;
-            margin: 30px auto;
-            padding: 12px 25px;
+            margin: 10px auto;
+            padding: 10px 20px;
             background: linear-gradient(135deg, #3498db, #1abc9c);
             color: white;
             text-align: center;
             border-radius: 8px;
             text-decoration: none;
             font-weight: bold;
-            width: 180px;
+            width: 150px;
             transition: background 0.3s;
+            cursor: pointer;
+            border: none;
         }
 
-        .btn-back:hover {
+        .btn-back:hover, .btn-suggest:hover {
             background: linear-gradient(135deg, #1abc9c, #3498db);
         }
     </style>
@@ -87,6 +89,7 @@
             <p>تاریخ پایان: <span th:text="${request.formattedDeadLineTime}"></span></p>
             <p>آدرس: <span th:text="${request.address}"></span></p>
             <p>وضعیت درخواست: <span th:text="${request.requestStatus}"></span></p>
+            <a th:href="@{/offer(requestId=${request.requestNumber})}" class="btn-suggest">پیشنهاد</a>
         </li>
     </ul>
 </div>

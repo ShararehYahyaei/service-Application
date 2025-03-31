@@ -1,5 +1,6 @@
 package org.example.serviceapplication.user.webController.specialistController;
 
+import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.request.dto.CustomerRequestResponseDto;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
@@ -7,11 +8,10 @@ import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.specialistService.SpecialistService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -69,6 +69,12 @@ public class SpecialistWebController {
         }).toList();
         model.addAttribute("requests", formattedRequests);
         return "all-requests";
+    }
+
+
+    @GetMapping("/offer")
+    public String addNewOffer(Model model) {
+        return "requestsForm";
     }
 
 
