@@ -89,8 +89,7 @@
             <p>تاریخ پایان: <span th:text="${request.formattedDeadLineTime}"></span></p>
             <p>آدرس: <span th:text="${request.address}"></span></p>
             <p>وضعیت درخواست: <span th:text="${request.requestStatus}"></span></p>
-            <a th:href="@{/offer(requestId=${request.requestNumber})}" class="btn-suggest">پیشنهاد</a>
-        </li>
+            <button class="btn-suggest" onclick="window.location.href='/offer'">ارسال پیشنهاد</button>
     </ul>
 </div>
 

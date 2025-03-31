@@ -31,7 +31,7 @@ public class SpecialistController {
         Long id = offerDto.specialistId();
         User specialist = specialistService.getById(id);
         if (specialist.getRole() != Role.Specialist) {
-            throw new UserHasWrongRole("Customer has wrong role");
+            throw new UserHasWrongRole("Specialist has wrong role");
         }
         specialistService.createOffer(specialist, offerDto);
         return ResponseEntity.ok(HttpStatus.CREATED);

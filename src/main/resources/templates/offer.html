@@ -1,122 +1,95 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fa" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>فرم ارسال پیشنهاد</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap');
+
         body {
-            background-color: #f8f9fa;
-            font-family: 'Arial', sans-serif;
-            color: #495057;
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            direction: rtl;
         }
 
-        .container {
-            max-width: 600px;
-            margin-top: 50px;
-            background: #ffffff;
+        .form-container {
+            background: #fff;
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
         }
 
         h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-weight: 600;
-            color: #007bff;
-        }
-
-        .form-group {
+            color: #2c3e50;
             margin-bottom: 20px;
         }
 
-        .form-control {
-            border-radius: 10px;
-            padding: 15px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-        }
-
         label {
+            display: block;
+            text-align: right;
+            margin-top: 10px;
             font-weight: bold;
-            color: #343a40;
+            color: #555;
         }
 
-        button {
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .btn-submit {
             width: 100%;
             padding: 12px;
-            font-size: 18px;
-            border-radius: 10px;
-            background-color: #28a745;
-            border: none;
-            color: white;
-            font-weight: 600;
-        }
-
-        button:hover {
-            background-color: #218838;
-            cursor: pointer;
-        }
-
-        .form-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .alert {
             margin-top: 20px;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #3498db, #1abc9c);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
         }
 
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #1abc9c, #3498db);
+        }
     </style>
 </head>
 <body>
-<div class="container">
+<div class="form-container">
     <h2>ارسال پیشنهاد</h2>
-    <!-- اگر پیام موفقیت یا خطا باشد، نمایش داده می‌شود -->
-    <div th:if="${success}" class="alert alert-success">
-        <strong>موفقیت!</strong> پیشنهاد شما با موفقیت ثبت شد.
-    </div>
-    <div th:if="${error}" class="alert alert-danger">
-        <strong>خطا!</strong> مشکلی در ارسال پیشنهاد پیش آمده است.
-    </div>
+    <form th:action="@{/offer}" th:object="${offer}" method="post">
+        <label for="specialistId">کد متخصص:</label>
+        <input type="number" id="specialistId" th:field="*{specialistId}" required>
 
-    <!-- فرم ارسال پیشنهاد -->
-    <form th:action="@{/addOffer/{customerRequestId}(customerRequestId=${customerRequestId})}" th:object="${offerDto}" method="post">
+        <label for="offerPrice">مبلغ پیشنهاد:</label>
+        <input type="number" id="offerPrice" th:field="*{offerPrice}" step="0.01" required>
 
-        <div class="form-group">
-            <label for="specialistId">کد متخصص:</label>
-            <input type="number" id="specialistId" th:field="*{specialistId}" class="form-control" required>
-        </div>
+        <label for="offerDate">تاریخ پیشنهاد:</label>
+        <input type="date" id="offerDate" th:field="*{offerDate}" required>
 
-        <div class="form-group">
-            <label for="offerPrice">قیمت پیشنهاد:</label>
-            <input type="number" id="offerPrice" th:field="*{offerPrice}" class="form-control" step="0.01" required>
-        </div>
+        <label for="estimationTime">مدت زمان تخمینی (روز):</label>
+        <input type="number" id="estimationTime" th:field="*{estimationTime}" required>
 
-        <div class="form-group">
-            <label for="offerDate">تاریخ پیشنهاد:</label>
-            <input type="date" id="offerDate" th:field="*{offerDate}" class="form-control" required>
-        </div>
+        <label for="customerRequestId">کد درخواست مشتری:</label>
+        <input type="number" id="customerRequestId" th:field="*{customerRequestId}" required>
 
-        <div class="form-group">
-            <label for="estimationTime">زمان تخمینی (ساعت):</label>
-            <input type="number" id="estimationTime" th:field="*{estimationTime}" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-            <label for="rate">امتیاز:</label>
-            <input type="number" id="rate" th:field="*{rate}" class="form-control" step="0.1">
-        </div>
-
-        <button type="submit">ارسال پیشنهاد</button>
+        <button type="submit" class="btn-submit">ارسال پیشنهاد</button>
     </form>
 </div>
 </body>
