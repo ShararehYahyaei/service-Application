@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ثبت سفارش</title>
+    <style>
+        body {
+            font-family: 'Vazirmatn', Arial, sans-serif;
+            background: rgba(255, 182, 193, 0.5);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            direction: rtl;
+        }
+
+        .order-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+        }
+
+        .order-form h2 {
+            margin-bottom: 20px;
+            color: #d81b60;
+        }
+
+        .order-form input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: right;
+        }
+
+        .order-form button {
+            background: linear-gradient(135deg, #d81b60, #f06292);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s ease-in-out;
+            width: 100%;
+        }
+
+        .order-form button:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #c2185b, #ad1457);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="order-form">
+    <h2>ثبت سفارش جدید</h2>
+    <form th:action="@{/submit-order}" method="post">
+        <input type="number" name="customerId" placeholder="شناسه مشتری" required>
+        <input type="number" name="offerId" placeholder="شناسه پیشنهاد" required>
+        <input type="number" name="customerRequestId" placeholder="شناسه درخواست مشتری" required>
+        <button type="submit">ثبت سفارش</button>
+    </form>
+</div>
+
+</body>
+
+</html>

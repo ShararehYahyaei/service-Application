@@ -15,6 +15,7 @@
             height: 100vh;
             direction: rtl;
         }
+
         .sidebar {
             width: 220px;
             background: rgb(255, 196, 230);
@@ -141,7 +142,9 @@
     <form th:action="@{/all-my-suggestions}" method="get">
         <button type="submit">لیست همه پیشنهادهای من</button>
     </form>
-
+    <form th:action="@{/place-order}" method="get">
+        <button type="submit">ثبت سفارش</button>
+    </form>
 
 </div>
 
