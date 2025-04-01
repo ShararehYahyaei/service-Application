@@ -13,6 +13,8 @@ import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Controller
 public class CustomerWeb {
-
+    private final Logger logger = LoggerFactory.getLogger(CustomerWeb.class);
     private final SubServiceCategoryInterface subService;
     private final CustomerService customerService;
     private final CustomerRequestService customerRequestService;
@@ -47,6 +49,7 @@ public class CustomerWeb {
 
     @GetMapping("/servicesList")
     public String showAllServices(Model model) {
+        logger.info("Show all services");
         List<SubServiceCategories> services = subService.getAllSubServiceCatgories();
         Map<String, List<SubServiceCategories>> collect = services.stream().
                 collect(Collectors.groupingBy(SubServiceCategories::categoryName));
@@ -54,6 +57,7 @@ public class CustomerWeb {
         model.addAttribute("subCategories", collect);
         model.addAttribute("services", services);
         model.addAttribute("showList", true);
+        logger.info("Returning  all services");
         return "services";
     }
 
@@ -71,7 +75,9 @@ public class CustomerWeb {
         User customer = customerService.getUserById(idUser);
         model.addAttribute("customer", customer);
         if (customer.getRole() != Role.Customer) {
+            logger.error("User has wrong role");
             throw new UserHasWrongRole("User has wrong role");
+
         }
 
         customerService.createRequest(customer, customerRequest);
