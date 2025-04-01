@@ -8,14 +8,12 @@ import org.example.serviceapplication.offer.exception.OfferStatusIsNotCorrect;
 import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.offer.model.OfferStatus;
 import org.example.serviceapplication.offer.repository.OfferRepository;
-import org.example.serviceapplication.request.exception.RequestNotPresent;
 import org.example.serviceapplication.request.exception.RequestStatusIsNotCorrect;
 import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.request.model.RequestStatus;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.review.service.ReviewService;
 import org.example.serviceapplication.user.model.User;
-import org.example.serviceapplication.user.service.customerService.CustomerService;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -161,8 +159,8 @@ public class OfferServiceImpl implements OfferServiceInterface {
 
     @Transactional(readOnly = true)
     @Override
-    public List<OfferDto> getAllOffersNotSorted( CustomerRequest customerRequest) {
-        List<Offer> allOffers = offerRepository.findByCustomerRequest( customerRequest);
+    public List<OfferDto> getAllOffersNotSorted(CustomerRequest customerRequest) {
+        List<Offer> allOffers = offerRepository.findByCustomerRequest(customerRequest);
         if (allOffers.isEmpty()) {
             throw new OfferNotFound("OfferNotFound");
         } else {
@@ -170,6 +168,20 @@ public class OfferServiceImpl implements OfferServiceInterface {
         }
 
     }
+
+    @Transactional
+    @Override
+    public List<OfferDto> getAllOffersSortedByPrice(CustomerRequest request) {
+        List<Offer> offers = offerRepository.findByCustomerRequestOrderByOfferPriceAsc(request);
+        return toOfferDTOList(offers);
+
+    }
+
+//    @Override
+//    public List<OfferDto> getAllOffersSortedByRate(CustomerRequest request) {
+//        List<Offer> offers = offerRepository.findByCustomerRequestOrderByRateDesc(request);
+//        return toOfferDTOList(offers);
+//    }
 
 
 }

@@ -50,7 +50,6 @@ public class Offer {
 
     }
 
-
     public Offer(double price, LocalDate localDate, int estimationTime) {
         this.offerPrice = price;
         this.offerDate = localDate;

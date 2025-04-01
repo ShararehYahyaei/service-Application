@@ -28,4 +28,8 @@ public interface OfferServiceInterface {
     void deleteOffer(Long offerId);
 
     List<OfferDto> getAllOffersNotSorted( CustomerRequest customerRequest);
+
+    List<OfferDto> getAllOffersSortedByPrice(CustomerRequest request);
+
+  //  List<OfferDto> getAllOffersSortedByRate(CustomerRequest request);
 }

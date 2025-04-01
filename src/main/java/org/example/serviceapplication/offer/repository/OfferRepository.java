@@ -12,10 +12,10 @@ import java.util.Optional;
 
 public interface OfferRepository extends CrudRepository<Offer, Long> {
         List<Offer> findByCustomerRequestId(Long customer_request_id, Sort sort);
-        List<Offer> findByUserIdAndCustomerRequestId(Long userId, Long customerRequestId);
         List<Offer> findByUserIdAndStatus(Long userId, OfferStatus status);
         CustomerRequest user(User user);
         List<Offer> findByCustomerRequest(CustomerRequest customerRequest);
-
+        List<Offer> findByCustomerRequestOrderByOfferPriceAsc(CustomerRequest request);
 
 }
+

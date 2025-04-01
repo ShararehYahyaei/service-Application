@@ -89,18 +89,27 @@ public class CustomerWeb {
         return "all-my-suggestions";
     }
 
+
     @GetMapping("/offersDisplay")
-    public String getAllOffersNoSort(
-            @RequestParam(name = "customer_request_id") Long customerRequestId, Model model) {
+    public String getAllOffersSorted(
+            @RequestParam(name = "customer_request_id") Long customerRequestId,
+            @RequestParam(name = "sortBy", required = false) String sortBy,
+            Model model) {
 
         CustomerRequest request = customerRequestService.findRequestById(customerRequestId);
         if (request == null) {
             throw new RequestNotPresent("Customer request not found for ID: " + customerRequestId);
         }
-        model.addAttribute("customerRequestId", customerRequestId);
-        List<OfferDto> allOffers = offerService.getAllOffersNotSorted(request);
-        model.addAttribute("offers", allOffers);
 
+        model.addAttribute("customerRequestId", customerRequestId);
+        List<OfferDto> allOffers;
+        if ("price".equalsIgnoreCase(sortBy)) {
+            allOffers = offerService.getAllOffersSortedByPrice(request);
+        } else {
+            allOffers = offerService.getAllOffersNotSorted(request);
+        }
+
+        model.addAttribute("offers", allOffers);
         return "offersDisplay";
     }
 

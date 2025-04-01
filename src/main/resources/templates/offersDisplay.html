@@ -63,6 +63,14 @@
 
 <div class="table-container">
     <h2>لیست پیشنهادات</h2>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <a th:href="@{/offersDisplay(customer_request_id=${customerRequestId}, sortBy='price')}">
+            <button style="padding: 8px 15px; margin: 5px; cursor: pointer;">مرتب‌سازی بر اساس قیمت</button>
+        </a>
+        <a th:href="@{/offersDisplay(customer_request_id=${customerRequestId}, sortBy='rate')}">
+            <button style="padding: 8px 15px; margin: 5px; cursor: pointer;">مرتب‌سازی بر اساس امتیاز</button>
+        </a>
+    </div>
     <table>
         <thead>
         <tr>
