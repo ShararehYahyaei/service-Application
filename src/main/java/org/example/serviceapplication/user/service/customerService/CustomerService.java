@@ -89,8 +89,11 @@ public class CustomerService implements CustomerServiceInter {
     @Transactional
     @Override
     public List<OfferDto> getAllOffers(Long requestId, Sort sort) {
-        return offerService.getAllOffers(requestId,sort);
+        return offerService.getAllOffersNotSorted(requestId,sort);
     }
+
+
+
 
     @Override
     public List<CustomerRequestResponseDto> getAllRequests(Long userId) {

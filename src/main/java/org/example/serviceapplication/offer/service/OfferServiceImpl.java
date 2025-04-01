@@ -15,6 +15,7 @@ import org.example.serviceapplication.request.model.RequestStatus;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.review.service.ReviewService;
 import org.example.serviceapplication.user.model.User;
+import org.example.serviceapplication.user.service.customerService.CustomerService;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,7 @@ public class OfferServiceImpl implements OfferServiceInterface {
         this.offerRepository = offerRepository;
         this.request = request;
         this.reviewService = reviewService;
+
     }
 
     @Transactional
@@ -104,13 +106,15 @@ public class OfferServiceImpl implements OfferServiceInterface {
 
     @Transactional(readOnly = true)
     @Override
-    public List<OfferDto> getAllOffers(Long requestId, Sort sort) {
-        List<Offer> offers = offerRepository.findByCustomerRequestId(requestId,sort);
+    public List<OfferDto> getAllOffersNotSorted(Long requestId, Sort sort) {
+        List<Offer> offers = offerRepository.findByCustomerRequestId(requestId, sort);
         if (offers.isEmpty()) {
             throw new OfferNotFound("OfferNotFound");
         }
         return toOfferDTOList(offers);
+
     }
+
 
     @Override
     public Offer getOfferById(Long offerId) {
@@ -151,6 +155,18 @@ public class OfferServiceImpl implements OfferServiceInterface {
             offerRepository.deleteById(offerId);
         } else {
             throw new OfferStatusIsNotCorrect("OfferStatusIsNotCorrect");
+        }
+
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<OfferDto> getAllOffersNotSorted( CustomerRequest customerRequest) {
+        List<Offer> allOffers = offerRepository.findByCustomerRequest( customerRequest);
+        if (allOffers.isEmpty()) {
+            throw new OfferNotFound("OfferNotFound");
+        } else {
+            return toOfferDTOList(allOffers);
         }
 
     }

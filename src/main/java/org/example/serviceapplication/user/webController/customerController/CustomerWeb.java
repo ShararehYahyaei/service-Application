@@ -2,15 +2,17 @@ package org.example.serviceapplication.user.webController.customerController;
 
 
 import org.example.serviceapplication.offer.dto.OfferDto;
+import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.request.dto.CustomerRequestDto;
+import org.example.serviceapplication.request.exception.RequestNotPresent;
+import org.example.serviceapplication.request.model.CustomerRequest;
+import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,10 +29,14 @@ public class CustomerWeb {
 
     private final SubServiceCategoryInterface subService;
     private final CustomerService customerService;
+    private final CustomerRequestService customerRequestService;
+    private final OfferServiceInterface offerService;
 
-    public CustomerWeb(SubServiceCategoryInterface subService, CustomerService customerService) {
+    public CustomerWeb(SubServiceCategoryInterface subService, CustomerService customerService, CustomerRequestService customerRequestService, OfferServiceInterface offerService) {
         this.subService = subService;
         this.customerService = customerService;
+        this.customerRequestService = customerRequestService;
+        this.offerService = offerService;
     }
 
     @GetMapping("/services")
@@ -76,6 +81,21 @@ public class CustomerWeb {
     @GetMapping("/all-my-suggestions")
     public String showSuggestions() {
         return "all-my-suggestions";
+    }
+
+    @GetMapping("/offersDisplay")
+    public String getAllOffersNoSort(
+            @RequestParam(name = "customer_request_id") Long customerRequestId, Model model) {
+
+        CustomerRequest request = customerRequestService.findRequestById(customerRequestId);
+        if (request == null) {
+            throw new RequestNotPresent("Customer request not found for ID: " + customerRequestId);
+        }
+        model.addAttribute("customerRequestId", customerRequestId);
+        List<OfferDto> allOffers = offerService.getAllOffersNotSorted(request);
+        model.addAttribute("offers", allOffers);
+
+        return "offersDisplay";
     }
 
 

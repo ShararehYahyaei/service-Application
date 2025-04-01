@@ -72,20 +72,14 @@
 </head>
 <body>
 <div class="form-container">
-    <h2>ارسال پیشنهادات</h2>
-    <form action="/all-my-suggestions
-" method="get">
-        <label for="userId">شماره مشتری</label>
-        <input type="number" id="userId" name="userId" required>
+    <h2>پیشنهادهای داده شده مربوط به مشتری</h2>
+    <form action="/offersDisplay" method="get">
 
         <label for="customerRequestId">شماره درخواست</label>
-        <input type="number" id="customerRequestId" name="customerRequestId" required>
+        <input type="number" id="customerRequestId" name="customer_request_id" required>
 
         <button type="submit">ارسال درخواست</button>
     </form>
-
-    <div class="error" id="errorMessage" style="display: none;">لطفاً تمامی فیلدها را پر کنید.</div>
 </div>
-
 </body>
 </html>
