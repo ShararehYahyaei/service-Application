@@ -2,6 +2,7 @@ package org.example.serviceapplication.user.service;
 
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.user.dto.*;
+import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.model.User;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +30,8 @@ public interface UserService {
     @Transactional
     void addSubCategory(Long idSpecialist, Long categoryId);
 
-    List<SpecialistWithSubService>getUserWithSubServiceCategory(Long idSpecialist);
+    List<SpecialistWithSubService> getUserWithSubServiceCategory(Long idSpecialist);
+
     @Transactional
     void removeSubCategoryForSpecialist(Long idSpecialist, Long categoryId);
 
@@ -43,4 +45,5 @@ public interface UserService {
     List<SpecialistResponseDto> getAllSpecialists();
 
     void updatePassword(PasswordUserRequest changePasswordRequest);
+
 }

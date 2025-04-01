@@ -10,6 +10,8 @@ import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.dto.UserRequest;
 import org.example.serviceapplication.user.dto.UserResponseDto;
+import org.example.serviceapplication.user.enumPackage.Role;
+import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Controller;
@@ -29,12 +31,11 @@ import java.util.stream.Collectors;
 public class UserWebController {
     private final UserService userService;
     private final SubServiceCategoryInterface subservice;
-    private final ConversionService conversionService;
 
-    public UserWebController(UserService userService, SubServiceCategoryInterface subservice, ConversionService conversionService) {
+    public UserWebController(UserService userService, SubServiceCategoryInterface subservice) {
         this.userService = userService;
         this.subservice = subservice;
-        this.conversionService = conversionService;
+
     }
 
     @GetMapping("/register")
@@ -72,6 +73,7 @@ public class UserWebController {
                 .map(sub -> new SubServiceDto(sub.id(), sub.name()))
                 .collect(Collectors.toList());
     }
+
 
 
 }

@@ -114,4 +114,9 @@ public class CustomerWeb {
     }
 
 
+    @GetMapping("/place-order")
+    public String showOrderForm() {
+        return "place-order";
+
+    }
 }

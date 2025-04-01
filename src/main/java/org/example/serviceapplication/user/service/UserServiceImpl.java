@@ -1,10 +1,14 @@
 package org.example.serviceapplication.user.service;
 
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.example.serviceapplication.Category.exception.NoActiveUsersFound;
 import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
-import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
-import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.dto.*;
 import org.example.serviceapplication.user.enumPackage.Role;
@@ -23,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,7 +35,8 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-
+    @PersistenceContext
+    private EntityManager entityManager;
     private final UserRepository userRepository;
     private final ServiceCategoryInterface categoryService;
     private final CustomerService customerService;
@@ -61,7 +67,7 @@ public class UserServiceImpl implements UserService {
             userResponse = customerService.createCustomer(user);
         } else if (user.getRole() == Role.Specialist && profileImage != null) {
             Long Id = userRequest.subServiceCategoryId();
-            userResponse = specialistService.createSpecialist(user,Id);
+            userResponse = specialistService.createSpecialist(user, Id);
         }
         return userResponse;
 
@@ -241,6 +247,27 @@ public class UserServiceImpl implements UserService {
 
     public boolean isEmailUnique(String email) {
         return userRepository.findByEmail(email) == null;
+    }
+
+
+    public List<User> searchUsers(String name, String email, String role) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> query = cb.createQuery(User.class);
+        Root<User> userRoot = query.from(User.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (name != null && !name.isEmpty()) {
+            predicates.add(cb.like(userRoot.get("name"), "%" + name + "%"));
+        }
+        if (email != null && !email.isEmpty()) {
+            predicates.add(cb.like(userRoot.get("email"), "%" + email + "%"));
+        }
+        if (role != null && !role.isEmpty()) {
+            predicates.add(cb.equal(userRoot.get("role"), role));
+        }
+
+        query.where(cb.and(predicates.toArray(new Predicate[0])));
+        return entityManager.createQuery(query).getResultList();
     }
 
 
