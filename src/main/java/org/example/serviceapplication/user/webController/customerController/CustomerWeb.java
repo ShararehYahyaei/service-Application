@@ -3,6 +3,7 @@ package org.example.serviceapplication.user.webController.customerController;
 
 import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
+import org.example.serviceapplication.order.model.OrderDto;
 import org.example.serviceapplication.request.dto.CustomerRequestDto;
 import org.example.serviceapplication.request.exception.RequestNotPresent;
 import org.example.serviceapplication.request.model.CustomerRequest;
@@ -117,6 +118,25 @@ public class CustomerWeb {
     @GetMapping("/place-order")
     public String showOrderForm() {
         return "place-order";
-
     }
+    @PostMapping("/submit-order")
+    public String createOrder(@ModelAttribute OrderDto orderDto, Model model) {
+        Long idUser = orderDto.customerId();
+        User customer = customerService.getUserById(idUser);
+        if (idUser == null) {
+            model.addAttribute("errorMessage", "شناسه مشتری نامعتبر است.");
+            return "place-order";
+        }
+
+
+        if (customer.getRole() != Role.Customer) {
+            model.addAttribute("errorMessage", "کاربر دارای نقش نادرست است.");
+            return "place-order";
+        }
+        customerService.createOrder(customer, orderDto);
+        model.addAttribute("successMessage", "سفارش با موفقیت ثبت شد!");
+        return "services";
+    }
+
+
 }

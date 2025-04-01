@@ -65,25 +65,25 @@
     <h2>لیست پیشنهادات</h2>
     <div style="text-align: center; margin-bottom: 20px;">
         <a th:href="@{/offersDisplay(customer_request_id=${customerRequestId}, sortBy='price')}">
-            <button style="padding: 8px 15px; margin: 5px; cursor: pointer;">مرتب‌سازی بر اساس قیمت</button>
+            <button style="padding: 8px 15px; margin: 5px; cursor: pointer;">مرتب ‌سازی بر اساس قیمت</button>
         </a>
         <a th:href="@{/offersDisplay(customer_request_id=${customerRequestId}, sortBy='rate')}">
-            <button style="padding: 8px 15px; margin: 5px; cursor: pointer;">مرتب‌سازی بر اساس امتیاز</button>
+            <button style="padding: 8px 15px; margin: 5px; cursor: pointer;">مرتب‌ سازی بر اساس امتیاز</button>
         </a>
     </div>
     <table>
         <thead>
         <tr>
-            <th>Offer ID</th>
-            <th>Specialist ID</th>
-            <th>Offer Price</th>
-            <th>Offer Date</th>
-            <th>Estimation Time</th>
-            <th>Rate</th>
+            <th>کد پیشنهاد</th>
+            <th>شناسه متخصص</th>
+            <th>مبلغ پیشنهادی (تومان)</th>
+            <th>تاریخ پیشنهاد شده</th>
+            <th>مدت زمان انجام (روز)</th>
+            <th>امتیاز متخصص (از ۵)</th>
+            <th>عملیات</th>
         </tr>
         </thead>
         <tbody>
-
         <th:block th:each="offer : ${offers}">
             <tr>
                 <td th:text="${offer.offerId}"></td>
@@ -92,10 +92,27 @@
                 <td th:text="${offer.offerDate}"></td>
                 <td th:text="${offer.estimationTime}"></td>
                 <td th:text="${offer.rate}"></td>
+                <td>
+                    <form th:action="@{/place-order}" method="get">
+                        <button type="submit" style="padding: 10px 20px; background: #d81b60; color:
+                         white; border: none; border-radius: 5px; cursor: pointer; font-size:
+                         16px; transition: background-color 0.3s;">
+                            ثبت سفارش
+                        </button>
+                    </form>
+
+                    <style>
+                        button:hover {
+                            background-color: #c2185b;
+                        }
+                    </style>
+
+                </td>
             </tr>
         </th:block>
         </tbody>
     </table>
+
 </div>
 
 </body>
