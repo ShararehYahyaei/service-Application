@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست پیشنهادات</title>
+    <style>
+        body {
+            font-family: 'Vazirmatn', Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .table-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+            overflow-x: auto;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        td {
+            background-color: #fafafa;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="table-container">
+    <h2>لیست پیشنهادات</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Offer ID</th>
+            <th>Specialist ID</th>
+            <th>Offer Price</th>
+            <th>Offer Date</th>
+            <th>Estimation Time</th>
+            <th>Rate</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <th:block th:each="offer : ${offers}">
+            <tr>
+                <td th:text="${offer.offerId}"></td>
+                <td th:text="${offer.specialistId}"></td>
+                <td th:text="${offer.offerPrice}"></td>
+                <td th:text="${offer.offerDate}"></td>
+                <td th:text="${offer.estimationTime}"></td>
+                <td th:text="${offer.rate}"></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
