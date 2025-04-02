@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>افزودن زیرخدمت</title>
+    <style>
+        body {
+            font-family: 'Vazirmatn', Arial, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            direction: rtl;
+        }
+
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        label {
+            font-size: 16px;
+            color: #555;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #ff5178, #ff6a9f);
+            transform: translateY(-2px);
+        }
+
+        .message {
+            color: green;
+            margin-top: 10px;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>افزودن زیرخدمت به متخصص</h1>
+
+<div class="form-container">
+    <form th:action="@{/assign-sub-service-to-specialist}" method="get">
+        <input type="hidden" name="userId" th:value="${specialist.id}">
+
+        <label for="subCategoryId">شماره زیرخدمت:</label>
+        <input type="number" id="subCategoryId" name="subCategoryId" required>
+        <form th:action="@{/assign-sub-service-to-specialist}" method="post">
+            <input type="hidden" name="userId" th:value="${specialist.id}"/>
+            <input type="hidden" name="subServiceId" value="yourSubServiceId"/>
+            <button type="submit">افزودن زیرخدمت</button>
+        </form>
+
+    </form>
+</div>
+
+<p th:if="${message}" class="message" th:text="${message}"></p>
+<p th:if="${error}" class="error" th:text="${error}"></p>
+
+</body>
+</html>

@@ -58,6 +58,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserResponseDto createUser(UserRequest userRequest, MultipartFile profileImage) {
+        if (!isEmailUnique(userRequest.email())) {
+            throw new EmailNotUniqueException("The email is already taken.");
+        }
         UserResponseDto userResponse = null;
         User user = convertRequestIntoEntity(userRequest);
         user.setActive(false);
@@ -120,7 +123,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void addSubCategory(Long idSpecialist, Long categoryId) {
-
         User userFound = getUserSpecialistById(idSpecialist);
         specialistService.addSubCategoryToSpecialist(userFound, categoryId);
 
@@ -175,11 +177,9 @@ public class UserServiceImpl implements UserService {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            //todo handle It exception
+        }
 
-        }
-        if (!isEmailUnique(userRequest.email())) {
-            throw new EmailNotUniqueException("The email is already taken.");
-        }
         return new User(
                 userRequest.address(),
                 userRequest.phone(),

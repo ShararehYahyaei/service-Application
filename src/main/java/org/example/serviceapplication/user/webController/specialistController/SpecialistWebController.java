@@ -4,10 +4,12 @@ import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.request.dto.CustomerRequestDto;
 import org.example.serviceapplication.request.dto.CustomerRequestResponseDto;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
+import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
+import org.example.serviceapplication.user.service.UserService;
 import org.example.serviceapplication.user.service.specialistService.SpecialistService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +28,14 @@ import java.util.Map;
 public class SpecialistWebController {
     private final SubServiceCategoryInterface subservice;
     private final SpecialistService specialistService;
+    private final UserService userService;
 
 
     public SpecialistWebController(SubServiceCategoryInterface subservice,
-                                   SpecialistService specialistService) {
+                                   SpecialistService specialistService, UserService userService) {
         this.subservice = subservice;
         this.specialistService = specialistService;
+        this.userService = userService;
     }
 
 
@@ -96,7 +100,7 @@ public class SpecialistWebController {
 
     @PostMapping("/offer")
     public String createOffer(@ModelAttribute OfferDto offerDto, Model model
-    , RedirectAttributes redirectAttributes) {
+            , RedirectAttributes redirectAttributes) {
         Long specialistId = offerDto.specialistId();
         User specialist = specialistService.getById(specialistId);
         model.addAttribute("specialist", offerDto);
@@ -112,6 +116,37 @@ public class SpecialistWebController {
     @GetMapping("/offer/success")
     public String offerSuccessPage() {
         return "offer-success";
+    }
+
+    @GetMapping("/assign-sub-service-to-specialist")
+    public String assignSubServicePage(
+            @RequestParam("userId") Long userId,
+            Model model) {
+
+        User specialist = userService.getUserById(userId);
+
+        if (specialist == null) {
+            model.addAttribute("error", "متخصص مورد نظر یافت نشد!");
+            return "assign-sub-service";
+        }
+
+        model.addAttribute("specialist", specialist);
+        return "assign-sub-service";
+    }
+
+    @PostMapping("/assign-sub-service-to-specialist")
+    public String assignSubServiceToSpecialist(@RequestParam("userId") Long userId,
+                                               @RequestParam("subServiceId") Long subServiceId) {
+
+
+        User specialist = userService.getUserById(userId);
+        SubServiceCategory subServiceCategoryById = subservice.getSubServiceCategoryById(subServiceId);
+        specialist.getSubServiceCategories().add(subServiceCategoryById);
+
+
+        userService.addSubCategory(userId, subServiceId);
+        subServiceCategoryById.getUsers().add(specialist);
+        return "redirect:/specialist-profile";
     }
 
 

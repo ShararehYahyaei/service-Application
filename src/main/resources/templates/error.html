@@ -1,11 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
     <meta charset="UTF-8">
-    <title>Error</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خطا</title>
+    <!-- استفاده از Tailwind CSS برای طراحی زیبا -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .error-message {
+            font-size: 1.1rem;
+            color: #B91C1C;
+            background-color: #FEE2E2;
+            border: 1px solid #F87171;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
-<body>
-<h1>An unexpected error occurred!</h1>
-<p>Please try again later.</p>
+<body class="bg-gray-100 text-gray-900">
+<div class="flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+        <h1 class="text-3xl font-semibold text-red-600 mb-4">مشکلی پیش آمده است</h1>
+
+        <div th:if="${error}" class="error-message">
+            <p th:text="${error}"></p>
+        </div>
+
+        <div class="text-center mt-6">
+            <a href="/services" class="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-700">
+                بازگشت به صفحه ثبت‌نام
+            </a>
+        </div>
+    </div>
+</div>
 </body>
 </html>
