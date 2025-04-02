@@ -265,11 +265,9 @@ public class UserServiceImpl implements UserService {
         Root<User> userRoot = query.from(User.class);
         List<Predicate> predicates = new ArrayList<>();
 
-
         if (name != null && !name.isEmpty()) {
             predicates.add(cb.like(userRoot.get("name"), "%" + name + "%"));
         }
-
 
         if (email != null && !email.isEmpty()) {
             predicates.add(cb.like(userRoot.get("email"), "%" + email + "%"));

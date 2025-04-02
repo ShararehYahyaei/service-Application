@@ -98,9 +98,6 @@ public class UserWebController {
 
         List<User> users = userService.searchUsers(name, email, role);
         model.addAttribute("users", users);
-        model.addAttribute("name", name);
-        model.addAttribute("email", email);
-        model.addAttribute("role", role);
 
         return "searchUsers";
     }
