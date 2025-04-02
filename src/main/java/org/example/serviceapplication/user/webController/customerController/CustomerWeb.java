@@ -8,6 +8,7 @@ import org.example.serviceapplication.request.dto.CustomerRequestDto;
 import org.example.serviceapplication.request.exception.RequestNotPresent;
 import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
+import org.example.serviceapplication.review.model.ReviewDto;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.enumPackage.Role;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
@@ -119,6 +121,7 @@ public class CustomerWeb {
     public String showOrderForm() {
         return "place-order";
     }
+
     @PostMapping("/submit-order")
     public String createOrder(@ModelAttribute OrderDto orderDto, Model model) {
         Long idUser = orderDto.customerId();
@@ -128,7 +131,6 @@ public class CustomerWeb {
             return "place-order";
         }
 
-
         if (customer.getRole() != Role.Customer) {
             model.addAttribute("errorMessage", "کاربر دارای نقش نادرست است.");
             return "place-order";
@@ -136,6 +138,26 @@ public class CustomerWeb {
         customerService.createOrder(customer, orderDto);
         model.addAttribute("successMessage", "سفارش با موفقیت ثبت شد!");
         return "services";
+    }
+
+    @GetMapping("/customer-profile")
+    public String showCustomerProfile(Model model) {
+        model.addAttribute("reviewDto", new ReviewDto(null,
+                null, null, 0, null));
+        return "customer-profile";
+    }
+    @PostMapping("/customer-profile")
+    public String submitReview(@ModelAttribute ReviewDto reviewDto, RedirectAttributes redirectAttributes) {
+        User customer = customerService.getUserById(reviewDto.customerId());
+
+        if (customer.getRole() != Role.Customer) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+
+        customerService.addReview(customer, reviewDto);
+        redirectAttributes.addFlashAttribute("successMessage",
+                "نظر شما با موفقیت ثبت شد!");
+        return "redirect:/customer-profile";
     }
 
 
