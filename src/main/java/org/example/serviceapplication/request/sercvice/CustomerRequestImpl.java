@@ -11,6 +11,8 @@ import org.example.serviceapplication.request.repository.CustomerRequestRepo;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerRequestImpl implements CustomerRequestService {
 
+    private final Logger logger = LoggerFactory.getLogger(CustomerRequestImpl.class);
     private final CustomerRequestRepo requestRepo;
 
     private final SubServiceCategoryInterface subService;
@@ -56,12 +59,21 @@ public class CustomerRequestImpl implements CustomerRequestService {
     @Override
     public List<CustomerRequestResponseDto> getAllRequestForSpecialist(List<SubServiceCategory> subServices) {
         List<CustomerRequest> allBySubServiceCategoryIn = requestRepo.findAllBySubServiceCategoryIn(subServices);
+        if (allBySubServiceCategoryIn.isEmpty()) {
+            logger.error("No requests found");
+            throw new RequestNotPresent("RequestNotPresent");
+        }
+
         return convertEntityToResponse(allBySubServiceCategoryIn);
     }
 
     @Override
     public List<CustomerRequestResponseDto> getAllCustomerRequestDtoForCustomer(Long userId) {
         List<CustomerRequest> requestForCustomer = requestRepo.findByUserId(userId);
+        if (requestForCustomer.isEmpty()) {
+            logger.error("No requests found");
+            throw new RequestNotPresent("RequestNotPresent");
+        }
         return convertEntityToResponse(requestForCustomer);
     }
 
@@ -83,7 +95,7 @@ public class CustomerRequestImpl implements CustomerRequestService {
 
     private List<CustomerRequestResponseDto> convertEntityToResponse(List<CustomerRequest> newRequests) {
         List<CustomerRequestResponseDto> filteredRequests = newRequests.stream()
-                .filter(request -> request.getRequestStatus() == RequestStatus.AwaitingOffers)
+                .filter(request -> !request.getRequestStatus().equals(RequestStatus.InProgress) )
                 .map(request -> new CustomerRequestResponseDto(
                         request.getId(),
                         request.getRequestPrice(),
@@ -101,5 +113,10 @@ public class CustomerRequestImpl implements CustomerRequestService {
         return filteredRequests;
     }
 
+    @Transactional
+    @Override
+    public void updateRequest(CustomerRequest customerRequest) {
+        requestRepo.save(customerRequest);
+    }
 
 }

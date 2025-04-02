@@ -14,6 +14,9 @@ import org.example.serviceapplication.request.model.RequestStatus;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.review.service.ReviewService;
 import org.example.serviceapplication.user.model.User;
+import org.example.serviceapplication.user.webController.customerController.CustomerWeb;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class OfferServiceImpl implements OfferServiceInterface {
+    private final Logger logger = LoggerFactory.getLogger(OfferServiceImpl.class);
     private final OfferRepository offerRepository;
     private final CustomerRequestService request;
     private final ReviewService reviewService;
@@ -41,18 +45,19 @@ public class OfferServiceImpl implements OfferServiceInterface {
     @Transactional
     @Override
     public void createOffer(User customer, OfferDto offerDto) {
+        logger.info("create offer");
         Offer offer = convertRequestIntoEntity(customer, offerDto);
         offer.setStatus(OfferStatus.PENDING);
         offer.setOfferDate(LocalDate.now());
         offer.setCreateTime(LocalDateTime.now());
         offerRepository.save(offer);
-        offer.getCustomerRequest().setRequestStatus(RequestStatus.AwaitingSelection);
 
     }
 
     @Transactional
     @Override
     public void updateOffer(Long offerId, OfferUpdateDto offerUpdateDto) {
+        logger.info("Updating offer with id {}", offerId);
         Optional<Offer> byId = offerRepository.findById(offerId);
         if (byId.isEmpty()) {
             throw new OfferNotFound("Offer with customerRequestNumber " + offerId + " not found");
@@ -66,27 +71,30 @@ public class OfferServiceImpl implements OfferServiceInterface {
 
 
     private Offer convertRequestIntoEntity(User specialist, OfferDto offerDto) {
+        logger.info("Converting offerDto to entity");
         CustomerRequest requestOne = request.findRequestById(offerDto.customerRequestId());
-        if (requestOne.getRequestStatus() != RequestStatus.InProgress
-        ) {
-            if (offerDto.offerDate().isAfter(LocalDate.now())) {
-                return new Offer(
-                        specialist,
-                        requestOne,
-                        offerDto.offerPrice(),
-                        offerDto.offerDate(),
-                        offerDto.estimationTime()
-
-                );
-            }
-            throw new OfferDateIsNotValid("OfferDateIsNotValid");
-        } else {
+        if (requestOne.getRequestStatus().equals(RequestStatus.InProgress)) {
+            logger.error("Request status is In Progress");
             throw new RequestStatusIsNotCorrect("Request status is not correct");
         }
+        if (offerDto.offerDate().isBefore(LocalDate.now())) {
+            logger.error("OfferDate is Before Now");
+            throw new OfferDateIsNotValid("OfferDateIsNotValid");
+        }
+        return new Offer(
+                specialist,
+                requestOne,
+                offerDto.offerPrice(),
+                offerDto.offerDate(),
+                offerDto.estimationTime()
+
+        );
 
     }
 
+
     private List<OfferDto> toOfferDTOList(List<Offer> offers) {
+        logger.info("Convert offers to offerDTOList");
         return offers.stream()
                 .map(offer -> new OfferDto(
                         offer.getId(),

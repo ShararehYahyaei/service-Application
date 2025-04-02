@@ -5,6 +5,7 @@ import org.example.serviceapplication.request.dto.CustomerRequestResponseDto;
 import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.user.model.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface CustomerRequestService {
     List<CustomerRequestResponseDto> getAllCustomerRequestDtoForCustomer(Long userId);
 
 
+    @Transactional
+    void updateRequest(CustomerRequest customerRequest);
 }
