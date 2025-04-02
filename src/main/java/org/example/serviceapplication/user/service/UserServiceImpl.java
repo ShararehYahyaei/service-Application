@@ -258,18 +258,24 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
+
     public List<User> searchUsers(String name, String email, String role) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> userRoot = query.from(User.class);
         List<Predicate> predicates = new ArrayList<>();
 
+
         if (name != null && !name.isEmpty()) {
             predicates.add(cb.like(userRoot.get("name"), "%" + name + "%"));
         }
+
+
         if (email != null && !email.isEmpty()) {
             predicates.add(cb.like(userRoot.get("email"), "%" + email + "%"));
         }
+
+
         if (role != null && !role.isEmpty()) {
             predicates.add(cb.equal(userRoot.get("role"), role));
         }
@@ -277,6 +283,7 @@ public class UserServiceImpl implements UserService {
         query.where(cb.and(predicates.toArray(new Predicate[0])));
         return entityManager.createQuery(query).getResultList();
     }
+
 
 
 

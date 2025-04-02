@@ -90,7 +90,6 @@ public class UserWebController {
     }
 
 
-
     @GetMapping("/searchUsers")
     public String searchUsers(@RequestParam(value = "name", required = false) String name,
                               @RequestParam(value = "email", required = false) String email,
@@ -105,7 +104,6 @@ public class UserWebController {
 
         return "searchUsers";
     }
-
 
 
 }
