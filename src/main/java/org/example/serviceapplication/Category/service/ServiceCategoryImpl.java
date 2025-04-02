@@ -6,6 +6,8 @@ import org.example.serviceapplication.subCategory.dto.SubServiceCategoryResponse
 import org.example.serviceapplication.Category.exception.DuplicateCategoryName;
 import org.example.serviceapplication.Category.model.ServiceCategory;
 import org.example.serviceapplication.Category.repository.ServiceCategoryRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class ServiceCategoryImpl implements ServiceCategoryInterface {
 
     private final ServiceCategoryRepository serviceCategoryRepository;
+    private final Logger logger = LoggerFactory.getLogger(ServiceCategoryImpl.class);
 
     public ServiceCategoryImpl(ServiceCategoryRepository serviceCategoryRepository) {
         this.serviceCategoryRepository = serviceCategoryRepository;
@@ -29,7 +32,7 @@ public class ServiceCategoryImpl implements ServiceCategoryInterface {
     @Override
     public ServiceCategory createNewCategory(ServiceCategoryRequest serviceCategoryRequest) {
         ServiceCategory category = convertDtoToEntity(serviceCategoryRequest);
-        if (serviceCategoryRepository.existsByName(category.getName())){
+        if (serviceCategoryRepository.existsByName(category.getName())) {
             throw new DuplicateCategoryName("Duplicate category name");
         }
         return serviceCategoryRepository.save(category);
@@ -43,6 +46,7 @@ public class ServiceCategoryImpl implements ServiceCategoryInterface {
         if (categoryFoundById.isPresent()) {
             return convertEntityToResponseDto(categoryFoundById.get());
         }
+        logger.error("Category not found");
         throw new RuntimeException("Category not found");
 
     }
@@ -55,6 +59,7 @@ public class ServiceCategoryImpl implements ServiceCategoryInterface {
         if (categoryFoundById.isPresent()) {
             return categoryFoundById.get();
         } else {
+            logger.error("Category not found");
             throw new RuntimeException("Category not found");
         }
     }
@@ -64,6 +69,7 @@ public class ServiceCategoryImpl implements ServiceCategoryInterface {
     public ServiceCategory updateCategory(ServiceCategory category) {
         Optional<ServiceCategory> categoryFound = serviceCategoryRepository.findById(category.getId());
         if (categoryFound.isEmpty()) {
+            logger.error("Category not found");
             throw new RuntimeException("Category not found");
         }
         return serviceCategoryRepository.save(category);
@@ -83,6 +89,7 @@ public class ServiceCategoryImpl implements ServiceCategoryInterface {
     @Transactional(readOnly = true)
     @Override
     public List<ServiceCategoryResponse> getAllCategories() {
+        logger.info("getAllCategories");
         List<ServiceCategory> allCategories = serviceCategoryRepository.findAll();
         return allCategories.stream()
                 .map(this::convertEntityToResponseDto)
@@ -92,6 +99,7 @@ public class ServiceCategoryImpl implements ServiceCategoryInterface {
     @Transactional(readOnly = true)
     @Override
     public List<ServiceCategoryResponse> getAllCategoriesByName(String name) {
+        logger.info("getAllCategoriesByName");
         List<ServiceCategory> allCategoriesWithContainingName = serviceCategoryRepository.findByNameContainingIgnoreCase(name);
         if (allCategoriesWithContainingName.isEmpty()) {
             throw new RuntimeException("Category not found with name " + name);
@@ -110,6 +118,7 @@ public class ServiceCategoryImpl implements ServiceCategoryInterface {
             found.get().setName(name);
             serviceCategoryRepository.save(found.get());
         } else {
+            logger.error("Category not found");
             throw new RuntimeException("Category not found");
         }
         ;

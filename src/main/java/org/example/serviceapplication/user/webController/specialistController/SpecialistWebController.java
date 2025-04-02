@@ -143,7 +143,6 @@ public class SpecialistWebController {
         SubServiceCategory subServiceCategoryById = subservice.getSubServiceCategoryById(subServiceId);
         specialist.getSubServiceCategories().add(subServiceCategoryById);
 
-
         userService.addSubCategory(userId, subServiceId);
         subServiceCategoryById.getUsers().add(specialist);
         return "redirect:/specialist-profile";

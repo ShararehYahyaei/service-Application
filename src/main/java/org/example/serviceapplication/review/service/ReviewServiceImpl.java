@@ -1,5 +1,6 @@
 package org.example.serviceapplication.review.service;
 
+import org.example.serviceapplication.offer.service.OfferServiceImpl;
 import org.example.serviceapplication.order.exception.OrderIsDuplicated;
 import org.example.serviceapplication.order.exception.OrderStatusIsNotCorrect;
 import org.example.serviceapplication.order.model.Order;
@@ -10,6 +11,8 @@ import org.example.serviceapplication.review.model.ReviewDto;
 import org.example.serviceapplication.review.repository.ReviewRepository;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.specialistService.SpecialistService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,7 @@ import java.time.LocalDateTime;
 public class ReviewServiceImpl implements ReviewService {
     private final OrderService orderService;
     private final ReviewRepository reviewRepository;
+    private final Logger logger = LoggerFactory.getLogger(ReviewServiceImpl.class);
 
 
     public ReviewServiceImpl(OrderService orderService, ReviewRepository reviewRepository
@@ -31,6 +35,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     @Override
     public void addReview(User customer, ReviewDto reviewDto) {
+        logger.info("Adding review");
         Review review = convertRequestIntoEntity(customer, reviewDto);
         review.setReviewDate(LocalDateTime.now());
         reviewRepository.save(review);
@@ -48,6 +53,9 @@ public class ReviewServiceImpl implements ReviewService {
 
             );
         }
+
+
+        logger.error("Order Status Is Not Correct");
         throw new OrderStatusIsNotCorrect("OrderStatusIsNotCorrect");
     }
     @Override

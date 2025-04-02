@@ -21,7 +21,7 @@ public interface OfferServiceInterface {
 
     Offer getOfferById(Long offerId);
 
-    List<OfferDto> getAllMyOfferWithAcceetedStatsus(Long userId);
+    List<OfferDto> getAllOffersWithAccepetedStatus(Long userId);
 
     User getSpecialist(Long requestId);
 

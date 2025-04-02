@@ -16,6 +16,8 @@ import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.specialistService.SpecialistService;
 import org.example.serviceapplication.user.userRepository.UserRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,7 @@ public class CustomerService implements CustomerServiceInter {
     private final OrderService orderService;
     private final ReviewService reviewService;
     private final SpecialistService specialistService;
+    private final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
     public CustomerService(UserRepository userRepository,
                            CustomerRequestService customerRequestService,
@@ -51,6 +54,7 @@ public class CustomerService implements CustomerServiceInter {
     @Transactional
     @Override
     public CustomerResponseDto createCustomer(User user) {
+        logger.info("Create customer with user: {}", user);
         User customer = userRepository.save(user);
         return convertEntityToResponseDto(customer);
 
@@ -113,6 +117,7 @@ public class CustomerService implements CustomerServiceInter {
     }
 
     public List<CustomerResponseDto> convertEntitiesToResponseDtos(List<User> users) {
+        logger.info("Converting entities to response dto");
         return users.stream()
                 .map(user -> new CustomerResponseDto(
                         user.getAddress(),

@@ -45,6 +45,7 @@ public class OfferServiceImpl implements OfferServiceInterface {
     @Transactional
     @Override
     public void createOffer(User customer, OfferDto offerDto) {
+
         logger.info("create offer");
         Offer offer = convertRequestIntoEntity(customer, offerDto);
         offer.setStatus(OfferStatus.PENDING);
@@ -57,6 +58,7 @@ public class OfferServiceImpl implements OfferServiceInterface {
     @Transactional
     @Override
     public void updateOffer(Long offerId, OfferUpdateDto offerUpdateDto) {
+        logger.info("update offer");
         logger.info("Updating offer with id {}", offerId);
         Optional<Offer> byId = offerRepository.findById(offerId);
         if (byId.isEmpty()) {
@@ -113,6 +115,7 @@ public class OfferServiceImpl implements OfferServiceInterface {
     @Transactional(readOnly = true)
     @Override
     public List<OfferDto> getAllOffersNotSorted(Long requestId, Sort sort) {
+        logger.info("getAllOffersNotSorted");
         List<Offer> offers = offerRepository.findByCustomerRequestId(requestId, sort);
         if (offers.isEmpty()) {
             throw new OfferNotFound("OfferNotFound");
@@ -124,17 +127,20 @@ public class OfferServiceImpl implements OfferServiceInterface {
 
     @Override
     public Offer getOfferById(Long offerId) {
+        logger.info("getOfferById");
         Optional<Offer> offer = offerRepository.findById(offerId);
         if (offer.isPresent()) {
             return offer.get();
         }
+        logger.error("Offer with id {} not found", offerId);
         throw new OfferNotFound("Offer Not found");
     }
 
     @Override
-    public List<OfferDto> getAllMyOfferWithAcceetedStatsus(Long userId) {
+    public List<OfferDto> getAllOffersWithAccepetedStatus(Long userId) {
         List<Offer> byUserIdAndStatus = offerRepository.findByUserIdAndStatus(userId, OfferStatus.ACCEPTED);
         if (byUserIdAndStatus.isEmpty()) {
+            logger.info("getAllMyOfferWithAcceptedStatuses not found");
             throw new OfferNotFound("OfferNotFound");
         }
 
@@ -155,11 +161,13 @@ public class OfferServiceImpl implements OfferServiceInterface {
     public void deleteOffer(Long offerId) {
         Optional<Offer> found = offerRepository.findById(offerId);
         if (found.isEmpty()) {
+            logger.error("Offer with id {} not found", offerId);
             throw new OfferNotFound("OfferNotFound");
         }
         if (found.get().getStatus() == OfferStatus.PENDING) {
             offerRepository.deleteById(offerId);
         } else {
+            logger.error("Offer with id {} is not PENDING", offerId);
             throw new OfferStatusIsNotCorrect("OfferStatusIsNotCorrect");
         }
 

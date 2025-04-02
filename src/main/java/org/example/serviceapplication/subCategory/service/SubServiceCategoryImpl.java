@@ -9,6 +9,8 @@ import org.example.serviceapplication.subCategory.repsitory.SubServiceCategoryRe
 import org.example.serviceapplication.subCategory.dto.SubServiceCategoryRequest;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategoryResponse;
 import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
     private final SubServiceCategoryRepository subServiceCategoryRepository;
     private final ServiceCategoryInterface serviceCategoryInterface;
+    private final Logger logger = LoggerFactory.getLogger(SubServiceCategoryImpl.class);
 
     public SubServiceCategoryImpl(SubServiceCategoryRepository subServiceCategoryRepository,
                                   ServiceCategoryInterface serviceCategoryInterface) {
@@ -31,6 +34,7 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
     @Transactional
     @Override
     public SubServiceCategoryResponse createSubServiceCategory(SubServiceCategoryRequest subServiceCategoryRequest) {
+
         ServiceCategory serviceCategory = serviceCategoryInterface.getCategoryById(subServiceCategoryRequest.categoryId());
         serviceCategory.getSubServiceCategoryList().add(
                 new SubServiceCategory(
@@ -63,6 +67,7 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
         if (byId.isPresent()) {
             return byId.get();
         }
+        logger.error("SubServiceCategory with id {} not found", id);
         throw new SubServiceCategoryIsNotFound("Sub Service Category Not Found");
     }
 
@@ -71,7 +76,8 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
     public void editSubServiceCategory(Long id, UpdateSubServiceCategory updateSubServiceCategory) {
         Optional<SubServiceCategory> foundSubService = subServiceCategoryRepository.findById(id);
         if (foundSubService.isEmpty()) {
-            throw new RuntimeException("SubServiceCategory not found with ID: " + id);
+            logger.error("SubServiceCategory with id {} not found", id);
+            throw new SubServiceCategoryIsNotFound("SubServiceCategory not found with ID: " + id);
         }
         if (updateSubServiceCategory.name() != null) {
             foundSubService.get().setName(updateSubServiceCategory.name());
@@ -90,6 +96,7 @@ public class SubServiceCategoryImpl implements SubServiceCategoryInterface {
     @Override
     public void deleteSubServiceCategory(Long id) {
         Optional<SubServiceCategory> found = subServiceCategoryRepository.findById(id);
+        logger.info("SubServiceCategory with id {} found", id);
         if (found.isPresent()) {
             subServiceCategoryRepository.delete(found.get());
         } else {

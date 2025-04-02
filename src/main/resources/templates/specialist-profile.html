@@ -109,7 +109,7 @@
     <p><strong>نام:</strong> <span th:text="${specialist.name}"></span></p>
     <p><strong>ایمیل:</strong> <span th:text="${specialist.email}"></span></p>
 </div>
-<form th:action="@{/assign-sub-service-to-specialist}" method="get">
+<form th:action="@{/assign-sub-service-to-specialist}" method="post">
     <input type="hidden" name="userId" th:value="${specialist.id}" />
     <button type="submit" class="button">
         افزودن زیرخدمت

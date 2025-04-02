@@ -17,6 +17,8 @@ import org.example.serviceapplication.user.dto.SpecialistWithSubService;
 import org.example.serviceapplication.user.exception.*;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.userRepository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,7 @@ public class SpecialistServiceImpl implements SpecialistService {
     private final UserRepository userRepository;
     private final SubServiceCategoryInterface subServiceCategory;
     private final SubServiceCategoryRepository subServiceCategoryRepository;
+    private final Logger logger = LoggerFactory.getLogger(SpecialistServiceImpl.class);
 
 
     public SpecialistServiceImpl(OfferServiceInterface offerService, CustomerRequestService customerRequestService, OrderService orderService,
@@ -53,6 +56,7 @@ public class SpecialistServiceImpl implements SpecialistService {
     @Override
     public void editSubServiceCategory(User user, Long subServiceCategoryOld, Long subServiceCategoryNew) {
         if (user.getSubServiceCategories() == null || user.getSubServiceCategories().isEmpty()) {
+            logger.error("SubServiceCategory is null or empty");
             throw new NotSubServiceCategory("this list is empty");
         }
 
@@ -61,6 +65,7 @@ public class SpecialistServiceImpl implements SpecialistService {
         SubServiceCategory newCategory = subServiceCategory.getSubServiceCategoryById(subServiceCategoryNew);
 
         if (!user.getSubServiceCategories().contains(oldCategory)) {
+            logger.error("SubServiceCategory does not exist");
             throw new NotSubServiceCategory("User must have  this SubServiceCategory");
         }
 
@@ -72,6 +77,7 @@ public class SpecialistServiceImpl implements SpecialistService {
 
         if (newCategory != null) {
             if (user.getSubServiceCategories().contains(newCategory)) {
+                logger.error("SubServiceCategory already exists");
                 throw new UserAlreadyHasThisSubService("User already has this SubServiceCategory");
             }
             user.getSubServiceCategories().add(newCategory);
@@ -84,6 +90,7 @@ public class SpecialistServiceImpl implements SpecialistService {
     @Transactional
     @Override
     public SpecialistResponseDto createSpecialist(User user, Long subServiceId) {
+        logger.info("createSpecialist");
         if (user.getProfileImage() == null) {
             throw new ProfileImageNull("Profile image is null");
         }
@@ -205,7 +212,7 @@ public class SpecialistServiceImpl implements SpecialistService {
 
     @Override
     public List<OfferDto> getAllMyOffersWithAccepetedStatus(Long userId) {
-        return offerService.getAllMyOfferWithAcceetedStatsus(userId);
+        return offerService.getAllOffersWithAccepetedStatus(userId);
     }
 
     @Transactional

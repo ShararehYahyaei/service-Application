@@ -75,17 +75,14 @@
 <h1>افزودن زیرخدمت به متخصص</h1>
 
 <div class="form-container">
-    <form th:action="@{/assign-sub-service-to-specialist}" method="get">
+    <!-- فرم ارسال به متد POST -->
+    <form th:action="@{/assign-sub-service-to-specialist}" method="post">
         <input type="hidden" name="userId" th:value="${specialist.id}">
 
         <label for="subCategoryId">شماره زیرخدمت:</label>
-        <input type="number" id="subCategoryId" name="subCategoryId" required>
-        <form th:action="@{/assign-sub-service-to-specialist}" method="post">
-            <input type="hidden" name="userId" th:value="${specialist.id}"/>
-            <input type="hidden" name="subServiceId" value="yourSubServiceId"/>
-            <button type="submit">افزودن زیرخدمت</button>
-        </form>
+        <input type="number" id="subCategoryId" name="subServiceId" required>
 
+        <button type="submit">افزودن زیرخدمت</button>
     </form>
 </div>
 

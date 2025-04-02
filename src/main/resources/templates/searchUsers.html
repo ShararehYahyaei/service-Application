@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتایج جستجو</title>
+    <!-- لینک به Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+<div class="max-w-4xl mx-auto my-8 p-6 bg-white shadow-lg rounded-lg">
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">نتایج جستجوی کاربران</h1>
+
+
+    <form th:action="@{/searchUsers}" method="get" class="space-y-4">
+        <div>
+            <label for="name" class="block text-lg font-medium text-gray-700">نام:</label>
+            <input type="text" id="name" name="name" th:value="${name}"
+                   class="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        </div>
+        <div>
+            <label for="email" class="block text-lg font-medium text-gray-700">ایمیل:</label>
+            <input type="text" id="email" name="email" th:value="${email}"
+                   class="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        </div>
+        <div>
+            <label for="role" class="block text-lg font-medium text-gray-700">نقش:</label>
+            <input type="text" id="role" name="role" th:value="${role}"
+                   class="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        </div>
+        <div class="text-center">
+            <button type="submit"
+                    class="mt-4 py-2 px-6 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-300">جستجو</button>
+        </div>
+    </form>
+
+    <div class="mt-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">نتایج جستجو:</h2>
+        <ul class="space-y-4">
+            <li th:each="user : ${users}" class="p-4 bg-gray-50 border rounded-lg shadow-sm">
+                <div class="flex justify-between items-center">
+                    <span th:text="${user.name}" class="text-xl font-semibold text-gray-700"></span>
+                    <span th:text="${user.email}" class="text-sm text-gray-500"></span>
+                </div>
+                <span th:text="${user.role}" class="block text-right mt-2 text-gray-600"></span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

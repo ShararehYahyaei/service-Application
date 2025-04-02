@@ -90,4 +90,22 @@ public class UserWebController {
     }
 
 
+
+    @GetMapping("/searchUsers")
+    public String searchUsers(@RequestParam(value = "name", required = false) String name,
+                              @RequestParam(value = "email", required = false) String email,
+                              @RequestParam(value = "role", required = false) String role,
+                              Model model) {
+
+        List<User> users = userService.searchUsers(name, email, role);
+        model.addAttribute("users", users);
+        model.addAttribute("name", name);
+        model.addAttribute("email", email);
+        model.addAttribute("role", role);
+
+        return "searchUsers";
+    }
+
+
+
 }

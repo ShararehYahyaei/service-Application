@@ -3,6 +3,7 @@ package org.example.serviceapplication.order.service;
 import org.example.serviceapplication.offer.exception.OfferNotFound;
 import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.offer.model.OfferStatus;
+import org.example.serviceapplication.offer.service.OfferServiceImpl;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.order.exception.OrderNotFound;
 import org.example.serviceapplication.order.exception.OrderStatusIsNotCorrect;
@@ -15,6 +16,8 @@ import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.request.model.RequestStatus;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.user.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,7 @@ import java.util.Optional;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final CustomerRequestService customerRequestService;
+    private final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     public OrderServiceImpl(OrderRepository orderRepository, CustomerRequestService customerRequestService) {
         this.orderRepository = orderRepository;
@@ -35,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void createOrder(User customer, OrderDto orderDto) {
+        logger.info("Create order");
         CustomerRequest request = customerRequestService.findRequestById(orderDto.customerRequestId());
         User customerForOrder = request.getUser();
         Optional<Offer> offer = request.getOffers().stream().filter(c -> c.getId().equals(orderDto.offerId())).
@@ -54,6 +59,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Order convertDtoToOrder(User customer, OrderDto orderDto) {
+        logger.info("Convert order");
         CustomerRequest request = customerRequestService.findRequestById(orderDto.customerRequestId());
         if (request.getRequestStatus() == RequestStatus.AwaitingSelection) {
             return new Order(
@@ -72,6 +78,7 @@ public class OrderServiceImpl implements OrderService {
         if (found.isPresent()) {
             return found.get();
         }
+        logger.error("Order not found");
         throw new OrderNotFound("order customerRequestNumber not existed yeet...");
     }
 
@@ -87,6 +94,7 @@ public class OrderServiceImpl implements OrderService {
                 orderRepository.save(order);
                 return;
             }
+            logger.error("Order status is not correct");
             throw new OrderStatusIsNotCorrect("OrderStatusIsNotValid");
         }
         throw new OrderNotFound("order customerRequestNumber not existed yeet...");

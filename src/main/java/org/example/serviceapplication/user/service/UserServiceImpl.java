@@ -21,6 +21,8 @@ import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
 import org.example.serviceapplication.user.service.specialistService.SpecialistServiceImpl;
 import org.example.serviceapplication.user.userRepository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,6 +44,7 @@ public class UserServiceImpl implements UserService {
     private final CustomerService customerService;
     private final SpecialistServiceImpl specialistService;
     private final SubServiceCategoryInterface subService;
+    private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     public UserServiceImpl(UserRepository userRepository,
                            ServiceCategoryInterface categoryService,
@@ -58,7 +61,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserResponseDto createUser(UserRequest userRequest, MultipartFile profileImage) {
+        logger.info("Creating user");
         if (!isEmailUnique(userRequest.email())) {
+            logger.error("Email already exists");
             throw new EmailNotUniqueException("The email is already taken.");
         }
         UserResponseDto userResponse = null;
@@ -83,6 +88,7 @@ public class UserServiceImpl implements UserService {
         if (userFound.isPresent()) {
             return convertUserToResponseDto(userFound.get());
         }
+        logger.error("User not found");
         throw new RuntimeException("User not found");
     }
 
@@ -250,6 +256,8 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Transactional(readOnly = true)
+    @Override
     public List<User> searchUsers(String name, String email, String role) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
@@ -269,6 +277,8 @@ public class UserServiceImpl implements UserService {
         query.where(cb.and(predicates.toArray(new Predicate[0])));
         return entityManager.createQuery(query).getResultList();
     }
+
+
 
 
 }

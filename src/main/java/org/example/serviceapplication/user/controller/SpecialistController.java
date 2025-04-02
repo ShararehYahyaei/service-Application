@@ -8,6 +8,8 @@ import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.specialistService.SpecialistService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,7 @@ import java.util.List;
 public class SpecialistController {
     private final SpecialistService specialistService;
 
+
     public SpecialistController(SpecialistService specialistService
     ) {
         this.specialistService = specialistService;
@@ -28,6 +31,7 @@ public class SpecialistController {
 
     @PostMapping("/addOffer")
     public ResponseEntity createOffer(@RequestBody OfferDto offerDto) {
+
         Long id = offerDto.specialistId();
         User specialist = specialistService.getById(id);
         if (specialist.getRole() != Role.Specialist) {
