@@ -2,6 +2,7 @@ package org.example.serviceapplication.review.service;
 
 import org.example.serviceapplication.offer.service.OfferServiceImpl;
 import org.example.serviceapplication.order.exception.OrderIsDuplicated;
+import org.example.serviceapplication.order.exception.OrderOwnershipException;
 import org.example.serviceapplication.order.exception.OrderStatusIsNotCorrect;
 import org.example.serviceapplication.order.model.Order;
 import org.example.serviceapplication.order.model.OrderStatus;
@@ -26,7 +27,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 
     public ReviewServiceImpl(OrderService orderService, ReviewRepository reviewRepository
-         ) {
+    ) {
         this.orderService = orderService;
         this.reviewRepository = reviewRepository;
 
@@ -44,22 +45,30 @@ public class ReviewServiceImpl implements ReviewService {
 
     private Review convertRequestIntoEntity(User customer, ReviewDto reviewDto) {
         Order order = orderService.getOrderById(reviewDto.orderId());
-        if (order.getOrderStatus() == OrderStatus.COMPLETED) {
-            return new Review(
-                    customer,
-                    order,
-                    reviewDto.rating(),
-                    reviewDto.comment()
 
-            );
+
+        if (!order.getCustomer().getId().equals(customer.getId())) {
+            logger.error("Order does not belong to this customer!");
+            throw new OrderOwnershipException("Order does not belong to this customer.");
+        }
+        if (order.getOrderStatus() != OrderStatus.COMPLETED) {
+            logger.error("Order Status Is Not Correct");
+            throw new OrderStatusIsNotCorrect("Order status must be COMPLETED to leave a review.");
         }
 
+        return new Review(
+                customer,
+                order,
+                reviewDto.rating(),
+                reviewDto.comment()
 
-        logger.error("Order Status Is Not Correct");
-        throw new OrderStatusIsNotCorrect("OrderStatusIsNotCorrect");
+        );
+
+
     }
+
     @Override
-    public Double  getRateForSpecialist(Long specialistId) {
-       return reviewRepository.findAverageRatingBySpecialistId(specialistId);
-   }
+    public Double getRateForSpecialist(Long specialistId) {
+        return reviewRepository.findAverageRatingBySpecialistId(specialistId);
+    }
 }

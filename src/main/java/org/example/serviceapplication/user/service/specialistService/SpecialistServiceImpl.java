@@ -258,7 +258,6 @@ public class SpecialistServiceImpl implements SpecialistService {
     @Transactional
     @Override
     public void deleteOffer(Long offerId) {
-
         offerService.deleteOffer(offerId);
     }
 

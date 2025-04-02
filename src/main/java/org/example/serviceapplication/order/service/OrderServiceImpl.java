@@ -5,6 +5,7 @@ import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.offer.model.OfferStatus;
 import org.example.serviceapplication.offer.service.OfferServiceImpl;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
+import org.example.serviceapplication.order.exception.OrderIsDuplicated;
 import org.example.serviceapplication.order.exception.OrderNotFound;
 import org.example.serviceapplication.order.exception.OrderStatusIsNotCorrect;
 import org.example.serviceapplication.order.model.Order;
@@ -46,14 +47,18 @@ public class OrderServiceImpl implements OrderService {
                 findFirst();
         if (offer.isEmpty()) {
             throw new OfferNotFound("Offer not found");
-        } else {
+        }
+        boolean orderExists = orderRepository.existsByOffer(offer.get());
+        if (orderExists) {
+            throw new OrderIsDuplicated("An order with this offer already exists");
+        }
             Order order = new Order(customerForOrder, offer.get(), request);
             order.setOrderDate(LocalDateTime.now());
             order.getOffer().setStatus(OfferStatus.ACCEPTED);
             order.getCustomerRequest().setRequestStatus(RequestStatus.InProgress);
             order.setOrderStatus(OrderStatus.CONFIRMED);
             orderRepository.save(order);
-        }
+
 
 
     }
