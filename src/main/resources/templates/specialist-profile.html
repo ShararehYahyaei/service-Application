@@ -21,58 +21,9 @@
             margin-bottom: 20px;
         }
 
-        .form-container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            text-align: center;
-        }
-
-        label {
-            font-size: 16px;
-            color: #555;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 16px;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #ff758c, #ff7eb3);
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: linear-gradient(135deg, #ff5178, #ff6a9f);
-            transform: translateY(-2px);
-        }
-
-        .error-message {
-            color: red;
-            margin-top: 10px;
-        }
-
         .profile-container {
             background: white;
             padding: 20px;
-            margin-top: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
@@ -87,34 +38,47 @@
             color: #666;
             font-size: 16px;
         }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background: linear-gradient(135deg, #ff5178, #ff6a9f);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
 
-<h1>جستجوی متخصص</h1>
-
-<div id="searchFormContainer" >
-    <form th:action="@{/specialist-profile}" method="get">
-        <label for="specialistId">شماره متخصص:</label>
-        <input type="number" id="specialistId" name="specialistId" required>
-        <button type="submit">جستجو</button>
-    </form>
-</div>
+<h1>پروفایل متخصص</h1>
 
 
 <p th:if="${error}" class="error-message" th:text="${error}"></p>
 
+
 <div class="profile-container" th:if="${specialist}">
-    <h2>پروفایل متخصص</h2>
+    <h2>اطلاعات متخصص</h2>
     <p><strong>نام:</strong> <span th:text="${specialist.name}"></span></p>
     <p><strong>ایمیل:</strong> <span th:text="${specialist.email}"></span></p>
 </div>
-<form th:action="@{/assign-sub-service-to-specialist}" method="post">
-    <input type="hidden" name="userId" th:value="${specialist.id}" />
-    <button type="submit" class="button">
-        افزودن زیرخدمت
-    </button>
-</form>
+
+
+<a href="/services" class="back-button">بازگشت</a>
 
 
 </body>

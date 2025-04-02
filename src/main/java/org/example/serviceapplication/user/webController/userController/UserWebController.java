@@ -1,23 +1,15 @@
 package org.example.serviceapplication.user.webController.userController;
 
 import jakarta.validation.Valid;
-import org.example.serviceapplication.Category.model.ServiceCategory;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
-import org.example.serviceapplication.subCategory.dto.SubServiceCategoryRequest;
-import org.example.serviceapplication.subCategory.dto.SubServiceCategoryResponse;
 import org.example.serviceapplication.subCategory.dto.SubServiceDto;
-import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
-import org.example.serviceapplication.user.dto.SpecialistResponseDto;
 import org.example.serviceapplication.user.dto.UserRequest;
 import org.example.serviceapplication.user.dto.UserResponseDto;
-import org.example.serviceapplication.user.enumPackage.Role;
-import org.example.serviceapplication.user.exception.UserNotFond;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -71,23 +62,28 @@ public class UserWebController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/specialist-profile")
-    public String getSpecialistProfile(@RequestParam(value = "specialistId", required = false) Long specialistId, Model model) {
-        if (specialistId != null) {
-            try {
-                User specialist = userService.getUserById(specialistId);
-
-                if (specialist == null) {
-                    model.addAttribute("error", "متخصص یافت نشد.");
-                } else {
-                    model.addAttribute("specialist", specialist);
-                }
-            } catch (Exception e) {
-                model.addAttribute("error", "خطا در دریافت اطلاعات متخصص.");
-            }
-        }
-        return "specialist-profile";
+    @GetMapping("/getProfile")
+    public String getSpecialistProfile() {
+        return "getProfile";
     }
+
+
+    @GetMapping("/specialist-profile")
+    public String getSpecialistProfile(@RequestParam("specialistId") Long specialistId, Model model) {
+        User specialist = userService.getUserById(specialistId);
+
+        if (specialist == null) {
+            model.addAttribute("error", "متخصصی با این شناسه یافت نشد.");
+            return "specialist-profile"; // نمایش صفحه پروفایل با پیام خطا
+        }
+
+        model.addAttribute("specialist", specialist);
+        return "specialist-profile"; // نمایش اطلاعات متخصص
+    }
+
+
+
+
 
 
     @GetMapping("/searchUsers")
