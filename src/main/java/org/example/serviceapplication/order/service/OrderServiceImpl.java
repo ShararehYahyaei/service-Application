@@ -3,8 +3,6 @@ package org.example.serviceapplication.order.service;
 import org.example.serviceapplication.offer.exception.OfferNotFound;
 import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.offer.model.OfferStatus;
-import org.example.serviceapplication.offer.service.OfferServiceImpl;
-import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.order.exception.OrderIsDuplicated;
 import org.example.serviceapplication.order.exception.OrderNotFound;
 import org.example.serviceapplication.order.exception.OrderStatusIsNotCorrect;
@@ -23,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -52,13 +52,12 @@ public class OrderServiceImpl implements OrderService {
         if (orderExists) {
             throw new OrderIsDuplicated("An order with this offer already exists");
         }
-            Order order = new Order(customerForOrder, offer.get(), request);
-            order.setOrderDate(LocalDateTime.now());
-            order.getOffer().setStatus(OfferStatus.ACCEPTED);
-            order.getCustomerRequest().setRequestStatus(RequestStatus.InProgress);
-            order.setOrderStatus(OrderStatus.CONFIRMED);
-            orderRepository.save(order);
-
+        Order order = new Order(customerForOrder, offer.get(), request);
+        order.setOrderDate(LocalDateTime.now());
+        order.getOffer().setStatus(OfferStatus.ACCEPTED);
+        order.getCustomerRequest().setRequestStatus(RequestStatus.InProgress);
+        order.setOrderStatus(OrderStatus.CONFIRMED);
+        orderRepository.save(order);
 
 
     }
@@ -104,5 +103,27 @@ public class OrderServiceImpl implements OrderService {
         }
         throw new OrderNotFound("order customerRequestNumber not existed yeet...");
 
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<OrderDto> getOrdersByCustomerId(Long customerId) {
+        List<Order> orders = orderRepository.findByCustomerId(customerId);
+        if (orders.isEmpty()) {
+            throw new OrderNotFound("order customerRequestNumber not existed yeet...");
+        }
+        return convertOrdersToOrderDtos(orders);
+
+    }
+
+    private static List<OrderDto> convertOrdersToOrderDtos(List<Order> orders) {
+        return orders.stream()
+                .map(order -> new OrderDto(
+                        order.getCustomer() != null ? order.getCustomer().getId() : null,
+                        order.getOffer() != null ? order.getOffer().getId() : null,
+                        order.getCustomerRequest() != null ? order.getCustomerRequest().getId() : null,
+                        order.getOrderStatus()
+                ))
+                .collect(Collectors.toList());
     }
 }

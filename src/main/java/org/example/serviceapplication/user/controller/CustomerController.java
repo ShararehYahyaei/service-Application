@@ -2,6 +2,8 @@ package org.example.serviceapplication.user.controller;
 
 import org.example.serviceapplication.credit.model.CreditDto;
 import org.example.serviceapplication.credit.service.CreditService;
+import org.example.serviceapplication.order.exception.OrderNotFound;
+import org.example.serviceapplication.order.service.OrderService;
 import org.example.serviceapplication.review.model.ReviewDto;
 import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.order.model.OrderDto;
@@ -26,10 +28,12 @@ public class CustomerController {
 
     private final CustomerService customerService;
     private final CreditService creditService;
+    private final OrderService orderService;
 
-    public CustomerController(CustomerService customerService, CreditService creditService) {
+    public CustomerController(CustomerService customerService, CreditService creditService, OrderService orderService) {
         this.customerService = customerService;
         this.creditService = creditService;
+        this.orderService = orderService;
     }
 
 
@@ -146,6 +150,17 @@ public class CustomerController {
         }
         Double creditAmount = creditService.getCreditAmountByUserId(userCustomerId);
         return ResponseEntity.ok(creditAmount);
+    }
+
+
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<OrderDto>> getOrdersByCustomerId(@PathVariable Long customerId) {
+        User customer = customerService.getUserById(customerId);
+        if (customer.getRole() != Role.Customer) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+        List<OrderDto> ordersByCustomerId = orderService.getOrdersByCustomerId(customerId);
+        return ResponseEntity.ok(ordersByCustomerId);
     }
 
 }
