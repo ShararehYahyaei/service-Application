@@ -97,7 +97,7 @@ public class CustomerController {
 
     }
 
-
+//todo edit
     @GetMapping("getUserSpecialistForRating/{userId}/{requestId}")
     public ResponseEntity<SpecialistResponseDto> getMyCompletedOrder(@PathVariable Long userId,
                                                                      @PathVariable Long requestId) {

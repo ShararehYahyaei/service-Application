@@ -31,5 +31,8 @@ public interface OfferServiceInterface {
 
     List<OfferDto> getAllOffersSortedByPrice(CustomerRequest request);
 
-  //  List<OfferDto> getAllOffersSortedByRate(CustomerRequest request);
+    @Transactional
+    List<OfferDto>getAllOffersBySpecialistId(Long userId);
+
+    //  List<OfferDto> getAllOffersSortedByRate(CustomerRequest request);
 }

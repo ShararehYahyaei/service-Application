@@ -16,6 +16,8 @@ public interface OfferRepository extends CrudRepository<Offer, Long> {
         CustomerRequest user(User user);
         List<Offer> findByCustomerRequest(CustomerRequest customerRequest);
         List<Offer> findByCustomerRequestOrderByOfferPriceAsc(CustomerRequest request);
+        List<Offer> findByUserId(Long userId);
+
 
 }
 

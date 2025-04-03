@@ -1,7 +1,5 @@
 package org.example.serviceapplication.review.service;
 
-import org.example.serviceapplication.offer.service.OfferServiceImpl;
-import org.example.serviceapplication.order.exception.OrderIsDuplicated;
 import org.example.serviceapplication.order.exception.OrderOwnershipException;
 import org.example.serviceapplication.order.exception.OrderStatusIsNotCorrect;
 import org.example.serviceapplication.order.model.Order;
@@ -11,7 +9,6 @@ import org.example.serviceapplication.review.model.Review;
 import org.example.serviceapplication.review.model.ReviewDto;
 import org.example.serviceapplication.review.repository.ReviewRepository;
 import org.example.serviceapplication.user.model.User;
-import org.example.serviceapplication.user.service.specialistService.SpecialistService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -71,4 +68,12 @@ public class ReviewServiceImpl implements ReviewService {
     public Double getRateForSpecialist(Long specialistId) {
         return reviewRepository.findAverageRatingBySpecialistId(specialistId);
     }
+
+    @Transactional
+    @Override
+    public Double getRateForUser(Long userId) {
+        Double rate = reviewRepository.findAverageRatingByUserId(userId);
+        return rate != null ? rate : 0.0;
+    }
+
 }

@@ -14,7 +14,6 @@ import org.example.serviceapplication.request.model.RequestStatus;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.review.service.ReviewService;
 import org.example.serviceapplication.user.model.User;
-import org.example.serviceapplication.user.webController.customerController.CustomerWeb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -199,6 +198,12 @@ public class OfferServiceImpl implements OfferServiceInterface {
 //        return toOfferDTOList(offers);
 //    }
 
+    @Transactional
+    @Override
+    public List<OfferDto>getAllOffersBySpecialistId(Long userId) {
+        List<Offer> byUserId = offerRepository.findByUserId(userId);
+        return toOfferDTOList(byUserId);
+    }
 
 }
 

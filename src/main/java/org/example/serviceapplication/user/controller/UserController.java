@@ -2,9 +2,15 @@ package org.example.serviceapplication.user.controller;
 
 
 import jakarta.validation.Valid;
+import org.example.serviceapplication.offer.dto.OfferDto;
+import org.example.serviceapplication.offer.service.OfferServiceImpl;
+import org.example.serviceapplication.review.service.ReviewService;
 import org.example.serviceapplication.user.dto.*;
+import org.example.serviceapplication.user.enumPackage.Role;
+import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
+import org.example.serviceapplication.user.service.specialistService.SpecialistService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +23,16 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final SpecialistService specialistService;
+    private final ReviewService reviewService;
+    private final OfferServiceImpl offerServiceImpl;
 
-    public UserController(UserService userService
-    ) {
+    public UserController(UserService userService,
+                          SpecialistService specialistService, ReviewService reviewService, OfferServiceImpl offerServiceImpl) {
         this.userService = userService;
-
+        this.specialistService = specialistService;
+        this.reviewService = reviewService;
+        this.offerServiceImpl = offerServiceImpl;
     }
 
 //    @PostMapping(value = "/create", consumes = "multipart/form-data")
@@ -107,6 +118,21 @@ public class UserController {
         List<SpecialistResponseDto> allSpecialists = userService.getAllSpecialists();
         return new ResponseEntity<>(allSpecialists, HttpStatus.OK);
 
+    }
+    @GetMapping("getRate/{userId}")
+    public ResponseEntity<Double> getRate(@PathVariable Long userId
+                                                               ) {
+        User userById = userService.getUserById(userId);
+        if (userById.getRole() != Role.Specialist) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+
+
+//        List<OfferDto> allOffersBySpecialistId = offerServiceImpl.getAllOffersBySpecialistId(userId);
+
+
+        Double rateForUser = reviewService.getRateForUser(userId);
+      return new ResponseEntity<>(rateForUser, HttpStatus.OK);
     }
 
 
