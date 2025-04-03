@@ -1,5 +1,7 @@
 package org.example.serviceapplication.user.controller;
 
+import org.example.serviceapplication.credit.model.CreditDto;
+import org.example.serviceapplication.credit.service.CreditService;
 import org.example.serviceapplication.review.model.ReviewDto;
 import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.order.model.OrderDto;
@@ -23,9 +25,11 @@ import java.util.List;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final CreditService creditService;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, CreditService creditService) {
         this.customerService = customerService;
+        this.creditService = creditService;
     }
 
 
@@ -97,7 +101,7 @@ public class CustomerController {
 
     }
 
-//todo edit
+
     @GetMapping("getUserSpecialistForRating/{userId}/{requestId}")
     public ResponseEntity<SpecialistResponseDto> getMyCompletedOrder(@PathVariable Long userId,
                                                                      @PathVariable Long requestId) {
@@ -123,4 +127,27 @@ public class CustomerController {
     }
 
 
+    @PostMapping("customer/createCredit")
+    public ResponseEntity createCredit(@RequestBody CreditDto creditDto) {
+        User customer = customerService.getUserById(creditDto.userCustomerId());
+        if (customer.getRole() != Role.Customer) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+        creditService.createCredit(creditDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Credit created successfully");
+    }
+
+
+    @GetMapping("customer/{userCustomerId}/credit")
+    public ResponseEntity<Double> getCredit(@PathVariable Long userCustomerId) {
+        User customer = customerService.getUserById(userCustomerId);
+        if (customer.getRole() != Role.Customer) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+        Double creditAmount = creditService.getCreditAmountByUserId(userCustomerId);
+        return ResponseEntity.ok(creditAmount);
+    }
+
 }
+
+
