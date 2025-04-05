@@ -9,8 +9,12 @@ import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.user.dto.UserResponseDto;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class CreditServiceImpl implements CreditService {
@@ -31,14 +35,14 @@ public class CreditServiceImpl implements CreditService {
     }
 
     private Credit convertCreditDtoCredit(CreditDto creditDto) {
-        User user = userService.getUserById(creditDto.userId());
+        User user = userService.getUserById(creditDto.userId().longValue());
         return new Credit(
-               user,
-                creditDto.balance(),
-                creditDto.expirationDate()
+                user,
+                creditDto.balance().longValue()
         );
 
     }
+
 
 //    @Transactional(readOnly = true)
 //    @Override

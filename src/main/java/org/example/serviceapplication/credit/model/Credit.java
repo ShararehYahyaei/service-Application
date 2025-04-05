@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@Table(name = "credit")
 public class Credit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,14 +18,13 @@ public class Credit {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-    private Double balance;
-    private LocalDateTime expirationDate;
+    private Long balance;
     @Enumerated(EnumType.STRING)
     private CreditStatus status;
 
-    public Credit(User user, Double balance, LocalDateTime localDateTime) {
+    public Credit(User user, Long balance ) {
         this.user = user;
         this.balance = balance;
-        this.expirationDate = localDateTime;
+
     }
 }

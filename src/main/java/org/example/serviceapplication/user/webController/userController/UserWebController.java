@@ -102,23 +102,21 @@ public class UserWebController {
 
     @GetMapping("/addCredit")
     public String showAddCreditForm(Model model) {
-        model.addAttribute("creditForm", new CreditDto(null,
-                null, null));
+        model.addAttribute("creditForm", new CreditDto(0,0));
         return "add-credit";
     }
 
     @PostMapping("/addCredit")
     public String addCredit(@ModelAttribute CreditDto creditDto, Model model) {
         logger.info("Received CreditDto: {}", creditDto);
-        User user = userService.getUserById(creditDto.userId());
-        if (user.getRole().equals(Role.Admin)) {
+        User user = userService.getUserById(creditDto.userId().longValue());
+        if (user.getRole().equals(Role.Admin)||user.getRole().equals(Role.Specialist)) {
             logger.error("کاربر دارای نقش اشتباه است");
             model.addAttribute("message", "این کاربر اجازه افزودن اعتبار ندارد.");
             return "add-credit";
         }
         creditService.createCredit(creditDto);
-        model.addAttribute("credit", creditDto);
-        return "add-credit";
+        return "services";
 
     }
 }

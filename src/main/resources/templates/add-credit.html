@@ -1,115 +1,87 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="fa">
 <head>
+    <meta charset="UTF-8">
     <title>افزودن اعتبار</title>
     <style>
         body {
-            font-family: 'Vazirmatn', Arial, sans-serif;
-            background-color: #f0f8ff;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: sans-serif;
+            background-color: #f7f7f7;
+            padding: 30px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 25px 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
         }
 
         h2 {
-            font-size: 24px;
-            color: #d81b60;
-            margin-bottom: 20px;
-        }
-
-        form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-            box-sizing: border-box;
-        }
-
-        form div {
-            margin-bottom: 15px;
+            text-align: center;
+            color: #333;
         }
 
         label {
-            font-size: 16px;
-            color: #555;
             display: block;
-            margin-bottom: 5px;
+            margin-top: 15px;
+            font-weight: bold;
         }
 
-        input[type="number"], input[type="datetime-local"] {
+        input, select {
             width: 100%;
             padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
+            margin-top: 5px;
             border-radius: 8px;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        input[type="number"]:focus, input[type="datetime-local"]:focus {
-            border-color: #d81b60;
+            border: 1px solid #ccc;
         }
 
         button {
+            margin-top: 20px;
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #d81b60, #f06292);
+            background-color: #28a745;
             color: white;
+            font-size: 16px;
             border: none;
-            font-size: 18px;
-            cursor: pointer;
             border-radius: 8px;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
         }
 
         button:hover {
-            background: linear-gradient(135deg, #c2185b, #ad1457);
-            transform: translateY(-5px);
+            background-color: #218838;
         }
 
         .message {
             margin-top: 20px;
-            padding: 15px;
-            background-color: #fce4ec;
-            border: 1px solid #f06292;
-            border-radius: 8px;
-            color: #d81b60;
             text-align: center;
+            color: #28a745;
         }
     </style>
 </head>
 <body>
-
-<div>
-    <h2>افزودن اعتبار به حساب کاربر</h2>
-
+<div class="form-container">
+    <h2>افزودن اعتبار به حساب</h2>
     <form th:action="@{/addCredit}" th:object="${creditForm}" method="post">
-        <div>
-            <label for="userId">شناسه کاربر:</label>
-            <input type="number" id="userId" th:field="*{userId}" required/>
-        </div>
-        <div>
-            <label for="balance">مقدار اعتبار:</label>
-            <input type="number" step="0.01" id="balance" th:field="*{balance}" required/>
-        </div>
-        <div>
-            <label for="expirationDate">تاریخ انقضا:</label>
-            <input type="datetime-local" id="expirationDate" th:field="*{expirationDate}" required/>
-        </div>
-        <button type="submit">افزودن اعتبار</button>
+        <label for="role">نقش:</label>
+        <select id="role" name="role" required>
+            <option value="">انتخاب کنید</option>
+            <option value="CUSTOMER">مشتری</option>
+        </select>
+
+        <label for="userId">شناسه کاربر:</label>
+        <input type="number" id="userId" th:field="*{userId}"  name="userId"    />
+
+        <label for="balance">مقدار اعتبار (تومان):</label>
+        <input type="number" th:field="*{balance}" step="0.01" name="balance" id="balance" />
+        <button type="submit">افزودن</button>
     </form>
 
-    <div th:if="${message != null}" class="message">
+    <div class="message" th:if="${message != null}">
         <p th:text="${message}"></p>
     </div>
 </div>
-
 </body>
 </html>
