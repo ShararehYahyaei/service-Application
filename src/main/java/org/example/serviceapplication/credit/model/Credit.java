@@ -1,20 +1,30 @@
 package org.example.serviceapplication.credit.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.serviceapplication.user.model.User;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 public class Credit {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userCustomerId;
-    private Double amount;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+    private Double balance;
+    private LocalDateTime expirationDate;
+    @Enumerated(EnumType.STRING)
+    private CreditStatus status;
 
+    public Credit(User user, Double balance, LocalDateTime localDateTime) {
+        this.user = user;
+        this.balance = balance;
+        this.expirationDate = localDateTime;
+    }
 }

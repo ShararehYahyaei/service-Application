@@ -8,6 +8,6 @@ public interface CreditService {
     @Transactional
     Credit createCredit(CreditDto creditdto);
 
-    @Transactional(readOnly = true)
-    Double getCreditAmountByUserId(Long userCustomerId);
+//    @Transactional(readOnly = true)
+//    Double getCreditAmountByUserId(Long userCustomerId);
 }

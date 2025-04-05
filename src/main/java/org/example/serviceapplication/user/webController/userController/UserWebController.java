@@ -1,11 +1,15 @@
 package org.example.serviceapplication.user.webController.userController;
 
 import jakarta.validation.Valid;
+import org.example.serviceapplication.credit.model.CreditDto;
+import org.example.serviceapplication.credit.service.CreditService;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.dto.SubServiceDto;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.dto.UserRequest;
 import org.example.serviceapplication.user.dto.UserResponseDto;
+import org.example.serviceapplication.user.enumPackage.Role;
+import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
 import org.slf4j.Logger;
@@ -26,12 +30,14 @@ import java.util.stream.Collectors;
 public class UserWebController {
     private final UserService userService;
     private final SubServiceCategoryInterface subservice;
+    private final CreditService creditService;
     private final Logger logger = LoggerFactory.getLogger(UserWebController.class);
 
-    public UserWebController(UserService userService, SubServiceCategoryInterface subservice) {
+    public UserWebController(UserService userService, SubServiceCategoryInterface subservice, CreditService creditService) {
         this.userService = userService;
         this.subservice = subservice;
 
+        this.creditService = creditService;
     }
 
     @GetMapping("/register")
@@ -74,16 +80,12 @@ public class UserWebController {
 
         if (specialist == null) {
             model.addAttribute("error", "متخصصی با این شناسه یافت نشد.");
-            return "specialist-profile"; // نمایش صفحه پروفایل با پیام خطا
+            return "specialist-profile";
         }
 
         model.addAttribute("specialist", specialist);
-        return "specialist-profile"; // نمایش اطلاعات متخصص
+        return "specialist-profile";
     }
-
-
-
-
 
 
     @GetMapping("/searchUsers")
@@ -98,5 +100,25 @@ public class UserWebController {
         return "searchUsers";
     }
 
+    @GetMapping("/addCredit")
+    public String showAddCreditForm(Model model) {
+        model.addAttribute("creditForm", new CreditDto(null,
+                null, null));
+        return "add-credit";
+    }
 
+    @PostMapping("/addCredit")
+    public String addCredit(@ModelAttribute CreditDto creditDto, Model model) {
+        logger.info("Received CreditDto: {}", creditDto);
+        User user = userService.getUserById(creditDto.userId());
+        if (user.getRole().equals(Role.Admin)) {
+            logger.error("کاربر دارای نقش اشتباه است");
+            model.addAttribute("message", "این کاربر اجازه افزودن اعتبار ندارد.");
+            return "add-credit";
+        }
+        creditService.createCredit(creditDto);
+        model.addAttribute("credit", creditDto);
+        return "add-credit";
+
+    }
 }

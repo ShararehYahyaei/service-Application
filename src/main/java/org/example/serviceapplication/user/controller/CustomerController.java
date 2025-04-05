@@ -131,26 +131,26 @@ public class CustomerController {
     }
 
 
-    @PostMapping("customer/createCredit")
-    public ResponseEntity createCredit(@RequestBody CreditDto creditDto) {
-        User customer = customerService.getUserById(creditDto.userCustomerId());
-        if (customer.getRole() != Role.Customer) {
-            throw new UserHasWrongRole("User has wrong role");
-        }
-        creditService.createCredit(creditDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Credit created successfully");
-    }
-
-
-    @GetMapping("customer/{userCustomerId}/credit")
-    public ResponseEntity<Double> getCredit(@PathVariable Long userCustomerId) {
-        User customer = customerService.getUserById(userCustomerId);
-        if (customer.getRole() != Role.Customer) {
-            throw new UserHasWrongRole("User has wrong role");
-        }
-        Double creditAmount = creditService.getCreditAmountByUserId(userCustomerId);
-        return ResponseEntity.ok(creditAmount);
-    }
+//    @PostMapping("customer/createCredit")
+//    public ResponseEntity createCredit(@RequestBody CreditDto creditDto) {
+//        User customer = customerService.getUserById(creditDto.userCustomerId());
+//        if (customer.getRole() != Role.Customer) {
+//            throw new UserHasWrongRole("User has wrong role");
+//        }
+//        creditService.createCredit(creditDto);
+//        return ResponseEntity.status(HttpStatus.CREATED).body("Credit created successfully");
+//    }
+//
+//
+//    @GetMapping("customer/{userCustomerId}/credit")
+//    public ResponseEntity<Double> getCredit(@PathVariable Long userCustomerId) {
+//        User customer = customerService.getUserById(userCustomerId);
+//        if (customer.getRole() != Role.Customer) {
+//            throw new UserHasWrongRole("User has wrong role");
+//        }
+//        Double creditAmount = creditService.getCreditAmountByUserId(userCustomerId);
+//        return ResponseEntity.ok(creditAmount);
+//    }
 
 
     @GetMapping("/customer/{customerId}")

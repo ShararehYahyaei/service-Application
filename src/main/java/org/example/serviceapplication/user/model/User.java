@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.serviceapplication.credit.model.Credit;
 import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
@@ -45,7 +46,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Status status;
     private LocalDateTime createdAt;
-
     @Lob
     byte[] profileImage;
 
