@@ -7,4 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface CardService {
     @Transactional
     Card createCard(CardDto cardDto);
+
+    @Transactional
+    boolean processPayment(Long selectedCard);
 }

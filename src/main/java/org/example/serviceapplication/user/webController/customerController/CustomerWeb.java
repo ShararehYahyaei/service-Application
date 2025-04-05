@@ -23,10 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -42,14 +39,16 @@ public class CustomerWeb {
     private final OfferServiceInterface offerService;
     private final CardService cardService;
     private final UserService userService;
+    private final OrderService orderService;
 
-    public CustomerWeb(SubServiceCategoryInterface subService, CustomerService customerService, CustomerRequestService customerRequestService, OfferServiceInterface offerService, CardService cardService, UserService userService) {
+    public CustomerWeb(SubServiceCategoryInterface subService, CustomerService customerService, CustomerRequestService customerRequestService, OfferServiceInterface offerService, CardService cardService, UserService userService, OrderService orderService) {
         this.subService = subService;
         this.customerService = customerService;
         this.customerRequestService = customerRequestService;
         this.offerService = offerService;
         this.cardService = cardService;
         this.userService = userService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/services")
@@ -191,6 +190,23 @@ public class CustomerWeb {
         model.addAttribute("cardForm", cardDto);
         model.addAttribute("message", "کارت با موفقیت اضافه شد!");
         return "services";
+    }
+
+
+    @GetMapping("/enter-customer-id")
+    public String enterCustomerIdForm() {
+        return "enter-customer-id-form";
+    }
+
+    @GetMapping("/order_list")
+    public String getOrdersByCustomerId(@RequestParam Long customerId, Model model) {
+        User customer = customerService.getUserById(customerId);
+        if (customer.getRole() != Role.Customer) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+        List<OrderDto> ordersByCustomerId = orderService.getOrdersByCustomerId(customerId);
+        model.addAttribute("orders", ordersByCustomerId);
+        return "order_list";
     }
 
 

@@ -1,0 +1,22 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>انتخاب روش پرداخت</title>
+</head>
+<body>
+<h1>انتخاب روش پرداخت</h1>
+
+<form th:action="@{/payment}" method="POST">
+    <label>
+        <input type="radio" name="paymentMethod" value="credit" /> پرداخت از اعتبار
+    </label>
+    <br />
+    <label>
+        <input type="radio" name="paymentMethod" value="card" /> پرداخت از کارت
+    </label>
+    <br />
+    <button type="submit">ادامه</button>
+</form>
+</body>
+</html>

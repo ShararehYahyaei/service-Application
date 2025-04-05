@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fa" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ورود شناسه مشتری</title>
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #fff0f5;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        form {
+            display: inline-block;
+            padding: 30px;
+            background: #ffe4ec;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        input, button {
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #d81b60;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ad1457;
+        }
+    </style>
+</head>
+<body>
+<h1>لطفاً شناسه مشتری را وارد کنید</h1>
+<form th:action="@{/order_list}" method="get">
+    <input type="number" name="customerId" placeholder="شناسه مشتری" required>
+    <br>
+    <button type="submit">مشاهده سفارشات</button>
+</form>
+
+</body>
+</html>

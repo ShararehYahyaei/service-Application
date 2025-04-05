@@ -26,6 +26,11 @@ public class CardServiceImpl implements CardService {
         return cardRepository.save(card);
     }
 
+    @Transactional
+    @Override
+    public boolean processPayment(Long selectedCard) {
+        return true;
+    }
 
     private Card converDtoToCard(CardDto cardDto) {
         User user = userService.getUserById(cardDto.customerId());

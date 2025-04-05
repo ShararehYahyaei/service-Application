@@ -1,0 +1,18 @@
+<!-- select-card.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>انتخاب کارت</title>
+</head>
+<body>
+<h1>انتخاب کارت پرداخت</h1>
+
+<form th:action="@{/process-payment}" method="POST">
+    <select name="selectedCard">
+        <option th:each="card : ${cards}" th:value="${card.id}" th:text="${card.cardNumber}"></option>
+    </select>
+    <br />
+    <button type="submit">پرداخت</button>
+</form>
+</body>
+</html>
