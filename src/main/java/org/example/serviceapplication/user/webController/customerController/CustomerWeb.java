@@ -1,9 +1,12 @@
 package org.example.serviceapplication.user.webController.customerController;
 
 
+import org.example.serviceapplication.card.model.CardDto;
+import org.example.serviceapplication.card.service.CardService;
 import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.order.model.OrderDto;
+import org.example.serviceapplication.order.service.OrderService;
 import org.example.serviceapplication.request.dto.CustomerRequestDto;
 import org.example.serviceapplication.request.exception.RequestNotPresent;
 import org.example.serviceapplication.request.model.CustomerRequest;
@@ -14,6 +17,7 @@ import org.example.serviceapplication.subCategory.service.SubServiceCategoryInte
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
+import org.example.serviceapplication.user.service.UserService;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,12 +40,16 @@ public class CustomerWeb {
     private final CustomerService customerService;
     private final CustomerRequestService customerRequestService;
     private final OfferServiceInterface offerService;
+    private final CardService cardService;
+    private final UserService userService;
 
-    public CustomerWeb(SubServiceCategoryInterface subService, CustomerService customerService, CustomerRequestService customerRequestService, OfferServiceInterface offerService) {
+    public CustomerWeb(SubServiceCategoryInterface subService, CustomerService customerService, CustomerRequestService customerRequestService, OfferServiceInterface offerService, CardService cardService, UserService userService) {
         this.subService = subService;
         this.customerService = customerService;
         this.customerRequestService = customerRequestService;
         this.offerService = offerService;
+        this.cardService = cardService;
+        this.userService = userService;
     }
 
     @GetMapping("/services")
@@ -158,6 +166,31 @@ public class CustomerWeb {
         redirectAttributes.addFlashAttribute("successMessage",
                 "نظر شما با موفقیت ثبت شد!");
         return "redirect:/customer-profile";
+    }
+
+
+
+    @GetMapping("/add-customer-card-form")
+    public String showAddCardForm(Model model) {
+        model.addAttribute("cardForm", new CardDto(null,
+                null,
+                null,
+                null,
+                null
+                ));
+        return "add-customer-card-form";
+    }
+
+    @PostMapping("/add-customer-card-form")
+    public String addCustomerCard(@ModelAttribute("cardForm") CardDto cardDto, Model model) {
+        User customer = userService.getUserById(cardDto.customerId());
+        if (customer.getRole() != Role.Customer) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+        cardService.createCard(cardDto);
+        model.addAttribute("cardForm", cardDto);
+        model.addAttribute("message", "کارت با موفقیت اضافه شد!");
+        return "services";
     }
 
 

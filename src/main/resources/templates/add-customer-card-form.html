@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>افزودن کارت برای مشتری</title>
+    <style>
+        /* استایل‌ها */
+        body {
+            font-family: 'Vazirmatn', Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #d81b60;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        label {
+            font-size: 16px;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
+            border-color: #d81b60;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #d81b60, #f06292);
+            color: white;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #c2185b, #ad1457);
+            transform: translateY(-5px);
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fce4ec;
+            border: 1px solid #f06292;
+            border-radius: 8px;
+            color: #d81b60;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>افزودن کارت برای مشتری</h2>
+
+    <form th:action="@{/add-customer-card-form}" th:object="${cardForm}" method="post">
+        <div>
+            <label for="cardNumber">شماره کارت:</label>
+            <input type="text" id="cardNumber" th:field="*{cardNumber}" placeholder="شماره کارت را وارد کنید" required/>
+        </div>
+        <div>
+            <label for="cvv">CVV:</label>
+            <input type="text" id="cvv" th:field="*{cvv}" placeholder="CVV را وارد کنید" required/>
+        </div>
+        <div>
+            <label for="expirationDate">تاریخ انقضا:</label>
+            <input type="date" id="expirationDate" th:field="*{expirationDate}" required/>
+        </div>
+        <div>
+            <label for="amount">مبلغ:</label>
+            <input type="number" id="amount" th:field="*{amount}" placeholder="مبلغ را وارد کنید" required/>
+        </div>
+        <div>
+            <label for="userId">شناسه مشتری:</label>
+            <input type="number" id="userId" th:field="*{customerId}" placeholder="شناسه مشتری را وارد کنید" required/>
+        </div>
+        <button type="submit">افزودن کارت</button>
+    </form>
+
+    <div th:if="${message != null}" class="message">
+        <p th:text="${message}"></p>
+    </div>
+</div>
+
+</body>
+</html>

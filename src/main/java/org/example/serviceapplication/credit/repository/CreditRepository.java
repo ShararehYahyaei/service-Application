@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CreditRepository extends JpaRepository<Credit, Long> {
-   // Credit findByUserCustomerId(Long userCustomerId);
+
 }

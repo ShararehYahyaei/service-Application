@@ -1,5 +1,9 @@
 package org.example.serviceapplication.user.controller;
 
+import org.example.serviceapplication.card.model.Card;
+import org.example.serviceapplication.card.model.CardDto;
+import org.example.serviceapplication.card.service.CardService;
+import org.example.serviceapplication.card.service.CardServiceImpl;
 import org.example.serviceapplication.credit.model.CreditDto;
 import org.example.serviceapplication.credit.service.CreditService;
 import org.example.serviceapplication.order.exception.OrderNotFound;
@@ -17,6 +21,7 @@ import org.example.serviceapplication.user.service.customerService.CustomerServi
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
@@ -27,12 +32,11 @@ import java.util.List;
 public class CustomerController {
 
     private final CustomerService customerService;
-    private final CreditService creditService;
+
     private final OrderService orderService;
 
-    public CustomerController(CustomerService customerService, CreditService creditService, OrderService orderService) {
+    public CustomerController(CustomerService customerService, OrderService orderService) {
         this.customerService = customerService;
-        this.creditService = creditService;
         this.orderService = orderService;
     }
 
@@ -131,28 +135,6 @@ public class CustomerController {
     }
 
 
-//    @PostMapping("customer/createCredit")
-//    public ResponseEntity createCredit(@RequestBody CreditDto creditDto) {
-//        User customer = customerService.getUserById(creditDto.userCustomerId());
-//        if (customer.getRole() != Role.Customer) {
-//            throw new UserHasWrongRole("User has wrong role");
-//        }
-//        creditService.createCredit(creditDto);
-//        return ResponseEntity.status(HttpStatus.CREATED).body("Credit created successfully");
-//    }
-//
-//
-//    @GetMapping("customer/{userCustomerId}/credit")
-//    public ResponseEntity<Double> getCredit(@PathVariable Long userCustomerId) {
-//        User customer = customerService.getUserById(userCustomerId);
-//        if (customer.getRole() != Role.Customer) {
-//            throw new UserHasWrongRole("User has wrong role");
-//        }
-//        Double creditAmount = creditService.getCreditAmountByUserId(userCustomerId);
-//        return ResponseEntity.ok(creditAmount);
-//    }
-
-
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<OrderDto>> getOrdersByCustomerId(@PathVariable Long customerId) {
         User customer = customerService.getUserById(customerId);
@@ -162,6 +144,8 @@ public class CustomerController {
         List<OrderDto> ordersByCustomerId = orderService.getOrdersByCustomerId(customerId);
         return ResponseEntity.ok(ordersByCustomerId);
     }
+
+
 
 }
 
