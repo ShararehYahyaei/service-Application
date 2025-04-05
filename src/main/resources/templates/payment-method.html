@@ -1,22 +1,31 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>انتخاب روش پرداخت</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h1>انتخاب روش پرداخت</h1>
+<body class="bg-gray-100 text-gray-800 font-sans">
+<div class="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+    <h1 class="text-3xl font-semibold text-center text-indigo-600 mb-6">انتخاب روش پرداخت</h1>
 
-<form th:action="@{/payment}" method="POST">
-    <label>
-        <input type="radio" name="paymentMethod" value="credit" /> پرداخت از اعتبار
-    </label>
-    <br />
-    <label>
-        <input type="radio" name="paymentMethod" value="card" /> پرداخت از کارت
-    </label>
-    <br />
-    <button type="submit">ادامه</button>
-</form>
+    <form th:action="@{/payment}" method="POST">
+        <div class="space-y-4">
+            <div class="flex items-center">
+                <input type="radio" name="paymentMethod" value="credit" class="h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" id="credit" />
+                <label for="credit" class="ml-3 text-lg text-gray-700">پرداخت از اعتبار</label>
+            </div>
+            <div class="flex items-center">
+                <input type="radio" name="paymentMethod" value="card" class="h-5 w-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" id="card" />
+                <label for="card" class="ml-3 text-lg text-gray-700">پرداخت از کارت</label>
+            </div>
+        </div>
+
+        <div class="mt-6">
+            <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+                ادامه
+            </button>
+        </div>
+    </form>
+</div>
 </body>
 </html>

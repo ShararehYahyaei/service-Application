@@ -1,6 +1,7 @@
 package org.example.serviceapplication.user.webController.paymentController;
 
 
+import org.example.serviceapplication.card.model.CardResponse;
 import org.example.serviceapplication.card.service.CardService;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 public class PaymentController {
@@ -20,37 +23,39 @@ public class PaymentController {
 
     }
 
-    @GetMapping("/payment")
-    public String showPaymentOptions() {
+    @PostMapping("/payment")
+    public String showPaymentOptions(@RequestParam("customerId") Long customerId,
+                                     Model model) {
+        List<CardResponse> cards = cardService.getCardsByCustomerId(customerId);
+        model.addAttribute("cards", cards);
         return "payment-method";
     }
 
 //    @PostMapping("/payment")
 //    public String processPayment(@RequestParam String paymentMethod, Model model) {
 //        if (paymentMethod.equals("card")) {
-//            // بارگذاری کارت‌های مشتری برای نمایش
 //            List<Card> cards = cardService.getCustomerCards();
 //            model.addAttribute("cards", cards);
 //            return "select-card";
 //        } else if (paymentMethod.equals("credit")) {
-//            // پرداخت از اعتبار
+//
 //            return "redirect:/process-credit-payment";
 //        } else {
-//            return "redirect:/payment"; // در صورت انتخاب اشتباه
+//            return "redirect:/payment";
 //        }
 //    }
-    @PostMapping("/process-payment")
-    public String processCardPayment(@RequestParam Long selectedCard, Model model) {
-        // انجام عملیات پرداخت از کارت
-        boolean paymentSuccess = cardService.processPayment(selectedCard);
-
-        if (paymentSuccess) {
-            model.addAttribute("message", "پرداخت با موفقیت انجام شد!");
-        } else {
-            model.addAttribute("message", "پرداخت با خطا مواجه شد.");
-        }
-        return "payment-result";
-    }
+//    @PostMapping("/process-payment")
+//    public String processCardPayment(@RequestParam Long selectedCard, Model model) {
+//
+//        boolean paymentSuccess = cardService.processPayment(selectedCard);
+//
+//        if (paymentSuccess) {
+//            model.addAttribute("message", "پرداخت با موفقیت انجام شد!");
+//        } else {
+//            model.addAttribute("message", "پرداخت با خطا مواجه شد.");
+//        }
+//        return "payment-result";
+//    }
 //
 //    @GetMapping("/process-credit-payment")
 //    public String processCreditPayment(Model model) {

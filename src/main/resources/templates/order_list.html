@@ -100,9 +100,11 @@
             <td th:text="${order.offerId}"></td>
             <td th:text="${order.status}"></td>
             <td>
-                <form th:action="@{/payment/{orderId}(orderId=${order.customerRequestId})}" method="post">
+                <form th:action="@{/payment}" method="post">
+                    <input type="hidden" name="customerId" th:value="${order.customerId}" />
                     <button type="submit">پرداخت</button>
                 </form>
+
             </td>
         </tr>
         </tbody>

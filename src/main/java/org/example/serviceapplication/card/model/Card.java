@@ -35,6 +35,7 @@ public class Card {
     private Double amount;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     public Card(String cardNumber, String cvv, LocalDate localDate, Double amount, User user) {
