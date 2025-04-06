@@ -102,7 +102,7 @@ public class UserWebController {
 
     @GetMapping("/addCredit")
     public String showAddCreditForm(Model model) {
-        model.addAttribute("creditForm", new CreditDto(0,0));
+        model.addAttribute("creditForm", new CreditDto(null,0.0));
         return "add-credit";
     }
 

@@ -7,7 +7,12 @@ import org.example.serviceapplication.card.model.Card;
 import org.example.serviceapplication.card.model.CardDto;
 import org.example.serviceapplication.card.model.CardResponse;
 import org.example.serviceapplication.card.service.CardService;
+import org.example.serviceapplication.offer.model.Offer;
+import org.example.serviceapplication.offer.service.OfferServiceInterface;
+import org.example.serviceapplication.order.model.Order;
 import org.example.serviceapplication.order.model.OrderStatus;
+import org.example.serviceapplication.order.service.OrderService;
+import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,21 +29,26 @@ import java.util.List;
 public class PaymentController {
     private final CardService cardService;
     private final CustomerService customerService;
+    private final OfferServiceInterface offerService;
     private final Logger logger = LoggerFactory.getLogger(PaymentController.class);
+    private final OrderService orderService;
 
-    public PaymentController(CardService cardService, CustomerService customerService) {
+    public PaymentController(CardService cardService, CustomerService customerService, OfferServiceInterface offerService, OrderService orderService) {
         this.cardService = cardService;
         this.customerService = customerService;
 
+        this.offerService = offerService;
+        this.orderService = orderService;
     }
 
     @PostMapping("/payment")
-    public String showPaymentOptions(@RequestParam("customerId") Long customerId,
-                                     @RequestParam("status") OrderStatus orderStatus,
+    public String showPaymentOptions(@RequestParam Long customerId,
+                                     @RequestParam OrderStatus status,
+                                     @RequestParam Long orderId,
                                      Model model) {
-        if (orderStatus == OrderStatus.COMPLETED) {
+        if (status == OrderStatus.COMPLETED) {
             List<CardResponse> cards = cardService.getCardsByCustomerId(customerId);
-            if (cards.size()== 0) {
+            if (cards.isEmpty()) {
                 model.addAttribute("message", "شما هیچ کارتی ندارید. لطفا کارت خود را اضافه کنید.");
                 model.addAttribute("cardForm", new CardDto(null,
                         null,
@@ -50,6 +60,9 @@ public class PaymentController {
             }
             model.addAttribute("cards", cards);
             model.addAttribute("customerId", customerId);
+            model.addAttribute("orderStatus", status);
+            model.addAttribute("orderId", orderId);
+            System.out.println("orderId: " + orderId);
             return "payment-method";
         } else {
             model.addAttribute("message", "not completed yet ...");
@@ -60,6 +73,7 @@ public class PaymentController {
     @PostMapping("/payment-options")
     public String processPayment(@RequestParam String paymentMethod,
                                  @RequestParam Long customerId,
+                                 @RequestParam Long orderId,
                                  Model model) {
         if (paymentMethod.equals("card")) {
             List<CardResponse> cards = cardService.getCardsByCustomerId(customerId);
@@ -68,6 +82,8 @@ public class PaymentController {
             }
             model.addAttribute("cards", cards);
             model.addAttribute("customerId", customerId);
+            model.addAttribute("orderId", orderId);
+            System.out.println(orderId + "cccccc");
             return "select-card";
         } else if (paymentMethod.equals("credit")) {
             return "redirect:/process-credit-payment";
@@ -78,17 +94,21 @@ public class PaymentController {
 
     @PostMapping("/card-details")
     public String showPaymentPage(@RequestParam Long cardId,
-                                  @RequestParam Long customerId, Model model) {
+                                  @RequestParam Long customerId,
+                                  @RequestParam Long orderId,
+                                  Model model) {
         CardResponse card = cardService.getCardById(cardId);
         model.addAttribute("card", card);
         model.addAttribute("customerId", customerId);
+        model.addAttribute("orderId", orderId);
+        System.out.println(orderId + "kkkkk");
         return "payment-details";
     }
 
     @PostMapping("/process-payment")
-    public String processPayment(@RequestParam Long cardId,
-                                 @RequestParam double amount, String cvv, Model model) {
-
+    public String processPayment(@RequestParam Long cardId, String cvv,
+                                 @RequestParam Long orderId,
+                                 Model model) {
         Card card = cardService.getByIdCard(cardId);
 
         if (card == null || cvv == null) {
@@ -99,9 +119,13 @@ public class PaymentController {
             logger.error("Card or cvv does not match");
             throw new CardInformationIsNotCorrect("Card or cvv is incorrect");
         }
+        Order order = orderService.getOrderById(orderId);
+        Offer offerById = offerService.getOfferById(order.getOffer().getId());
+        if (card.getAmount() >= offerById.getOfferPrice()) {
 
-        if (card.getAmount() >= amount) {
-            cardService.deductAmount(cardId, amount);
+            model.addAttribute("orderId", orderId);
+            User user = offerById.getUser();
+            cardService.deductAmount(cardId, offerById.getOfferPrice(),user);
             model.addAttribute("message", "پرداخت با موفقیت انجام شد.");
         } else {
             model.addAttribute("message", "موجودی کافی نیست.");

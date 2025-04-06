@@ -119,6 +119,7 @@ public class OrderServiceImpl implements OrderService {
     private static List<OrderDto> convertOrdersToOrderDtos(List<Order> orders) {
         return orders.stream()
                 .map(order -> new OrderDto(
+                        order.getId(),
                         order.getCustomer() != null ? order.getCustomer().getId() : null,
                         order.getOffer() != null ? order.getOffer().getId() : null,
                         order.getCustomerRequest() != null ? order.getCustomerRequest().getId() : null,

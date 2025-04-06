@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.user.model.User;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

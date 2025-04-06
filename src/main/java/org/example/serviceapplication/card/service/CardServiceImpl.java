@@ -5,6 +5,9 @@ import org.example.serviceapplication.card.model.Card;
 import org.example.serviceapplication.card.model.CardDto;
 import org.example.serviceapplication.card.model.CardResponse;
 import org.example.serviceapplication.card.repository.CardRepository;
+import org.example.serviceapplication.credit.model.Credit;
+import org.example.serviceapplication.credit.model.CreditDto;
+import org.example.serviceapplication.credit.service.CreditService;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
 import org.springframework.stereotype.Service;
@@ -18,10 +21,12 @@ import java.util.Optional;
 public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
     private final UserService userService;
+    private final CreditService creditService;
 
-    public CardServiceImpl(CardRepository cardRepository, UserService userService) {
+    public CardServiceImpl(CardRepository cardRepository, UserService userService, CreditService creditService) {
         this.cardRepository = cardRepository;
         this.userService = userService;
+        this.creditService = creditService;
     }
 
 
@@ -56,12 +61,16 @@ public class CardServiceImpl implements CardService {
 
     @Transactional
     @Override
-    public void deductAmount(Long cardId, double amount) {
+    public void deductAmount(Long cardId, double amount, User user) {
         Optional<Card> cardFound = cardRepository.findById(cardId);
-      if(cardFound.isPresent()) {
-          cardFound.get().setAmount(cardFound.get().getAmount() - amount);
-          cardRepository.save(cardFound.get());
-      }
+        if (cardFound.isPresent()) {
+            double deductionAmount = amount * 0.70;
+            cardFound.get().setAmount(cardFound.get().getAmount() - amount);
+            cardRepository.save(cardFound.get());
+            CreditDto creditDto = new CreditDto(user.getId(),deductionAmount );
+            creditService.createCredit(creditDto);
+
+        }
     }
 
     private Card converDtoToCard(CardDto cardDto) {

@@ -96,6 +96,7 @@
         </thead>
         <tbody>
         <tr th:each="order : ${orders}">
+            <td th:text="${order.orderId}"></td>
             <td th:text="${order.customerId}"></td>
             <td th:text="${order.customerRequestId}"></td>
             <td th:text="${order.offerId}"></td>
@@ -105,6 +106,7 @@
                 <form th:action="@{/payment}" method="post">
                     <input type="hidden" name="customerId" th:value="${order.customerId}" />
                     <input type="hidden" name="status" th:value="${order.status}" />
+                    <input type="hidden" name="orderId" th:value="${order.orderId}" />
                     <button type="submit" th:disabled="${order.status.name() != 'COMPLETED'}">پرداخت</button>
                 </form>
 

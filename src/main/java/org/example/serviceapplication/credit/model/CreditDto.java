@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public record CreditDto(
-         Integer userId,
-         Integer balance
+         Long userId,
+         Double balance
 ) {
 
 }

@@ -3,6 +3,7 @@ package org.example.serviceapplication.card.service;
 import org.example.serviceapplication.card.model.Card;
 import org.example.serviceapplication.card.model.CardDto;
 import org.example.serviceapplication.card.model.CardResponse;
+import org.example.serviceapplication.user.model.User;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface CardService {
 
     CardResponse getCardById(Long cardId);
 
-    void deductAmount(Long cardId, double amount);
+    void deductAmount(Long cardId, double amount, User user);
 
     @Transactional(readOnly = true)
     Card getByIdCard(Long cardId);

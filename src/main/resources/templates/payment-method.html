@@ -10,6 +10,7 @@
 
     <form th:action="@{/payment-options}" method="POST">
         <input type="hidden" name="customerId" th:value="${customerId}" />
+        <input type="hidden" name="orderId" th:value="${orderId}" />
 
         <!-- گزینه‌های پرداخت -->
         <div class="space-y-4">
