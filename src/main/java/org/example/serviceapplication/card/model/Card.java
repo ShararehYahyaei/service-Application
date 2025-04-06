@@ -45,4 +45,7 @@ public class Card {
         this.amount = amount;
         this.user = user;
     }
+
+    public Card() {
+    }
 }

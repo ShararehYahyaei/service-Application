@@ -1,6 +1,7 @@
 package org.example.serviceapplication.user.webController.paymentController;
 
 
+import org.example.serviceapplication.card.model.CardDto;
 import org.example.serviceapplication.card.model.CardResponse;
 import org.example.serviceapplication.card.service.CardService;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
@@ -28,22 +29,54 @@ public class PaymentController {
                                      Model model) {
         List<CardResponse> cards = cardService.getCardsByCustomerId(customerId);
         model.addAttribute("cards", cards);
+        model.addAttribute("customerId", customerId);
         return "payment-method";
     }
 
-//    @PostMapping("/payment")
-//    public String processPayment(@RequestParam String paymentMethod, Model model) {
-//        if (paymentMethod.equals("card")) {
-//            List<Card> cards = cardService.getCustomerCards();
-//            model.addAttribute("cards", cards);
-//            return "select-card";
-//        } else if (paymentMethod.equals("credit")) {
-//
-//            return "redirect:/process-credit-payment";
+    @PostMapping("/payment-options")
+    public String processPayment(@RequestParam String paymentMethod,
+                                 @RequestParam Long customerId,
+                                 Model model) {
+        if (paymentMethod.equals("card")) {
+            List<CardResponse> cards = cardService.getCardsByCustomerId(customerId);
+
+            for (CardResponse card : cards) {
+                System.out.println(card);
+            }
+            model.addAttribute("cards", cards);
+            model.addAttribute("customerId", customerId);
+            return "select-card";
+        } else if (paymentMethod.equals("credit")) {
+            return "redirect:/process-credit-payment";
+        } else {
+            return "redirect:/payment";
+        }
+    }
+
+    @PostMapping("/card-details")
+    public String showPaymentPage(@RequestParam Long cardId,
+                                  @RequestParam Long customerId, Model model) {
+        CardResponse card = cardService.getCardById(cardId);
+        model.addAttribute("card", card);
+        model.addAttribute("customerId", customerId);
+        return "payment-details";
+    }
+
+//    @PostMapping("/process-payment")
+//    public String processPayment(@RequestParam Long cardId, @RequestParam Long customerId,
+//                                 @RequestParam double amount, Model model) {
+//        // بررسی موجودی کارت و انجام پرداخت
+//        CardResponse card = cardService.getCardById(cardId);
+//        if (card.getBalance() >= amount) {
+//            cardService.deductAmount(cardId, amount); // کاهش موجودی
+//            model.addAttribute("message", "پرداخت با موفقیت انجام شد.");
 //        } else {
-//            return "redirect:/payment";
+//            model.addAttribute("message", "موجودی کافی نیست.");
 //        }
+//        return "payment-success"; // نمایش پیام موفقیت یا خطا
 //    }
+
+
 //    @PostMapping("/process-payment")
 //    public String processCardPayment(@RequestParam Long selectedCard, Model model) {
 //
@@ -60,7 +93,6 @@ public class PaymentController {
 //    @GetMapping("/process-credit-payment")
 //    public String processCreditPayment(Model model) {
 //        boolean paymentSuccess = customerService.deductCredit();
-//
 //        if (paymentSuccess) {
 //            model.addAttribute("message", "پرداخت از اعتبار با موفقیت انجام شد!");
 //        } else {

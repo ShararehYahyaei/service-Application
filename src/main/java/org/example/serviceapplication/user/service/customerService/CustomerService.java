@@ -136,4 +136,9 @@ public class CustomerService implements CustomerServiceInter {
         User userForThisRequest = offerService.getSpecialist(requestId);
       return    specialistService.convertToRes(userForThisRequest);
     }
+
+    @Override
+    public boolean deductCredit() {
+        return true;
+    }
 }

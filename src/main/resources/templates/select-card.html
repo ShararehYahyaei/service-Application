@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>انتخاب کارت</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+<div class="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-8">
+    <h2 class="text-3xl font-semibold text-center text-blue-600 mb-6">انتخاب کارت پرداخت</h2>
+
+    <form th:action="@{/card-details}" method="post">
+        <label for="cardId">انتخاب کارت:</label>
+        <select id="cardId" name="cardId" required>
+            <option value="" disabled selected>یک کارت انتخاب کنید</option>
+            <option th:each="card : ${cards}"
+                    th:value="${card.cardId}"
+                    th:text="${card.cardNumber}">
+            </option>
+        </select>
+
+        <input type="hidden" name="customerId" th:value="${customerId}" />
+        <input type="hidden" name="cardId" th:value="${cardId}" />
+
+        <button type="submit"
+                class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            ادامه
+        </button>
+    </form>
+
+</div>
+</body>
+</html>

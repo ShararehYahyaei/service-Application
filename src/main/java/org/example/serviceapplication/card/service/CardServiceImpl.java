@@ -1,5 +1,6 @@
 package org.example.serviceapplication.card.service;
 
+import org.example.serviceapplication.card.exception.CardIsNotFound;
 import org.example.serviceapplication.card.model.Card;
 import org.example.serviceapplication.card.model.CardDto;
 import org.example.serviceapplication.card.model.CardResponse;
@@ -9,9 +10,9 @@ import org.example.serviceapplication.user.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CardServiceImpl implements CardService {
@@ -41,7 +42,16 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<CardResponse> getCardsByCustomerId(Long customerId) {
         List<Card> cards = cardRepository.findByUserId(customerId);
-        return converDtoToCardResponse(cards);
+        return convertDtoToCardResponse(cards);
+    }
+
+    @Override
+    public CardResponse getCardById(Long cardId) {
+        Optional<Card> card = cardRepository.findById(cardId);
+        if (card.isEmpty()) {
+            throw new CardIsNotFound("card is not found");
+        }
+       return convertCardToCardResponse(card.get());
     }
 
     private Card converDtoToCard(CardDto cardDto) {
@@ -58,15 +68,27 @@ public class CardServiceImpl implements CardService {
 
 
 
-    private List<CardResponse> converDtoToCardResponse(List<Card>cards) {
+    private List<CardResponse> convertDtoToCardResponse(List<Card>cards) {
         List<CardResponse> cardResponses = new ArrayList<>();
         for (Card card : cards) {
-            CardResponse cardResponse = new CardResponse(card.getCardNumber());
+            CardResponse cardResponse = new CardResponse(
+                    card.getId(),
+                    card.getCardNumber(),
+                    card.getAmount()
+
+            );
             cardResponses.add(cardResponse);
         }
         return cardResponses;
     }
 
 
+
+    private CardResponse convertCardToCardResponse(Card card) {
+        return new CardResponse(
+                card.getId(),
+                card.getCardNumber(),
+                card.getAmount());
+    }
 
 }

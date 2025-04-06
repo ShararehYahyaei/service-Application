@@ -14,4 +14,6 @@ public interface CardService {
     @Transactional
     boolean processPayment(Long selectedCard);
     List<CardResponse> getCardsByCustomerId(Long customerId);
+
+    CardResponse getCardById(Long cardId);
 }
