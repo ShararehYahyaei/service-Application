@@ -10,8 +10,10 @@
     <h2 class="text-3xl font-semibold text-center text-blue-600 mb-6">جزئیات کارت انتخابی</h2>
 
     <div class="mb-6">
-        <p class="text-lg font-medium text-gray-700">شماره کارت: <span th:text="${card.cardNumber}" class="text-blue-600 font-bold"></span></p>
-       // <p class="text-lg font-medium text-gray-700">موجودی کارت: <span th:text="${card.balance}" class="text-green-600 font-bold"></span></p>
+        <p class="text-lg font-medium text-gray-700">شماره کارت: <span th:text="${card.cardNumber}"
+                                                                       class="text-blue-600 font-bold"></span></p>
+       // <p class="text-lg font-medium text-gray-700">موجودی کارت: <span th:text="${card.balance}"
+                                                                          class="text-green-600 font-bold"></span></p>
     </div>
 
     <form th:action="@{/process-payment}" method="post">

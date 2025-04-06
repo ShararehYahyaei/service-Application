@@ -62,19 +62,19 @@ public class PaymentController {
         return "payment-details";
     }
 
-//    @PostMapping("/process-payment")
-//    public String processPayment(@RequestParam Long cardId, @RequestParam Long customerId,
-//                                 @RequestParam double amount, Model model) {
-//        // بررسی موجودی کارت و انجام پرداخت
-//        CardResponse card = cardService.getCardById(cardId);
-//        if (card.getBalance() >= amount) {
-//            cardService.deductAmount(cardId, amount); // کاهش موجودی
-//            model.addAttribute("message", "پرداخت با موفقیت انجام شد.");
-//        } else {
-//            model.addAttribute("message", "موجودی کافی نیست.");
-//        }
-//        return "payment-success"; // نمایش پیام موفقیت یا خطا
-//    }
+    @PostMapping("/process-payment")
+    public String processPayment(@RequestParam Long cardId, @RequestParam Long customerId,
+                                 @RequestParam double amount, Model model) {
+
+        CardResponse card = cardService.getCardById(cardId);
+        if (card.balance() >= amount) {
+            cardService.deductAmount(cardId, amount);
+            model.addAttribute("message", "پرداخت با موفقیت انجام شد.");
+        } else {
+            model.addAttribute("message", "موجودی کافی نیست.");
+        }
+        return "payment-success";
+    }
 
 
 //    @PostMapping("/process-payment")

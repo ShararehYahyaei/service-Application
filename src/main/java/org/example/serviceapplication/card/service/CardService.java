@@ -16,4 +16,9 @@ public interface CardService {
     List<CardResponse> getCardsByCustomerId(Long customerId);
 
     CardResponse getCardById(Long cardId);
+
+    void deductAmount(Long cardId, double amount);
+
+    @Transactional(readOnly = true)
+    Card getByIdCard(Long cardId);
 }

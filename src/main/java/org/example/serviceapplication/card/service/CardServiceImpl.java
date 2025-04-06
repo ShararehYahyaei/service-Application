@@ -51,7 +51,17 @@ public class CardServiceImpl implements CardService {
         if (card.isEmpty()) {
             throw new CardIsNotFound("card is not found");
         }
-       return convertCardToCardResponse(card.get());
+        return convertCardToCardResponse(card.get());
+    }
+
+    @Transactional
+    @Override
+    public void deductAmount(Long cardId, double amount) {
+        Optional<Card> cardFound = cardRepository.findById(cardId);
+      if(cardFound.isPresent()) {
+          cardFound.get().setAmount(cardFound.get().getAmount() - amount);
+          cardRepository.save(cardFound.get());
+      }
     }
 
     private Card converDtoToCard(CardDto cardDto) {
@@ -67,8 +77,7 @@ public class CardServiceImpl implements CardService {
     }
 
 
-
-    private List<CardResponse> convertDtoToCardResponse(List<Card>cards) {
+    private List<CardResponse> convertDtoToCardResponse(List<Card> cards) {
         List<CardResponse> cardResponses = new ArrayList<>();
         for (Card card : cards) {
             CardResponse cardResponse = new CardResponse(
@@ -83,7 +92,6 @@ public class CardServiceImpl implements CardService {
     }
 
 
-
     private CardResponse convertCardToCardResponse(Card card) {
         return new CardResponse(
                 card.getId(),
@@ -91,4 +99,13 @@ public class CardServiceImpl implements CardService {
                 card.getAmount());
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Card getByIdCard(Long cardId) {
+        Optional<Card> card = cardRepository.findById(cardId);
+        if (card.isEmpty()) {
+            throw new CardIsNotFound("card is not found");
+        }
+        return card.get();
+    }
 }
