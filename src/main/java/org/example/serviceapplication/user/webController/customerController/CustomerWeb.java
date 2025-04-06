@@ -167,8 +167,6 @@ public class CustomerWeb {
         return "redirect:/customer-profile";
     }
 
-
-
     @GetMapping("/add-customer-card-form")
     public String showAddCardForm(Model model) {
         model.addAttribute("cardForm", new CardDto(null,

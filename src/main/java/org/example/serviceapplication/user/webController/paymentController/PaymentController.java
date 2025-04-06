@@ -7,6 +7,7 @@ import org.example.serviceapplication.card.model.Card;
 import org.example.serviceapplication.card.model.CardDto;
 import org.example.serviceapplication.card.model.CardResponse;
 import org.example.serviceapplication.card.service.CardService;
+import org.example.serviceapplication.order.model.OrderStatus;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.smartcardio.CardException;
 import java.util.List;
 
 @Controller
@@ -34,10 +34,26 @@ public class PaymentController {
 
     @PostMapping("/payment")
     public String showPaymentOptions(@RequestParam("customerId") Long customerId,
+                                     @RequestParam("status") OrderStatus orderStatus,
                                      Model model) {
-        List<CardResponse> cards = cardService.getCardsByCustomerId(customerId);
-        model.addAttribute("cards", cards);
-        model.addAttribute("customerId", customerId);
+        if (orderStatus == OrderStatus.COMPLETED) {
+            List<CardResponse> cards = cardService.getCardsByCustomerId(customerId);
+            if (cards.size()== 0) {
+                model.addAttribute("message", "شما هیچ کارتی ندارید. لطفا کارت خود را اضافه کنید.");
+                model.addAttribute("cardForm", new CardDto(null,
+                        null,
+                        null,
+                        null,
+                        null
+                ));
+                return "add-customer-card-form";
+            }
+            model.addAttribute("cards", cards);
+            model.addAttribute("customerId", customerId);
+            return "payment-method";
+        } else {
+            model.addAttribute("message", "not completed yet ...");
+        }
         return "payment-method";
     }
 
@@ -47,7 +63,6 @@ public class PaymentController {
                                  Model model) {
         if (paymentMethod.equals("card")) {
             List<CardResponse> cards = cardService.getCardsByCustomerId(customerId);
-
             for (CardResponse card : cards) {
                 System.out.println(card);
             }
