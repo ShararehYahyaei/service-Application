@@ -1,22 +1,30 @@
 package org.example.serviceapplication.user.webController.paymentController;
 
 
+import org.example.serviceapplication.card.exception.CardInformationIsNotCorrect;
+import org.example.serviceapplication.card.exception.CardIsNotFound;
+import org.example.serviceapplication.card.model.Card;
 import org.example.serviceapplication.card.model.CardDto;
 import org.example.serviceapplication.card.model.CardResponse;
 import org.example.serviceapplication.card.service.CardService;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.smartcardio.CardException;
 import java.util.List;
 
 @Controller
 public class PaymentController {
     private final CardService cardService;
     private final CustomerService customerService;
+    private final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
     public PaymentController(CardService cardService, CustomerService customerService) {
         this.cardService = cardService;
@@ -63,11 +71,21 @@ public class PaymentController {
     }
 
     @PostMapping("/process-payment")
-    public String processPayment(@RequestParam Long cardId, @RequestParam Long customerId,
-                                 @RequestParam double amount, Model model) {
+    public String processPayment(@RequestParam Long cardId,
+                                 @RequestParam double amount, String cvv, Model model) {
 
-        CardResponse card = cardService.getCardById(cardId);
-        if (card.balance() >= amount) {
+        Card card = cardService.getByIdCard(cardId);
+
+        if (card == null || cvv == null) {
+            logger.error("Card or cvv is null");
+            throw new CardIsNotFound("Card not found");
+        }
+        if (!card.getCvv().equals(cvv)) {
+            logger.error("Card or cvv does not match");
+            throw new CardInformationIsNotCorrect("Card or cvv is incorrect");
+        }
+
+        if (card.getAmount() >= amount) {
             cardService.deductAmount(cardId, amount);
             model.addAttribute("message", "پرداخت با موفقیت انجام شد.");
         } else {
