@@ -1,6 +1,7 @@
 package org.example.serviceapplication.user.webController.paymentController;
 
 
+import jakarta.servlet.http.HttpSession;
 import org.example.serviceapplication.card.exception.CardInformationIsNotCorrect;
 import org.example.serviceapplication.card.exception.CardIsExpired;
 import org.example.serviceapplication.card.exception.CardIsNotFound;
@@ -109,6 +110,8 @@ public class PaymentController {
     @PostMapping("/process-payment")
     public String processPayment(@RequestParam Long cardId, String cvv,
                                  @RequestParam LocalDate expiryDate,
+                                 @RequestParam String captcha,
+                                 HttpSession session,
                                  @RequestParam Long orderId,
                                  Model model) {
         Card card = cardService.getByIdCard(cardId);
@@ -123,6 +126,13 @@ public class PaymentController {
         if(!card.getExpirationDate().equals(expiryDate)) {
             throw new CardIsExpired("card date is not correct");
         }
+
+        String sessionCaptcha = (String) session.getAttribute("captcha");
+        if (sessionCaptcha == null || !sessionCaptcha.equalsIgnoreCase(captcha)) {
+            model.addAttribute("error", "کد امنیتی اشتباه است.");
+            return "payment"; // نام فایل html
+        }
+
         Order order = orderService.getOrderById(orderId);
         Offer offerById = offerService.getOfferById(order.getOffer().getId());
         if (card.getAmount() >= offerById.getOfferPrice()) {
