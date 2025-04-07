@@ -1,38 +1,40 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خطا</title>
-    <!-- استفاده از Tailwind CSS برای طراحی زیبا -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        .error-message {
-            font-size: 1.1rem;
-            color: #B91C1C;
-            background-color: #FEE2E2;
-            border: 1px solid #F87171;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-    </style>
+    <title>Error</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-900">
-<div class="flex items-center justify-center min-h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h1 class="text-3xl font-semibold text-red-600 mb-4">مشکلی پیش آمده است</h1>
+<body class="bg-gray-100 font-sans text-gray-900">
 
-        <div th:if="${error}" class="error-message">
-            <p th:text="${error}"></p>
+<!-- Centered container for the error message -->
+<div class="flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
+        <h2 class="text-3xl font-bold text-red-600 mb-4" th:text="${errorMessage}">Error Occurred</h2>
+        <p class="text-lg mb-6">
+            <strong>Status Code:</strong> <span th:text="${errorCode}" class="font-semibold">500</span>
+        </p>
+
+        <!-- Show error details if available -->
+        <div th:if="${errorDetails}">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Details:</h3>
+            <ul class="space-y-2">
+                <li th:each="entry : ${errorDetails}" class="bg-gray-50 p-4 rounded-md shadow-sm">
+                    <strong th:text="${entry.key}" class="text-gray-800">Field</strong>:
+                    <span th:text="${entry.value}" class="text-gray-600">Message</span>
+                </li>
+            </ul>
         </div>
 
-        <div class="text-center mt-6">
-            <a href="/services" class="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-700">
-                بازگشت به صفحه ثبت‌نام
+        <!-- Back to Home Button -->
+        <div class="mt-6 text-center">
+            <!-- Using a fixed URL instead of Thymeleaf expression -->
+            <a href="services" class="inline-block px-6 py-2 bg-blue-500 text-white rounded-lg font-semibold text-lg hover:bg-blue-600 transition duration-300">
+                Back to Home
             </a>
         </div>
     </div>
 </div>
+
 </body>
 </html>

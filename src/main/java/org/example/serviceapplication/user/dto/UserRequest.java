@@ -2,6 +2,7 @@ package org.example.serviceapplication.user.dto;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.springframework.web.multipart.MultipartFile;
 
