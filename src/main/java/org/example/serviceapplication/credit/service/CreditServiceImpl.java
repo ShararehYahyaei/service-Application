@@ -5,21 +5,20 @@ import org.example.serviceapplication.credit.model.Credit;
 import org.example.serviceapplication.credit.model.CreditDto;
 import org.example.serviceapplication.credit.model.CreditStatus;
 import org.example.serviceapplication.credit.repository.CreditRepository;
-import org.example.serviceapplication.offer.model.Offer;
-import org.example.serviceapplication.user.dto.UserResponseDto;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
-import org.springframework.format.FormatterRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Service
 public class CreditServiceImpl implements CreditService {
     private final CreditRepository creditRepository;
     private final UserService userService;
+    private final Logger logger = LoggerFactory.getLogger(CreditServiceImpl.class);
 
     public CreditServiceImpl(CreditRepository creditRepository, UserService userService) {
         this.creditRepository = creditRepository;
@@ -38,11 +37,30 @@ public class CreditServiceImpl implements CreditService {
         User user = userService.getUserById(creditDto.userId().longValue());
         return new Credit(
                 user,
-                creditDto.balance().longValue()
+                creditDto.balance().doubleValue()
         );
 
     }
+    @Override
+    public CreditDto convertCreditToCreditDto(Credit credit) {
+        return new CreditDto(
+                credit.getId(),
+                credit.getBalance().doubleValue()
+        );
+    }
 
+
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<Credit> getCreditByUserId(Long userId) {
+        Optional<Credit> credit = creditRepository.findByUserId(userId);
+        if (credit.isEmpty()) {
+            logger.error("Credit not found for user id {}", userId);
+            throw new CreditNotFoundException("credit not found");
+        }
+        return credit;
+    }
 
 //    @Transactional(readOnly = true)
 //    @Override

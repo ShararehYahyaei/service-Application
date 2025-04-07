@@ -7,6 +7,7 @@ import org.example.serviceapplication.card.model.Card;
 import org.example.serviceapplication.card.model.CardDto;
 import org.example.serviceapplication.card.model.CardResponse;
 import org.example.serviceapplication.card.service.CardService;
+import org.example.serviceapplication.credit.service.CreditService;
 import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.order.model.Order;
@@ -28,15 +29,15 @@ import java.util.List;
 @Controller
 public class PaymentController {
     private final CardService cardService;
-    private final CustomerService customerService;
     private final OfferServiceInterface offerService;
     private final Logger logger = LoggerFactory.getLogger(PaymentController.class);
     private final OrderService orderService;
+    private final CreditService creditService;
 
-    public PaymentController(CardService cardService, CustomerService customerService, OfferServiceInterface offerService, OrderService orderService) {
+    public PaymentController(CardService cardService, OfferServiceInterface offerService,
+                             OrderService orderService, CreditService creditService) {
         this.cardService = cardService;
-        this.customerService = customerService;
-
+        this.creditService = creditService;
         this.offerService = offerService;
         this.orderService = orderService;
     }
@@ -101,7 +102,6 @@ public class PaymentController {
         model.addAttribute("card", card);
         model.addAttribute("customerId", customerId);
         model.addAttribute("orderId", orderId);
-        System.out.println(orderId + "kkkkk");
         return "payment-details";
     }
 
@@ -110,7 +110,6 @@ public class PaymentController {
                                  @RequestParam Long orderId,
                                  Model model) {
         Card card = cardService.getByIdCard(cardId);
-
         if (card == null || cvv == null) {
             logger.error("Card or cvv is null");
             throw new CardIsNotFound("Card not found");
@@ -133,28 +132,19 @@ public class PaymentController {
         return "payment-success";
     }
 
-
-//    @PostMapping("/process-payment")
-//    public String processCardPayment(@RequestParam Long selectedCard, Model model) {
-//
-//        boolean paymentSuccess = cardService.processPayment(selectedCard);
-//
-//        if (paymentSuccess) {
-//            model.addAttribute("message", "پرداخت با موفقیت انجام شد!");
-//        } else {
-//            model.addAttribute("message", "پرداخت با خطا مواجه شد.");
-//        }
-//        return "payment-result";
-//    }
-//
 //    @GetMapping("/process-credit-payment")
-//    public String processCreditPayment(Model model) {
-//        boolean paymentSuccess = customerService.deductCredit();
-//        if (paymentSuccess) {
-//            model.addAttribute("message", "پرداخت از اعتبار با موفقیت انجام شد!");
-//        } else {
-//            model.addAttribute("message", "موجودی اعتبار کافی نیست.");
-//        }
-//        return "payment-result";
+//    public String processCreditPayment(
+//            @RequestParam Long orderId,
+//            Model model) {
+//   // boolean paymentSuccess = creditService.getCreditByUserId();
+////        if (paymentSuccess) {
+////            model.addAttribute("message", "پرداخت از اعتبار با موفقیت انجام شد!");
+////        } else {
+////            model.addAttribute("message", "موجودی اعتبار کافی نیست.");
+////        }
+////        return "payment-result";
+//        model.addAttribute("orderId", orderId);
+//        System.out.println("orderId: " + orderId);
+//        return "payment-method";
 //    }
 }

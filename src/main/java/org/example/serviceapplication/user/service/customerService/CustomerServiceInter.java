@@ -35,5 +35,4 @@ public interface CustomerServiceInter {
     @Transactional(readOnly = true)
     SpecialistResponseDto getSpecialistForMyRequest(Long requestId);
 
-    boolean deductCredit();
 }

@@ -18,13 +18,15 @@ public class Credit {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-    private Long balance;
+    private Double balance;
     @Enumerated(EnumType.STRING)
     private CreditStatus status;
-
-    public Credit(User user, Long balance ) {
+    public Credit(User user, Double balance ) {
         this.user = user;
         this.balance = balance;
 
+    }
+
+    public Credit() {
     }
 }

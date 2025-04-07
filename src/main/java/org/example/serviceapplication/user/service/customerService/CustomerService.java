@@ -137,8 +137,5 @@ public class CustomerService implements CustomerServiceInter {
       return    specialistService.convertToRes(userForThisRequest);
     }
 
-    @Override
-    public boolean deductCredit() {
-        return true;
-    }
+
 }
