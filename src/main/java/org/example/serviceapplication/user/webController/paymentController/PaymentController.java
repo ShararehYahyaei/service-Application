@@ -99,11 +99,13 @@ public class PaymentController {
     public String showPaymentPage(@RequestParam Long cardId,
                                   @RequestParam Long customerId,
                                   @RequestParam Long orderId,
+                                  HttpSession session,
                                   Model model) {
         CardResponse card = cardService.getCardById(cardId);
         model.addAttribute("card", card);
         model.addAttribute("customerId", customerId);
         model.addAttribute("orderId", orderId);
+        session.setAttribute("entryTime", System.currentTimeMillis());
         return "payment-details";
     }
 
@@ -130,13 +132,19 @@ public class PaymentController {
         String sessionCaptcha = (String) session.getAttribute("captcha");
         if (sessionCaptcha == null || !sessionCaptcha.equalsIgnoreCase(captcha)) {
             model.addAttribute("error", "کد امنیتی اشتباه است.");
-            return "payment"; // نام فایل html
+            return "payment";
         }
 
+        Long entryTime = (Long) session.getAttribute("entryTime");
+        System.out.println(entryTime+"bgggggg");
+        if (entryTime == null || System.currentTimeMillis() - entryTime > 10 * 60 * 1000) {
+            model.addAttribute("error", "مهلت پرداخت شما به پایان رسیده است. لطفاً دوباره تلاش کنید.");
+            return "access-denied";
+            //todo error page
+        }
         Order order = orderService.getOrderById(orderId);
         Offer offerById = offerService.getOfferById(order.getOffer().getId());
         if (card.getAmount() >= offerById.getOfferPrice()) {
-
             model.addAttribute("orderId", orderId);
             User user = offerById.getUser();
             cardService.deductAmount(cardId, offerById.getOfferPrice(),user);
