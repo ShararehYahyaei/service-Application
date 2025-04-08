@@ -91,25 +91,26 @@
             <th>شناسه سفارش</th>
             <th> شناسه پیشنهاد</th>
             <th>وضعیت</th>
-            <th>شناسه درخواست</th>
-            <th>شناسه مشتری</th>
             <th>عملیات</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="order : ${orders}">
+        <tr th:each="order : ${allOrdersForSpecialist}">
             <td th:text="${order.orderId}"></td>
-            <td th:text="${order.offerId}"></td>
-            <td th:text="${order.status}"></td>
             <td th:text="${order.customerId}"></td>
             <td th:text="${order.customerRequestId}"></td>
-
+            <td th:text="${order.offerId}"></td>
+            <td th:text="${order.status}"></td>
             <td>
-                <form th:action="@{/payment}" method="post">
+                <p>وضعیت سفارش: <span th:text="${order.status()}"></span></p>
+                <form th:action="@{/update-order-status}" method="get">
                     <input type="hidden" name="customerId" th:value="${order.customerId}" />
                     <input type="hidden" name="status" th:value="${order.status}" />
                     <input type="hidden" name="orderId" th:value="${order.orderId}" />
-                    <button type="submit" th:disabled="${order.status.name() != 'COMPLETED'}">پرداخت</button>
+                        <input hidden="hidden" type="number" name="orderId" th:value="${order.orderId}" >
+                        <button type="submit">تغییر وضعیت</button>
+                    </button>
+
                 </form>
 
             </td>

@@ -19,4 +19,6 @@ public interface OrderService {
 
     @Transactional(readOnly = true)
     List<OrderDto> getOrdersByCustomerId(Long customerId);
+
+    List<OrderDto>getAllOrdersForSpecialist(List<Long> specialistId);
 }

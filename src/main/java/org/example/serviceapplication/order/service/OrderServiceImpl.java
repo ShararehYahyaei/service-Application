@@ -3,6 +3,7 @@ package org.example.serviceapplication.order.service;
 import org.example.serviceapplication.offer.exception.OfferNotFound;
 import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.offer.model.OfferStatus;
+import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.order.exception.OrderIsDuplicated;
 import org.example.serviceapplication.order.exception.OrderNotFound;
 import org.example.serviceapplication.order.exception.OrderStatusIsNotCorrect;
@@ -126,5 +127,13 @@ public class OrderServiceImpl implements OrderService {
                         order.getOrderStatus()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderDto>getAllOrdersForSpecialist(List<Long> specialistId) {
+
+        List<Order> allByOfferIn = orderRepository.findAllByOfferIn(specialistId);
+        return convertOrdersToOrderDtos(allByOfferIn);
+
     }
 }

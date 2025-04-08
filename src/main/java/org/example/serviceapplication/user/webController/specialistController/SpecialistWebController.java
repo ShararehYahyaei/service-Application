@@ -1,6 +1,11 @@
 package org.example.serviceapplication.user.webController.specialistController;
 
 import org.example.serviceapplication.offer.dto.OfferDto;
+import org.example.serviceapplication.offer.model.Offer;
+import org.example.serviceapplication.offer.service.OfferServiceInterface;
+import org.example.serviceapplication.order.model.Order;
+import org.example.serviceapplication.order.model.OrderDto;
+import org.example.serviceapplication.order.service.OrderService;
 import org.example.serviceapplication.request.dto.CustomerRequestDto;
 import org.example.serviceapplication.request.dto.CustomerRequestResponseDto;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
@@ -18,24 +23,31 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.swing.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 public class SpecialistWebController {
     private final SubServiceCategoryInterface subservice;
     private final SpecialistService specialistService;
     private final UserService userService;
+    private final OrderService orderService;
+    private final OfferServiceInterface offerService;
 
 
     public SpecialistWebController(SubServiceCategoryInterface subservice,
-                                   SpecialistService specialistService, UserService userService) {
+                                   SpecialistService specialistService, UserService userService, OrderService orderService, OfferServiceInterface offerService) {
         this.subservice = subservice;
         this.specialistService = specialistService;
         this.userService = userService;
+        this.orderService = orderService;
+        this.offerService = offerService;
     }
 
 
@@ -58,7 +70,7 @@ public class SpecialistWebController {
     }
 
     @GetMapping("/all-requests")
-    public String showAllRequestsPage(@RequestParam(value = "userIdCredit", required = false)Long customerId, Model model) {
+    public String showAllRequestsPage(@RequestParam(value = "userIdCredit", required = false) Long customerId, Model model) {
         User specialist = specialistService.getById(customerId);
         if (specialist.getRole() != Role.Specialist) {
             throw new UserHasWrongRole("User has wrong role");
@@ -73,7 +85,7 @@ public class SpecialistWebController {
             map.put("formattedDeadLineTime", request.deadLineTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             map.put("address", request.address());
             map.put("requestStatus", request.requestStatus());
-            map.put("userIdCredit",customerId);
+            map.put("userIdCredit", customerId);
             return map;
         }).toList();
         model.addAttribute("requests", formattedRequests);
@@ -82,7 +94,7 @@ public class SpecialistWebController {
 
 
     @GetMapping("/offer")
-    public String showOfferForm(@RequestParam(value = "userIdCredit", required = false)Long customerId,Model model) {
+    public String showOfferForm(@RequestParam(value = "userIdCredit", required = false) Long customerId, Model model) {
         OfferDto offerDto = new OfferDto(
                 null,
                 customerId,
@@ -146,6 +158,31 @@ public class SpecialistWebController {
         userService.addSubCategory(userId, subServiceId);
         subServiceCategoryById.getUsers().add(specialist);
         return "redirect:/specialist-profile";
+    }
+
+    @GetMapping("/order_list_specialist")
+    public String getOrdersBySpecialistId(@RequestParam(value = "userIdCredit", required = false) Long customerId, Model model) {
+        User specialist = userService.getUserById(customerId);
+        if (specialist.getRole() != Role.Specialist) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+
+        List<OfferDto> allOffersBySpecialistId = offerService.getAllOffersBySpecialistId(specialist.getId());
+        List<Long> collect = allOffersBySpecialistId.stream().map(c -> c.offerId()).collect(Collectors.toList());
+        List<OrderDto> allOrdersForSpecialist = orderService.getAllOrdersForSpecialist(collect);
+        model.addAttribute("specialist", specialist);
+        model.addAttribute("allOrdersForSpecialist", allOrdersForSpecialist);
+        return "order_list_specialist";
+    }
+
+    @GetMapping("/update-order-status")
+    public String updateOrderStatus(@RequestParam  (value = "orderId", required = false) Long orderId, Model model) {
+
+        Order order = orderService.getOrderById(orderId);
+        Offer offer = order.getOffer();
+        orderService.changeOrderStatus(offer.getId());
+        model.addAttribute("order", order);
+        return "services";
     }
 
 

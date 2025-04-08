@@ -38,11 +38,12 @@ public class Review {
     private LocalDateTime reviewDate;
 
 
-    public Review(User customer, Order order, int rating, String comment) {
+    public Review(User customer, Order order, int rating, String comment,Long specialist) {
         this.customer = customer;
         this.order = order;
         this.rating = rating;
         this.comment = comment;
+        this.specialist= new User(specialist);
     }
 
 

@@ -52,6 +52,10 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY ,mappedBy = "users",cascade = CascadeType.ALL)
     private List<SubServiceCategory> subServiceCategories=new ArrayList<>();
 
+    public User(Long id) {
+        this.id = id;
+    }
+
     public User(String address, String phone, String name, String lastName,
                 String userName, String email, String password, Role role,
                 byte[] profileImageBytes) {

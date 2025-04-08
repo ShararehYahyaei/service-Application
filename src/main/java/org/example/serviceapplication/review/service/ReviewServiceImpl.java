@@ -43,7 +43,6 @@ public class ReviewServiceImpl implements ReviewService {
     private Review convertRequestIntoEntity(User customer, ReviewDto reviewDto) {
         Order order = orderService.getOrderById(reviewDto.orderId());
 
-
         if (!order.getCustomer().getId().equals(customer.getId())) {
             logger.error("Order does not belong to this customer!");
             throw new OrderOwnershipException("Order does not belong to this customer.");
@@ -57,7 +56,8 @@ public class ReviewServiceImpl implements ReviewService {
                 customer,
                 order,
                 reviewDto.rating(),
-                reviewDto.comment()
+                reviewDto.comment(),
+                reviewDto.userId()
 
         );
 

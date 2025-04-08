@@ -81,10 +81,10 @@
         <button type="submit">لیست همه درخواست‌ها</button>
     </form>
 
-<!--    <form th:action="@{/add-customer-card-form}" method="get">-->
-<!--        <input hidden="hidden" type="number" name="userIdCredit" th:value="${reviewDto.customerId}" >-->
-<!--        <button type="submit">افزودن کارت برای مشتری</button>-->
-<!--    </form>-->
+    <form th:action="@{/order_list_specialist}" method="get">
+        <input hidden="hidden" type="number" name="userIdCredit" th:value="${reviewDto.customerId}" >
+        <button type="submit">تغییر وضعیت سفارش</button>
+    </form>
 
 <!--    <form th:action="@{/customerRequests}" method="get">-->
 <!--        <input hidden="hidden" type="number" name="userIdCredit" th:value="${reviewDto.customerId}" >-->

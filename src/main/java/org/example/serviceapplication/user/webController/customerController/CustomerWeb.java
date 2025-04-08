@@ -164,7 +164,7 @@ public class CustomerWeb {
     }
 
     @PostMapping("/customer-profile")
-    public String submitReview(@ModelAttribute ReviewDto reviewDto, RedirectAttributes redirectAttributes) {
+    public String submitReview(@ModelAttribute ReviewDto reviewDto,Model model) {
         User customer = customerService.getUserById(reviewDto.customerId());
 
         if (customer.getRole() != Role.Customer) {
@@ -172,9 +172,10 @@ public class CustomerWeb {
         }
 
         customerService.addReview(customer, reviewDto);
-        redirectAttributes.addFlashAttribute("successMessage",
-                "نظر شما با موفقیت ثبت شد!");
-        return "redirect:/customer-profile";
+
+        model.addAttribute("reviewDto", new ReviewDto(reviewDto.customerId(),
+                null, null, 0, null));
+        return "/customer-profile";
     }
 
     @GetMapping("/add-customer-card-form")
