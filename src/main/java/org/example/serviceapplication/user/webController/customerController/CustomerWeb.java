@@ -152,13 +152,15 @@ public class CustomerWeb {
     @GetMapping("/customer-profile")
     public String showCustomerProfile(@RequestParam(value = "customerId", required = false)Long customerId,
                                       Model model) {
-        User customer = customerService.getUserById(customerId);
-        if (customer.getRole() != Role.Customer) {
-            throw new UserHasWrongRole("User has wrong role");
-        }
+        User user = userService.getUserById(customerId);
         model.addAttribute("reviewDto", new ReviewDto(customerId,
                 null, null, 0, null));
-        return "customer-profile";
+        if (user.getRole() == Role.Customer) {
+           return "customer-profile";
+        } else if (user.getRole() == Role.Specialist) {
+            return "get-Specialist-profile";
+        }
+        throw new UserHasWrongRole("User has wrong role");
     }
 
     @PostMapping("/customer-profile")

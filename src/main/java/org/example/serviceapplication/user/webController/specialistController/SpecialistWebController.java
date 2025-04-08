@@ -58,9 +58,8 @@ public class SpecialistWebController {
     }
 
     @GetMapping("/all-requests")
-    public String showAllRequestsPage(@RequestParam("userId") Long userId, Model model) {
-        User specialist = specialistService.getById(userId);
-
+    public String showAllRequestsPage(@RequestParam(value = "userIdCredit", required = false)Long customerId, Model model) {
+        User specialist = specialistService.getById(customerId);
         if (specialist.getRole() != Role.Specialist) {
             throw new UserHasWrongRole("User has wrong role");
         }
@@ -74,6 +73,7 @@ public class SpecialistWebController {
             map.put("formattedDeadLineTime", request.deadLineTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             map.put("address", request.address());
             map.put("requestStatus", request.requestStatus());
+            map.put("userIdCredit",customerId);
             return map;
         }).toList();
         model.addAttribute("requests", formattedRequests);
@@ -82,10 +82,10 @@ public class SpecialistWebController {
 
 
     @GetMapping("/offer")
-    public String showOfferForm(Model model) {
+    public String showOfferForm(@RequestParam(value = "userIdCredit", required = false)Long customerId,Model model) {
         OfferDto offerDto = new OfferDto(
                 null,
-                null,
+                customerId,
                 0.0,
                 LocalDate.now(),
                 0,
