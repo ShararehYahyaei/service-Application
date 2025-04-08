@@ -73,8 +73,8 @@ public class CustomerWeb {
 
 
     @GetMapping("/customerRequests")
-    public String showCustomerRequestPage(Model model) {
-        model.addAttribute("customerRequestDto", new CustomerRequestDto(null,
+    public String showCustomerRequestPage(@RequestParam(value = "userIdCredit") Long userIdCredit,  Model model) {
+        model.addAttribute("customerRequestDto", new CustomerRequestDto(userIdCredit,
                 null, 0.0, "", null, ""));
         return "customerRequests";
     }
@@ -91,7 +91,9 @@ public class CustomerWeb {
         }
 
         customerService.createRequest(customer, customerRequest);
-        return "redirect:/customerRequests";
+        model.addAttribute("reviewDto", new ReviewDto(idUser,
+                null, null, 0, null));
+        return "/customer-profile";
     }
 
     @GetMapping("/all-my-suggestions")
@@ -198,17 +200,17 @@ public class CustomerWeb {
 
 
     @GetMapping("/enter-customer-id")
-    public String enterCustomerIdForm() {
+    public String enterCustomerIdForm(   @RequestParam(value = "userIdCredit") Long userIdCredit) {
         return "enter-customer-id-form";
     }
 
     @GetMapping("/order_list")
-    public String getOrdersByCustomerId(@RequestParam Long customerId, Model model) {
-        User customer = customerService.getUserById(customerId);
+    public String getOrdersByCustomerId(@RequestParam(value = "userIdCredit") Long userIdCredit, Model model) {
+        User customer = customerService.getUserById(userIdCredit);
         if (customer.getRole() != Role.Customer) {
             throw new UserHasWrongRole("User has wrong role");
         }
-        List<OrderDto> ordersByCustomerId = orderService.getOrdersByCustomerId(customerId);
+        List<OrderDto> ordersByCustomerId = orderService.getOrdersByCustomerId(userIdCredit);
         model.addAttribute("orders", ordersByCustomerId);
         return "order_list";
     }

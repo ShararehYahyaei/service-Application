@@ -86,7 +86,20 @@
         <button type="submit">افزودن کارت برای مشتری</button>
     </form>
 
+    <form th:action="@{/customerRequests}" method="get">
+        <input hidden="hidden" type="number" name="userIdCredit" th:value="${reviewDto.customerId}" >
+        <button type="submit">ثبت درخواست مشتری</button>
+    </form>
+    <form th:action="@{/order_list}" method="get">
+        <input hidden="hidden" type="number" name="userIdCredit" th:value="${reviewDto.customerId}" >
+        <br>
+        <button type="submit">مشاهده سفارشات</button>
+    </form>
+
+
 </div>
+
+
 
 <div class="form-container">
     <h2>ثبت نظر</h2>
