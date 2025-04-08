@@ -148,11 +148,17 @@ public class CustomerWeb {
     }
 
     @GetMapping("/customer-profile")
-    public String showCustomerProfile(Model model) {
-        model.addAttribute("reviewDto", new ReviewDto(null,
+    public String showCustomerProfile(@RequestParam(value = "customerId", required = false)Long customerId,
+                                      Model model) {
+        User customer = customerService.getUserById(customerId);
+        if (customer.getRole() != Role.Customer) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+        model.addAttribute("reviewDto", new ReviewDto(customerId,
                 null, null, 0, null));
         return "customer-profile";
     }
+
     @PostMapping("/customer-profile")
     public String submitReview(@ModelAttribute ReviewDto reviewDto, RedirectAttributes redirectAttributes) {
         User customer = customerService.getUserById(reviewDto.customerId());
@@ -168,12 +174,12 @@ public class CustomerWeb {
     }
 
     @GetMapping("/add-customer-card-form")
-    public String showAddCardForm(Model model) {
+    public String showAddCardForm(@RequestParam(value = "userIdCredit") Long userIdCredit,Model model) {
         model.addAttribute("cardForm", new CardDto(null,
                 null,
                 null,
                 null,
-                null
+                userIdCredit
                 ));
         return "add-customer-card-form";
     }

@@ -17,10 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -101,8 +98,9 @@ public class UserWebController {
     }
 
     @GetMapping("/addCredit")
-    public String showAddCreditForm(Model model) {
-        model.addAttribute("creditForm", new CreditDto(null,0.0));
+    public String showAddCreditForm(@RequestParam(value = "userIdCredit") Long userIdCredit,
+                                    Model model) {
+        model.addAttribute("creditForm", new CreditDto(userIdCredit, 0.0));
         return "add-credit";
     }
 
@@ -110,7 +108,7 @@ public class UserWebController {
     public String addCredit(@ModelAttribute CreditDto creditDto, Model model) {
         logger.info("Received CreditDto: {}", creditDto);
         User user = userService.getUserById(creditDto.userId().longValue());
-        if (user.getRole().equals(Role.Admin)||user.getRole().equals(Role.Specialist)) {
+        if (user.getRole().equals(Role.Admin) || user.getRole().equals(Role.Specialist)) {
             logger.error("کاربر دارای نقش اشتباه است");
             model.addAttribute("message", "این کاربر اجازه افزودن اعتبار ندارد.");
             return "add-credit";
@@ -119,4 +117,11 @@ public class UserWebController {
         return "services";
 
     }
+
+
+    @GetMapping("/getCustomerId")
+    public String showCustomerIdForm( Model model) {
+      return "getCustomerId";
+    }
+
 }

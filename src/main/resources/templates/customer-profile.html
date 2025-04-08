@@ -4,6 +4,39 @@
     <meta charset="UTF-8">
     <title>پروفایل مشتری</title>
     <style>
+        .sidebar {
+            width: 220px;
+            background: rgb(255, 196, 230);
+            padding: 20px;
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+
+        .sidebar form button {
+            background: linear-gradient(135deg, #d81b60, #f06292);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .sidebar form button:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(135deg, #c2185b, #ad1457);
+        }
+
         body {
             font-family: 'Vazirmatn', Arial, sans-serif;
             direction: rtl;
@@ -42,6 +75,18 @@
     </style>
 </head>
 <body>
+<div class="sidebar">
+    <form th:action="@{/addCredit}" method="get">
+        <input hidden="hidden" type="number"  name="userIdCredit" th:value="${reviewDto.customerId}" >
+        <button type="submit">افزایش اعتبار</button>
+    </form>
+
+    <form th:action="@{/add-customer-card-form}" method="get">
+        <input hidden="hidden" type="number" name="userIdCredit" th:value="${reviewDto.customerId}" >
+        <button type="submit">افزودن کارت برای مشتری</button>
+    </form>
+
+</div>
 
 <div class="form-container">
     <h2>ثبت نظر</h2>
