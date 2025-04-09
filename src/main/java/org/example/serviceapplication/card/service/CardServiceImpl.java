@@ -10,6 +10,9 @@ import org.example.serviceapplication.credit.model.CreditDto;
 import org.example.serviceapplication.credit.model.CreditStatus;
 import org.example.serviceapplication.credit.repository.CreditRepository;
 import org.example.serviceapplication.credit.service.CreditService;
+import org.example.serviceapplication.order.model.Order;
+import org.example.serviceapplication.order.model.OrderStatus;
+import org.example.serviceapplication.order.service.OrderService;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
 import org.springframework.stereotype.Service;
@@ -24,14 +27,15 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
     private final UserService userService;
     private final CreditService creditService;
+    private final OrderService orderService;
 
 
-
-    public CardServiceImpl(CardRepository cardRepository, UserService userService, CreditService creditService) {
+    public CardServiceImpl(CardRepository cardRepository, UserService userService, CreditService creditService, OrderService orderService) {
         this.cardRepository = cardRepository;
         this.userService = userService;
 
         this.creditService = creditService;
+        this.orderService = orderService;
     }
 
 
@@ -66,7 +70,7 @@ public class CardServiceImpl implements CardService {
 
     @Transactional
     @Override
-    public void widthraw(Long cardId, double amount, User specialist) {
+    public void widthraw(Long cardId, double amount, User specialist,Long orderId) {
         Optional<Card> cardFound = cardRepository.findById(cardId);
         double serviceFee=0.0;
         if (cardFound.isPresent()) {
@@ -83,12 +87,15 @@ public class CardServiceImpl implements CardService {
                 Credit credit = existingCredit.get();
                 credit.setBalance(credit.getBalance() + deductionAmount);
                 creditService.updareCredit(credit);
+
                 cardRepository.save(cardFound.get());
             } else {
                 CreditDto creditDto = new CreditDto(specialist.getId(), deductionAmount, CreditStatus.Active);
                 creditService.createCredit(creditDto);
                 cardRepository.save(cardFound.get());
             }
+            Order order = orderService.getOrderById(orderId);
+            order.setOrderStatus(OrderStatus.PAID);
 
         }else{
             throw new CardIsNotFound("card is not found");

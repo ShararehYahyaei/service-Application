@@ -18,7 +18,7 @@ public interface CardService {
 
     CardResponse getCardById(Long cardId);
 
-    void widthraw(Long cardId, double amount, User user);
+    void widthraw(Long cardId, double amount, User user,Long orderId);
 
     @Transactional(readOnly = true)
     Card getByIdCard(Long cardId);

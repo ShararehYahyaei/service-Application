@@ -8,6 +8,7 @@ import org.example.serviceapplication.credit.model.CreditStatus;
 import org.example.serviceapplication.credit.service.CreditService;
 import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.order.model.Order;
+import org.example.serviceapplication.order.model.OrderStatus;
 import org.example.serviceapplication.order.service.OrderService;
 import org.example.serviceapplication.user.model.User;
 import org.springframework.stereotype.Service;
@@ -47,10 +48,12 @@ public class PaymentService implements PaymentServiceInterface {
             creditSpecialist.setBalance(creditSpecialist.getBalance() + amountNew);
             creditService.updareCredit(creditSpecialist);
 
+
         } else {
             CreditDto creditDto = new CreditDto(specialist.getId(), amountNew, CreditStatus.Active);
             creditService.createCredit(creditDto);
 
         }
+        order.setOrderStatus(OrderStatus.PAID);
     }
 }
