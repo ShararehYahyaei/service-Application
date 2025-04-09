@@ -189,29 +189,6 @@ public class SpecialistWebController {
 
 
 
-    @GetMapping("/view_my_credit")
-    public String getSpecialistCredit(@RequestParam(value = "userIdCredit", required = false) Long customerId, Model model) {
-        User specialist = userService.getUserById(customerId);
-        if (specialist.getRole() != Role.Specialist) {
-            throw new UserHasWrongRole("User has wrong role");
-        }
-
-        Optional<Credit> credit = creditService.getCreditByUserId(specialist.getId());
-        if (credit.isEmpty()) {
-            throw new CreditNotFoundException("credit not found");
-        }
-
-        model.addAttribute("specialist", specialist);
-        model.addAttribute("credit", credit.get());
-//        List<OfferDto> allOffersBySpecialistId = offerService.getAllOffersBySpecialistId(specialist.getId());
-//        List<Long> collect = allOffersBySpecialistId.stream().map(c -> c.offerId()).collect(Collectors.toList());
-//        List<OrderDto> allOrdersForSpecialist = orderService.getAllOrdersForSpecialist(collect);
-//        model.addAttribute("specialist", specialist);
-//        model.addAttribute("allOrdersForSpecialist", allOrdersForSpecialist);
-//        return "order_list_specialist";
-        return "view_my_credit";
-    }
-
 
 
 }

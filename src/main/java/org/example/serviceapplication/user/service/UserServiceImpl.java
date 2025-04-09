@@ -218,7 +218,7 @@ public class UserServiceImpl implements UserService {
         if (userFound.isPresent()) {
             return userFound.get();
         } else {
-            throw new RuntimeException("User not found");
+            throw new UserNotFond("User not found");
         }
     }
 

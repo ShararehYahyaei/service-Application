@@ -91,6 +91,12 @@
         <input hidden="hidden" type="text" name="Role" th:value="${Role}" >
         <button type="submit">افزایش اعتبار</button>
     </form>
+    <form th:action="@{/view-my-credit}" method="get">
+        <input hidden="hidden" type="number" name="userIdCredit" th:value="${reviewDto.customerId}" >
+        <input hidden="hidden" type="text" name="Role" th:value="${Role}" >
+        <br>
+        <button type="submit">مشاهده اعتبار </button>
+    </form>
 
 
 
