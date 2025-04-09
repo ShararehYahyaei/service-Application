@@ -86,18 +86,16 @@
         <button type="submit">تغییر وضعیت سفارش</button>
     </form>
 
-    <form th:action="@{/addCredit}" method="get">
-        <input hidden="hidden" type="number"  name="userIdCredit" th:value="${reviewDto.customerId}" >
-        <input hidden="hidden" type="text" name="Role" th:value="${Role}" >
-        <button type="submit">افزایش اعتبار</button>
-    </form>
+
     <form th:action="@{/view-my-credit}" method="get">
         <input hidden="hidden" type="number" name="userIdCredit" th:value="${reviewDto.customerId}" >
         <input hidden="hidden" type="text" name="Role" th:value="${Role}" >
         <br>
         <button type="submit">مشاهده اعتبار </button>
     </form>
-
+    <form th:action="@{/addSubcategoryToSpecialist}" method="get">
+        <button type="submit">اضافه کردن زیر خدمت به متخصص</button>
+    </form>
 
 
 </div>

@@ -63,6 +63,10 @@ public class UserServiceImpl implements UserService {
             logger.error("Email already exists");
             throw new EmailNotUniqueException("The email is already taken.");
         }
+        if (!isPhone(userRequest.phone()) ){
+            logger.error("phone already exists");
+            throw new PhoneIsDuplicated("The phone is already taken.");
+        }
         UserResponseDto userResponse = null;
         User user = convertRequestIntoEntity(userRequest);
         user.setActive(false);
@@ -256,6 +260,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email) == null;
     }
 
+    public boolean isPhone(String phone) {
+        return userRepository.findByPhone(phone) == null;
+    }
+
 
     @Transactional(readOnly = true)
     @Override
@@ -276,7 +284,7 @@ public class UserServiceImpl implements UserService {
 
 
         if (role != null && !role.isEmpty()) {
-            predicates.add(cb.equal(userRoot.get("role"), role));
+            predicates.add(cb.like(userRoot.get("role"),"%" + role + "%"));
         }
 
         query.where(cb.and(predicates.toArray(new Predicate[0])));
