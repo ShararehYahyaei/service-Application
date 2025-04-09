@@ -7,6 +7,7 @@ import org.example.serviceapplication.card.model.CardResponse;
 import org.example.serviceapplication.card.repository.CardRepository;
 import org.example.serviceapplication.credit.model.Credit;
 import org.example.serviceapplication.credit.model.CreditDto;
+import org.example.serviceapplication.credit.model.CreditStatus;
 import org.example.serviceapplication.credit.repository.CreditRepository;
 import org.example.serviceapplication.credit.service.CreditService;
 import org.example.serviceapplication.user.model.User;
@@ -78,7 +79,7 @@ public class CardServiceImpl implements CardService {
             Credit credit = existingCredit.get();
             credit.setBalance(credit.getBalance()+deductionAmount);
         }else{
-            CreditDto creditDto = new CreditDto(user.getId(), deductionAmount);
+            CreditDto creditDto = new CreditDto(user.getId(), deductionAmount, CreditStatus.Active);
             creditService.createCredit(creditDto);
         }
     }

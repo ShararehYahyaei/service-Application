@@ -15,4 +15,7 @@ public interface CreditService {
 
     @Transactional(readOnly = true)
    Optional<Credit>  getCreditByUserId(Long userId);
+
+    @Transactional
+    Credit updareCredit(Credit credit);
 }

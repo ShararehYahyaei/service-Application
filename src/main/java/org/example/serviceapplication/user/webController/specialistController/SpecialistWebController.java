@@ -1,5 +1,8 @@
 package org.example.serviceapplication.user.webController.specialistController;
 
+import org.example.serviceapplication.credit.exception.CreditNotFoundException;
+import org.example.serviceapplication.credit.model.Credit;
+import org.example.serviceapplication.credit.service.CreditService;
 import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
@@ -26,10 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.swing.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -39,15 +39,17 @@ public class SpecialistWebController {
     private final UserService userService;
     private final OrderService orderService;
     private final OfferServiceInterface offerService;
+    private final CreditService creditService;
 
 
     public SpecialistWebController(SubServiceCategoryInterface subservice,
-                                   SpecialistService specialistService, UserService userService, OrderService orderService, OfferServiceInterface offerService) {
+                                   SpecialistService specialistService, UserService userService, OrderService orderService, OfferServiceInterface offerService, CreditService creditService) {
         this.subservice = subservice;
         this.specialistService = specialistService;
         this.userService = userService;
         this.orderService = orderService;
         this.offerService = offerService;
+        this.creditService = creditService;
     }
 
 
@@ -184,6 +186,32 @@ public class SpecialistWebController {
         model.addAttribute("order", order);
         return "services";
     }
+
+
+
+    @GetMapping("/view_my_credit")
+    public String getSpecialistCredit(@RequestParam(value = "userIdCredit", required = false) Long customerId, Model model) {
+        User specialist = userService.getUserById(customerId);
+        if (specialist.getRole() != Role.Specialist) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+
+        Optional<Credit> credit = creditService.getCreditByUserId(specialist.getId());
+        if (credit.isEmpty()) {
+            throw new CreditNotFoundException("credit not found");
+        }
+
+        model.addAttribute("specialist", specialist);
+        model.addAttribute("credit", credit.get());
+//        List<OfferDto> allOffersBySpecialistId = offerService.getAllOffersBySpecialistId(specialist.getId());
+//        List<Long> collect = allOffersBySpecialistId.stream().map(c -> c.offerId()).collect(Collectors.toList());
+//        List<OrderDto> allOrdersForSpecialist = orderService.getAllOrdersForSpecialist(collect);
+//        model.addAttribute("specialist", specialist);
+//        model.addAttribute("allOrdersForSpecialist", allOrdersForSpecialist);
+//        return "order_list_specialist";
+        return "view_my_credit";
+    }
+
 
 
 }

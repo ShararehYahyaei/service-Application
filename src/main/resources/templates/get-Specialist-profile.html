@@ -86,15 +86,13 @@
         <button type="submit">تغییر وضعیت سفارش</button>
     </form>
 
-<!--    <form th:action="@{/customerRequests}" method="get">-->
-<!--        <input hidden="hidden" type="number" name="userIdCredit" th:value="${reviewDto.customerId}" >-->
-<!--        <button type="submit">ثبت درخواست مشتری</button>-->
-<!--    </form>-->
-<!--    <form th:action="@{/order_list}" method="get">-->
-<!--        <input hidden="hidden" type="number" name="userIdCredit" th:value="${reviewDto.customerId}" >-->
-<!--        <br>-->
-<!--        <button type="submit">مشاهده سفارشات</button>-->
-<!--    </form>-->
+    <form th:action="@{/addCredit}" method="get">
+        <input hidden="hidden" type="number"  name="userIdCredit" th:value="${reviewDto.customerId}" >
+        <input hidden="hidden" type="text" name="Role" th:value="${Role}" >
+        <button type="submit">افزایش اعتبار</button>
+    </form>
+
+
 
 </div>
 

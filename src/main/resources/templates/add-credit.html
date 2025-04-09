@@ -65,13 +65,21 @@
 <div class="form-container">
     <h2>افزودن اعتبار به حساب</h2>
     <form th:action="@{/addCredit}" th:object="${creditForm}" method="post">
-        <label for="role">نقش:</label>
-        <select id="role" name="role" required>
-            <option value="">انتخاب کنید</option>
-            <option value="CUSTOMER">مشتری</option>
-        </select>
+
+        <label for="Role">نقش:</label>
+        <input  readonly="readonly"  type="text" id="Role" th:value="${Role}"  name="Role"    />
+
         <label for="userId">شناسه کاربر:</label>
-        <input type="number" id="userId" th:field="*{userId}"  name="userId"    />
+        <input  readonly="readonly"  type="number" id="userId" th:field="*{userId}"  name="userId"    />
+
+        <label for="status">وضعیت:</label>
+        <select id="status" name="status" required onchange="toggleProfileImage()">
+
+            <option value="" disabled selected>انتخاب کنید</option>
+            <option value="Active">فعال</option>
+            <option value="DeActive">غبر فعال</option>
+
+        </select>
 
         <label for="balance">مقدار اعتبار (تومان):</label>
         <input type="number" th:field="*{balance}" step="0.01" name="balance" id="balance" />

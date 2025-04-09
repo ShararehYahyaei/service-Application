@@ -45,7 +45,8 @@ public class CreditServiceImpl implements CreditService {
     public CreditDto convertCreditToCreditDto(Credit credit) {
         return new CreditDto(
                 credit.getId(),
-                credit.getBalance().doubleValue()
+                credit.getBalance(),
+                credit.getStatus()
         );
     }
 
@@ -59,6 +60,13 @@ public class CreditServiceImpl implements CreditService {
             logger.error("Credit not found for user id {}", userId);
             throw new CreditNotFoundException("credit not found");
         }
+        return credit;
+    }
+
+    @Transactional
+    @Override
+    public Credit updareCredit(Credit credit) {
+        creditRepository.saveAndFlush(credit);
         return credit;
     }
 

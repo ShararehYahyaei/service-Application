@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 
 public record CreditDto(
          Long userId,
-         Double balance
-) {
+         Double balance,
+         CreditStatus status) {
 
 }

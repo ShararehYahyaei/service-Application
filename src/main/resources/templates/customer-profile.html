@@ -78,6 +78,7 @@
 <div class="sidebar">
     <form th:action="@{/addCredit}" method="get">
         <input hidden="hidden" type="number"  name="userIdCredit" th:value="${reviewDto.customerId}" >
+        <input hidden="hidden" type="text" name="Role" th:value="${Role}" >
         <button type="submit">افزایش اعتبار</button>
     </form>
 
@@ -95,7 +96,13 @@
         <br>
         <button type="submit">مشاهده سفارشات</button>
     </form>
+    //todo view all credit by customerID
+    <form th:action="@{/order_list}" method="get">
+        <input hidden="hidden" type="number" name="userIdCredit" th:value="${reviewDto.customerId}" >
 
+        <br>
+        <button type="submit">مشاهده اعتبار </button>
+    </form>
 
 </div>
 
@@ -110,7 +117,7 @@
         <label for="orderId">شناسه متخصص:</label>
         <input type="number" id="userId" name="userId" required>
 
-        <label for="userId">شناسه پیشنهاد:</label>
+        <label for="userId">شناسه سفارش:</label>
         <input type="number" id="orderId" name="orderId" required>
 
         <label for="rating">امتیاز:</label>

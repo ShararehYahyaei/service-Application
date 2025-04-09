@@ -1,6 +1,7 @@
 package org.example.serviceapplication.user.webController.userController;
 
 import jakarta.validation.Valid;
+import org.example.serviceapplication.credit.model.Credit;
 import org.example.serviceapplication.credit.model.CreditDto;
 import org.example.serviceapplication.credit.service.CreditService;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -99,19 +101,28 @@ public class UserWebController {
 
     @GetMapping("/addCredit")
     public String showAddCreditForm(@RequestParam(value = "userIdCredit") Long userIdCredit,
+                                    @RequestParam(value = "Role") Role role,
                                     Model model) {
-        model.addAttribute("creditForm", new CreditDto(userIdCredit, 0.0));
+        model.addAttribute("creditForm", new CreditDto(userIdCredit, 0.0, null));
+        model.addAttribute("Role", role);
         return "add-credit";
     }
 
     @PostMapping("/addCredit")
     public String addCredit(@ModelAttribute CreditDto creditDto, Model model) {
         logger.info("Received CreditDto: {}", creditDto);
-        User user = userService.getUserById(creditDto.userId().longValue());
-        if (user.getRole().equals(Role.Admin) || user.getRole().equals(Role.Specialist)) {
+        User user = userService.getUserById(creditDto.userId());
+        if (user.getRole().equals(Role.Admin)) {
             logger.error("کاربر دارای نقش اشتباه است");
             model.addAttribute("message", "این کاربر اجازه افزودن اعتبار ندارد.");
             return "add-credit";
+        }
+        Optional<Credit> creditForUser = creditService.getCreditByUserId(user.getId());
+        if (creditForUser.isPresent()) {
+
+            creditForUser.get().setBalance(creditForUser.get().getBalance() + creditDto.balance());
+            creditService.updareCredit(creditForUser.get());
+            return "services";
         }
         creditService.createCredit(creditDto);
         return "services";
@@ -120,8 +131,42 @@ public class UserWebController {
 
 
     @GetMapping("/getCustomerId")
-    public String showCustomerIdForm( Model model) {
-      return "getCustomerId";
+    public String showCustomerIdForm(Model model) {
+        return "getCustomerId";
     }
+
+
+
+//    @GetMapping("/add_credit_specialist")
+//    public String addCreditForSpecialist(@RequestParam(value = "userIdCredit") Long userIdCredit,
+//                                    @RequestParam(value = "Role") Role role,
+//                                    Model model) {
+//        model.addAttribute("creditForm", new CreditDto(userIdCredit, 0.0, null));
+//        model.addAttribute("Role", role);
+//        return "add_credit_specialist";
+//    }
+//
+//    @PostMapping("/add_credit_specialist")
+//    public String addCreditForSpecialist(@ModelAttribute CreditDto creditDto, Model model) {
+//        logger.info("Received CreditDto: {}", creditDto);
+//        User user = userService.getUserById(creditDto.userId());
+//        if (user.getRole().equals(Role.Admin)) {
+//            logger.error("کاربر دارای نقش اشتباه است");
+//            model.addAttribute("message", "این کاربر اجازه افزودن اعتبار ندارد.");
+//            return "add_credit_specialist";
+//        }
+//        Optional<Credit> creditForUser = creditService.getCreditByUserId(user.getId());
+//        if (creditForUser.isPresent()) {
+//
+//            creditForUser.get().setBalance(creditForUser.get().getBalance() + creditDto.balance());
+//            creditService.updareCredit(creditForUser.get());
+//            return "services";
+//        }
+//        creditService.createCredit(creditDto);
+//        return "services";
+//
+//    }
+
+
 
 }

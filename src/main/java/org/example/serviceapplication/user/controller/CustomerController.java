@@ -134,7 +134,6 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<OrderDto>> getOrdersByCustomerId(@PathVariable Long customerId) {
         User customer = customerService.getUserById(customerId);
@@ -144,7 +143,6 @@ public class CustomerController {
         List<OrderDto> ordersByCustomerId = orderService.getOrdersByCustomerId(customerId);
         return ResponseEntity.ok(ordersByCustomerId);
     }
-
 
 
 }

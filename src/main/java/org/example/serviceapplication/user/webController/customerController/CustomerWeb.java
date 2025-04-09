@@ -155,6 +155,7 @@ public class CustomerWeb {
         User user = userService.getUserById(customerId);
         model.addAttribute("reviewDto", new ReviewDto(customerId,
                 null, null, 0, null));
+        model.addAttribute("Role", user.getRole());
         if (user.getRole() == Role.Customer) {
            return "customer-profile";
         } else if (user.getRole() == Role.Specialist) {
