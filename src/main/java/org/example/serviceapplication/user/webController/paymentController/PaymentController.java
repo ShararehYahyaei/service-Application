@@ -125,8 +125,9 @@ public class PaymentController {
         Offer offer = offerService.getOfferById(order.getOffer().getId());
         model.addAttribute("orderId", orderId);
         if (card.getAmount() >= offer.getOfferPrice()) {
-            User user = offer.getUser();
-            cardService.widthraw(cardId, offer.getOfferPrice(), user);
+            User customer=card.getUser();
+            User specialist = offer.getUser();
+            cardService.widthraw(cardId, offer.getOfferPrice(), specialist);
             model.addAttribute("message", "پرداخت با موفقیت انجام شد.");
         } else {
             model.addAttribute("message", "موجودی کافی نیست.");

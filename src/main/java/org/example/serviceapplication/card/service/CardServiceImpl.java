@@ -66,20 +66,26 @@ public class CardServiceImpl implements CardService {
 
     @Transactional
     @Override
-    public void widthraw(Long cardId, double amount, User user) {
+    public void widthraw(Long cardId, double amount, User specialist) {
         Optional<Card> cardFound = cardRepository.findById(cardId);
-        double deductionAmount = 0.0;
+        double serviceFee=0.0;
         if (cardFound.isPresent()) {
-            deductionAmount = amount * 0.70;
+
+            //first withdrow amount from customer
             cardFound.get().setAmount(cardFound.get().getAmount() - amount);
-            Optional<Credit> existingCredit = creditService.getCreditByUserId(user.getId());
+            // calculate 70 percent
+            double deductionAmount  = amount * 0.70;
+
+            serviceFee=amount-deductionAmount; //todo  to be decided
+            // add 70 percent to specialist credit
+            Optional<Credit> existingCredit = creditService.getCreditByUserId(specialist.getId());
             if (existingCredit.isPresent()) {
                 Credit credit = existingCredit.get();
                 credit.setBalance(credit.getBalance() + deductionAmount);
                 creditService.updareCredit(credit);
                 cardRepository.save(cardFound.get());
             } else {
-                CreditDto creditDto = new CreditDto(user.getId(), deductionAmount, CreditStatus.Active);
+                CreditDto creditDto = new CreditDto(specialist.getId(), deductionAmount, CreditStatus.Active);
                 creditService.createCredit(creditDto);
                 cardRepository.save(cardFound.get());
             }

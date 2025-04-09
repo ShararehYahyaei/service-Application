@@ -4,11 +4,10 @@ import java.time.LocalDateTime;
 
 public record OrderDto(
         Long orderId,
-       Long customerId,
-       Long offerId,
-       Long customerRequestId,
-       OrderStatus status,
-        LocalDateTime orderDate
-
-) {
+        Long customerId,
+        Long offerId,
+        Long customerRequestId,
+        OrderStatus status,
+        LocalDateTime orderDate,
+        double offerPrice) {
 }
