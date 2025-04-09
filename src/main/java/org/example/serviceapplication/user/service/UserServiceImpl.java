@@ -13,10 +13,7 @@ import org.example.serviceapplication.subCategory.service.SubServiceCategoryInte
 import org.example.serviceapplication.user.dto.*;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
-import org.example.serviceapplication.user.exception.EmailNotUniqueException;
-import org.example.serviceapplication.user.exception.NotSubServiceCategory;
-import org.example.serviceapplication.user.exception.UserHasWrongRole;
-import org.example.serviceapplication.user.exception.UserNotFond;
+import org.example.serviceapplication.user.exception.*;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
 import org.example.serviceapplication.user.service.specialistService.SpecialistServiceImpl;
@@ -130,6 +127,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addSubCategory(Long idSpecialist, Long categoryId) {
         User userFound = getUserSpecialistById(idSpecialist);
+        boolean result = userFound.getSubServiceCategories().stream().anyMatch(c -> c.getId().equals(categoryId));
+        if (result) {
+            throw new DuplicateSubCategoryException("user already has this subServiceCategory");
+        }
         specialistService.addSubCategoryToSpecialist(userFound, categoryId);
 
     }
@@ -281,9 +282,6 @@ public class UserServiceImpl implements UserService {
         query.where(cb.and(predicates.toArray(new Predicate[0])));
         return entityManager.createQuery(query).getResultList();
     }
-
-
-
 
 
 }

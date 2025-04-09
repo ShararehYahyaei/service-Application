@@ -126,16 +126,6 @@
         <button type="submit">ثبت‌نام</button>
     </form>
 
-    <form th:action="@{/all-customers}" method="get">
-        <button type="submit">لیست مشتریان</button>
-    </form>
-
-    <form th:action="@{/all-specialists}" method="get">
-        <button type="submit">لیست متخصصان</button>
-    </form>
-<!--    <form th:action="@{/customerRequests}" method="get">-->
-<!--        <button type="submit">ثبت درخواست مشتری</button>-->
-<!--    </form>-->
 
     <form th:action="@{/all-my-suggestions}" method="get">
         <button type="submit">لیست همه پیشنهادهای من</button>
@@ -152,6 +142,9 @@
         <button type="submit">پروفایل </button>
     </form>
 
+    <form th:action="@{/get-Profile-Admin}" method="get">
+        <button type="submit"> کارتابل ادمین </button>
+    </form>
 
 
 </div>

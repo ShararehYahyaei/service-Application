@@ -1,9 +1,6 @@
-package org.example.serviceapplication.user.webController.captchaController;
+package org.example.serviceapplication.captcha.controller;
 
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -19,11 +16,11 @@ public class CaptchaGenerator {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = image.createGraphics();
 
-        // پس زمینه سفید
+
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, width, height);
 
-        // متن تصادفی
+
         String text = generateRandomText();
         g.setFont(new Font("Arial", Font.BOLD, 30));
         g.setColor(Color.BLACK);

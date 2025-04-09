@@ -77,7 +77,6 @@ public class AdminWebController {
     }
 
 
-
     //todo add subService category
     @GetMapping("/addServiceCategory")
     public String addServiceCategoryForm(Model model) {
@@ -91,7 +90,6 @@ public class AdminWebController {
         categoryService.createNewCategory(serviceCategoryRequest);
         return "redirect:/servicesList";
     }
-
 
 
     //todo add sub ServiceCategory to each category in the sub Service age
@@ -123,5 +121,10 @@ public class AdminWebController {
         return "redirect:/servicesList";
     }
 
+
+    @GetMapping("/get-Profile-Admin")
+    public String getProfileAdmin(Model model) {
+        return " get-Profile-Admin";
+    }
 
 }

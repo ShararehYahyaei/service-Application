@@ -52,7 +52,7 @@
         <th>فعال</th>
         <th>نقش</th>
         <th>وضعیت</th>
-        <th>عملیات</th>
+<!--        <th>عملیات</th>-->
     </tr>
     </thead>
     <tbody>
@@ -63,12 +63,13 @@
         <td th:text="${specialist.active ? 'بله' : 'خیر'}"></td>
         <td th:text="${specialist.role}"></td>
         <td th:text="${specialist.status}"></td>
-        <td>
+<!--        <td>-->
 
-            <form th:action="@{/add-subservice}" method="post">
-                <button type="submit" class="add-subservice-btn">افزودن زیر خدمت</button>
-            </form>
-        </td>
+<!--            <form th:action="@{/add-subservice}" method="post">-->
+<!--                <input hidden="hidden" type="number"  name="specialistId" th:value="${specialist.specialistId}" >-->
+<!--                <button type="submit" class="add-subservice-btn">افزودن زیر خدمت</button>-->
+<!--            </form>-->
+<!--        </td>-->
     </tr>
     </tbody>
 </table>

@@ -187,6 +187,19 @@ public class SpecialistWebController {
         return "services";
     }
 
+    @GetMapping("/addSubcategoryToSpecialist")
+    public String showAddSubcategoryToSpecialistPage( Model model) {
+
+        return "addSubcategoryToSpecialist";
+    }
+
+    @PostMapping("/addSubcategoryToSpecialist")
+    public String addSubcategoryToSpecialistPage(@RequestParam  (value = "userId", required = false) Long userId,
+                                                 @RequestParam  (value = "subCategoryId", required = false) Long subCategoryId,Model model) {
+        userService.addSubCategory(userId, subCategoryId);
+        return "/ get-Profile-Admin";
+    }
+
 
 
 

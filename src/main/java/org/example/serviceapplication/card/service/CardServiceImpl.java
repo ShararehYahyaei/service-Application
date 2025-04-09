@@ -24,13 +24,14 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
     private final UserService userService;
     private final CreditService creditService;
-    private final CreditRepository creditRepository;
 
-    public CardServiceImpl(CardRepository cardRepository, UserService userService, CreditService creditService, CreditRepository creditRepository) {
+
+
+    public CardServiceImpl(CardRepository cardRepository, UserService userService, CreditService creditService) {
         this.cardRepository = cardRepository;
         this.userService = userService;
+
         this.creditService = creditService;
-        this.creditRepository = creditRepository;
     }
 
 
@@ -65,23 +66,29 @@ public class CardServiceImpl implements CardService {
 
     @Transactional
     @Override
-    public void deductAmount(Long cardId, double amount, User user) {
+    public void widthraw(Long cardId, double amount, User user) {
         Optional<Card> cardFound = cardRepository.findById(cardId);
         double deductionAmount = 0.0;
         if (cardFound.isPresent()) {
             deductionAmount = amount * 0.70;
             cardFound.get().setAmount(cardFound.get().getAmount() - amount);
-            cardRepository.save(cardFound.get());
-        }
-        Optional<Credit> existingCredit = creditService.getCreditByUserId(user.getId());
+            Optional<Credit> existingCredit = creditService.getCreditByUserId(user.getId());
+            if (existingCredit.isPresent()) {
+                Credit credit = existingCredit.get();
+                credit.setBalance(credit.getBalance() + deductionAmount);
+                creditService.updareCredit(credit);
+                cardRepository.save(cardFound.get());
+            } else {
+                CreditDto creditDto = new CreditDto(user.getId(), deductionAmount, CreditStatus.Active);
+                creditService.createCredit(creditDto);
+                cardRepository.save(cardFound.get());
+            }
 
-        if (existingCredit.isPresent()) {
-            Credit credit = existingCredit.get();
-            credit.setBalance(credit.getBalance()+deductionAmount);
         }else{
-            CreditDto creditDto = new CreditDto(user.getId(), deductionAmount, CreditStatus.Active);
-            creditService.createCredit(creditDto);
+            throw new CardIsNotFound("card is not found");
+
         }
+
     }
 
     private Card converDtoToCard(CardDto cardDto) {

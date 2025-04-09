@@ -1,4 +1,4 @@
-package org.example.serviceapplication.user.webController.captchaController;
+package org.example.serviceapplication.captcha.controller;
 
 import java.awt.image.BufferedImage;
 

@@ -1,4 +1,4 @@
-package org.example.serviceapplication.user.webController.userController;
+package org.example.serviceapplication.user.controller;
 
 import jakarta.validation.Valid;
 import org.example.serviceapplication.credit.exception.CreditNotFoundException;
