@@ -3,6 +3,9 @@ package org.example.serviceapplication.user.webController.customerController;
 
 import org.example.serviceapplication.card.model.CardDto;
 import org.example.serviceapplication.card.service.CardService;
+import org.example.serviceapplication.credit.model.Credit;
+import org.example.serviceapplication.credit.model.CreditDto;
+import org.example.serviceapplication.credit.service.CreditService;
 import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.order.model.OrderDto;
@@ -28,6 +31,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -40,8 +44,11 @@ public class CustomerWeb {
     private final CardService cardService;
     private final UserService userService;
     private final OrderService orderService;
+    private final CreditService creditService;
 
-    public CustomerWeb(SubServiceCategoryInterface subService, CustomerService customerService, CustomerRequestService customerRequestService, OfferServiceInterface offerService, CardService cardService, UserService userService, OrderService orderService) {
+    public CustomerWeb(SubServiceCategoryInterface subService, CustomerService customerService,
+                       CustomerRequestService customerRequestService, OfferServiceInterface offerService,
+                       CardService cardService, UserService userService, OrderService orderService, CreditService creditService) {
         this.subService = subService;
         this.customerService = customerService;
         this.customerRequestService = customerRequestService;
@@ -49,6 +56,7 @@ public class CustomerWeb {
         this.cardService = cardService;
         this.userService = userService;
         this.orderService = orderService;
+        this.creditService = creditService;
     }
 
     @GetMapping("/services")
@@ -201,6 +209,38 @@ public class CustomerWeb {
         model.addAttribute("message", "کارت با موفقیت اضافه شد!");
         return "services";
     }
+
+    @GetMapping("/addCredit")
+    public String showAddCreditForm(@RequestParam(value = "userIdCredit") Long userIdCredit,
+                                    @RequestParam(value = "Role") Role role,
+                                    Model model) {
+        model.addAttribute("creditForm", new CreditDto(userIdCredit, 0.0, null));
+        model.addAttribute("Role", role);
+        return "add-credit";
+    }
+
+    @PostMapping("/addCredit")
+    public String addCredit(@ModelAttribute CreditDto creditDto, Model model) {
+        logger.info("Received CreditDto: {}", creditDto);
+        User user = userService.getUserById(creditDto.userId());
+        if (user.getRole().equals(Role.Admin)) {
+            logger.error("کاربر دارای نقش اشتباه است");
+            model.addAttribute("message", "این کاربر اجازه افزودن اعتبار ندارد.");
+            return "add-credit";
+        }
+        Optional<Credit> creditForUser = creditService.getCreditByUserId(user.getId());
+        if (creditForUser.isPresent()) {
+            creditForUser.get().setBalance(creditForUser.get().getBalance() + creditDto.balance());
+            creditService.updareCredit(creditForUser.get());
+            return "services";
+        }
+        creditService.createCredit(creditDto);
+        return "services";
+
+    }
+
+
+
 
 
     @GetMapping("/enter-customer-id")

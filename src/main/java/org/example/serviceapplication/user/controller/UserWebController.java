@@ -99,35 +99,6 @@ public class UserWebController {
         return "searchUsers";
     }
 
-    @GetMapping("/addCredit")
-    public String showAddCreditForm(@RequestParam(value = "userIdCredit") Long userIdCredit,
-                                    @RequestParam(value = "Role") Role role,
-                                    Model model) {
-        model.addAttribute("creditForm", new CreditDto(userIdCredit, 0.0, null));
-        model.addAttribute("Role", role);
-        return "add-credit";
-    }
-
-    @PostMapping("/addCredit")
-    public String addCredit(@ModelAttribute CreditDto creditDto, Model model) {
-        logger.info("Received CreditDto: {}", creditDto);
-        User user = userService.getUserById(creditDto.userId());
-        if (user.getRole().equals(Role.Admin)) {
-            logger.error("کاربر دارای نقش اشتباه است");
-            model.addAttribute("message", "این کاربر اجازه افزودن اعتبار ندارد.");
-            return "add-credit";
-        }
-        Optional<Credit> creditForUser = creditService.getCreditByUserId(user.getId());
-        if (creditForUser.isPresent()) {
-
-            creditForUser.get().setBalance(creditForUser.get().getBalance() + creditDto.balance());
-            creditService.updareCredit(creditForUser.get());
-            return "services";
-        }
-        creditService.createCredit(creditDto);
-        return "services";
-
-    }
 
 
     @GetMapping("/getCustomerId")

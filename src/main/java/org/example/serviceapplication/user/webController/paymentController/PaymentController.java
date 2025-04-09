@@ -7,22 +7,31 @@ import org.example.serviceapplication.card.model.Card;
 import org.example.serviceapplication.card.model.CardDto;
 import org.example.serviceapplication.card.model.CardResponse;
 import org.example.serviceapplication.card.service.CardService;
+import org.example.serviceapplication.credit.exception.CreditIsNotSufficent;
+import org.example.serviceapplication.credit.exception.CreditNotFoundException;
+import org.example.serviceapplication.credit.model.Credit;
+import org.example.serviceapplication.credit.model.CreditDto;
+import org.example.serviceapplication.credit.model.CreditStatus;
 import org.example.serviceapplication.credit.service.CreditService;
 import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.order.model.Order;
 import org.example.serviceapplication.order.model.OrderStatus;
 import org.example.serviceapplication.order.service.OrderService;
+import org.example.serviceapplication.payment.PaymentService;
+import org.example.serviceapplication.payment.PaymentServiceInterface;
 import org.example.serviceapplication.user.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.*;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class PaymentController {
@@ -30,14 +39,14 @@ public class PaymentController {
     private final OfferServiceInterface offerService;
     private final Logger logger = LoggerFactory.getLogger(PaymentController.class);
     private final OrderService orderService;
-    private final CreditService creditService;
+    private final PaymentServiceInterface paymentService;
 
     public PaymentController(CardService cardService, OfferServiceInterface offerService,
-                             OrderService orderService, CreditService creditService) {
+                             OrderService orderService, PaymentService paymentService, PaymentServiceInterface paymentService1) {
         this.cardService = cardService;
-        this.creditService = creditService;
         this.offerService = offerService;
         this.orderService = orderService;
+        this.paymentService = paymentService1;
     }
 
     @PostMapping("/payment")
@@ -74,21 +83,18 @@ public class PaymentController {
                                  @RequestParam Long customerId,
                                  @RequestParam Long orderId,
                                  Model model) {
+
         if (paymentMethod.equals("card")) {
             List<CardResponse> cards = cardService.getCardsByCustomerId(customerId);
-            for (CardResponse card : cards) {
-                System.out.println(card);
-            }
             model.addAttribute("cards", cards);
-            model.addAttribute("customerId", customerId);
-            model.addAttribute("orderId", orderId);
+
             return "select-card";
-        } else if (paymentMethod.equals("credit")) {
-            model.addAttribute("customerId", customerId);
-            return "redirect:/process-credit-payment";
         } else {
-            return "redirect:/payment";
+            paymentService.payByCustomerCredit(orderId, customerId);
         }
+        model.addAttribute("customerId", customerId);
+        model.addAttribute("orderId", orderId);
+        return "services";
     }
 
     @PostMapping("/card-details")
@@ -125,7 +131,6 @@ public class PaymentController {
         Offer offer = offerService.getOfferById(order.getOffer().getId());
         model.addAttribute("orderId", orderId);
         if (card.getAmount() >= offer.getOfferPrice()) {
-            User customer=card.getUser();
             User specialist = offer.getUser();
             cardService.widthraw(cardId, offer.getOfferPrice(), specialist);
             model.addAttribute("message", "پرداخت با موفقیت انجام شد.");
@@ -133,7 +138,7 @@ public class PaymentController {
             model.addAttribute("message", "موجودی کافی نیست.");
             throw new CardIsNotSufficent("موجودی کافی نیست.");
         }
-        return "payment-success";
+        return "customer-profile";
     }
 
     private void validationCard(String cvv, LocalDate expiryDate, Card card) {
@@ -163,31 +168,5 @@ public class PaymentController {
         }
     }
 
-//    @GetMapping("/process-credit-payment")
-//    public String processCreditPayment(
-//            @RequestParam Long orderId,
-//            @RequestParam Long customerId,
-//            Model model) {
-//
-//        Order order = orderService.getOrderById(orderId);
-//        double offerPrice = order.getOffer().getOfferPrice();
-//        Optional<Credit> credit = creditService.getCreditByUserId(customerId);
-//        if (credit.isEmpty()) {
-//            throw new CreditNotFoundException("Credit not found");
-//        }
-//        if (credit.get().getBalance() < offerPrice) {
-//            throw new CreditIsNotSufficent("credit is not sufficient to credit");
-//        }
-//        double amountNew = offerPrice * 0.70;
-//        credit.get().setBalance(credit.get().getBalance() -offerPrice);
-//        offerService.getOfferById()
-//        creditService.updareCredit(credit.get());
-//        model.addAttribute("message", "پرداخت از اعتبار با موفقیت انجام شد!");
-//
-//
-//        return "payment-result";
-//        model.addAttribute("orderId", orderId);
-//        System.out.println("orderId: " + orderId);
-//        return "payment-method";
-//    }
+
 }

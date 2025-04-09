@@ -54,12 +54,8 @@ public class CreditServiceImpl implements CreditService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<Credit> getCreditByUserId(Long userId) {
+    public   Optional<Credit>  getCreditByUserId(Long userId) {
         Optional<Credit> credit = creditRepository.findByUserId(userId);
-        if (credit.isEmpty()) {
-            logger.error("Credit not found for user id {}", userId);
-            throw new CreditNotFoundException("credit not found");
-        }
         return credit;
     }
 

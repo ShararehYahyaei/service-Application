@@ -14,7 +14,7 @@ public interface CreditService {
     CreditDto convertCreditToCreditDto(Credit credit);
 
     @Transactional(readOnly = true)
-   Optional<Credit>  getCreditByUserId(Long userId);
+    Optional<Credit>  getCreditByUserId(Long userId);
 
     @Transactional
     Credit updareCredit(Credit credit);
