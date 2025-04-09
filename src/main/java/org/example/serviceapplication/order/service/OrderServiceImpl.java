@@ -1,14 +1,20 @@
 package org.example.serviceapplication.order.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.example.serviceapplication.offer.exception.OfferNotFound;
 import org.example.serviceapplication.offer.model.Offer;
 import org.example.serviceapplication.offer.model.OfferStatus;
-import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.order.exception.OrderIsDuplicated;
 import org.example.serviceapplication.order.exception.OrderNotFound;
 import org.example.serviceapplication.order.exception.OrderStatusIsNotCorrect;
 import org.example.serviceapplication.order.model.Order;
 import org.example.serviceapplication.order.model.OrderDto;
+import org.example.serviceapplication.order.model.OrderDtoSearch;
 import org.example.serviceapplication.order.model.OrderStatus;
 import org.example.serviceapplication.order.repository.OrderRepository;
 import org.example.serviceapplication.request.exception.RequestStatusIsNotCorrect;
@@ -21,13 +27,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+    @PersistenceContext
+    private EntityManager entityManager;
     private final OrderRepository orderRepository;
     private final CustomerRequestService customerRequestService;
     private final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
@@ -124,16 +135,70 @@ public class OrderServiceImpl implements OrderService {
                         order.getCustomer() != null ? order.getCustomer().getId() : null,
                         order.getOffer() != null ? order.getOffer().getId() : null,
                         order.getCustomerRequest() != null ? order.getCustomerRequest().getId() : null,
-                        order.getOrderStatus()
+                        order.getOrderStatus(),
+                        order.getOrderDate()
                 ))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrderDto>getAllOrdersForSpecialist(List<Long> specialistId) {
+    public List<OrderDto> getAllOrdersForSpecialist(List<Long> specialistId) {
 
         List<Order> allByOfferIn = orderRepository.findAllByOfferIn(specialistId);
         return convertOrdersToOrderDtos(allByOfferIn);
 
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<OrderDto> getAllOrders() {
+        List<Order> all = orderRepository.findAll();
+        return convertOrdersToOrderDtos(all);
+    }
+
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<OrderDto> searchOrders(OrderDtoSearch orderDtoSearch) {
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Order> query = cb.createQuery(Order.class);
+        Root<Order> orderRoot = query.from(Order.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (orderDtoSearch.subService() != null && !orderDtoSearch.subService().isEmpty()) {
+            predicates.add(cb.like(orderRoot.get("subService"), "%" + orderDtoSearch.subService() + "%"));
+        }
+
+        if (orderDtoSearch.orderStatus() != null && !orderDtoSearch.orderStatus().isEmpty()) {
+            predicates.add(cb.like(orderRoot.get("orderStatus"), "%" + orderDtoSearch.orderStatus().toUpperCase() + "%"));
+        }
+        if (orderDtoSearch.category() != null && !orderDtoSearch.category().isEmpty()) {
+            predicates.add(cb.like(orderRoot.get("category"), "%" + orderDtoSearch.category() + "%"));
+        }
+
+
+        if (orderDtoSearch.fromLocalDate() != null && !orderDtoSearch.fromLocalDate().isBlank()
+        &&
+                orderDtoSearch.toLocalDate() != null && !orderDtoSearch.toLocalDate().isBlank()
+        ) {
+
+            predicates.add(cb.between(orderRoot.get("orderDate"),
+                    LocalDateTime.of(LocalDate.parse(orderDtoSearch.fromLocalDate()),
+                            LocalTime.of(0,0)),
+                    LocalDateTime.of(LocalDate.parse(orderDtoSearch.toLocalDate()),
+                            LocalTime.of(23,59))
+                    )
+            );
+
+        }
+
+
+
+
+        query.where(cb.and(predicates.toArray(new Predicate[0])));
+        return convertOrdersToOrderDtos(entityManager.createQuery(query).getResultList());
+    }
+
+
 }

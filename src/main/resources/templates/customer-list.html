@@ -51,6 +51,20 @@
 
 <body>
 <h2>لیست مشتری‌ها</h2>
+<form th:action="@{/all-customers}"  method="get" class="space-y-4">
+<div>
+    <label for="fromLocalDate">تاریخ از:</label>
+    <input type="date" id="fromLocalDate" name="fromLocalDate" th:value="${fromLocalDate}" />
+</div>
+<div>
+    <label for="toLocalDate">تاریخ تا:</label>
+    <input type="date" id="toLocalDate"   name="toLocalDate" th:value="${toLocalDate}" />
+</div>
+    <div class="text-center">
+        <button type="submit"
+                class="back-button">جستجو</button>
+    </div>
+</form>
 <table>
     <thead>
     <tr>

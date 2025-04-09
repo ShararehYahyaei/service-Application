@@ -5,23 +5,24 @@ import org.example.serviceapplication.Category.dto.ServiceCategoryRequest;
 import org.example.serviceapplication.Category.dto.ServiceCategoryResponse;
 import org.example.serviceapplication.Category.exception.NotFoundCategory;
 import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
-import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
+import org.example.serviceapplication.order.model.Order;
+import org.example.serviceapplication.order.model.OrderDto;
+import org.example.serviceapplication.order.model.OrderDtoSearch;
+import org.example.serviceapplication.order.service.OrderService;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategoryRequest;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.dto.CustomerResponseDto;
 import org.example.serviceapplication.user.dto.SpecialistResponseDto;
 import org.example.serviceapplication.user.service.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class AdminWebController {
@@ -29,37 +30,61 @@ public class AdminWebController {
     private final UserService userService;
     private final ServiceCategoryInterface categoryService;
     private final SubServiceCategoryInterface subServiceCategoryInterface;
+    private final OrderService orderService;
 
 
     public AdminWebController(UserService userService,
-                              ServiceCategoryInterface categoryService, SubServiceCategoryInterface subServiceCategoryInterface) {
+                              ServiceCategoryInterface categoryService, SubServiceCategoryInterface subServiceCategoryInterface, OrderService orderService) {
         this.userService = userService;
         this.categoryService = categoryService;
         this.subServiceCategoryInterface = subServiceCategoryInterface;
+        this.orderService = orderService;
     }
 
-    //todo show all customers
     @GetMapping("/all-customers")
-    public String getAllCustomers(Model model) {
+    public String getAllCustomers(
+            @RequestParam(name = "fromLocalDate", required = false) LocalDate fromLocalDate,
+            @RequestParam(name = "toLocalDate", required = false) LocalDate toLocalDate,
+
+            Model model) {
         String role = "ADMIN";
 
         if (!"ADMIN".equals(role)) {
             return "access-denied";
         }
         List<CustomerResponseDto> allCustomers = userService.getAllCustomers();
+
+        allCustomers = filterCustomerDtoByDate(fromLocalDate, toLocalDate, allCustomers);
+
+
         model.addAttribute("customers", allCustomers);
         return "customer-list";
+    }
+
+    private  List<CustomerResponseDto> filterCustomerDtoByDate(LocalDate fromLocalDate, LocalDate toLocalDate, List<CustomerResponseDto> allCustomers) {
+        if (fromLocalDate != null && toLocalDate != null) {
+            allCustomers = allCustomers.stream()
+                    .filter(c ->
+                            c.createdAt().isAfter(LocalDateTime.of(fromLocalDate, LocalTime.of(0, 0)))
+                                    &&
+                                    c.createdAt().isBefore(LocalDateTime.of(toLocalDate, LocalTime.of(23, 59)))
+                    ).toList();
+        }
+        return allCustomers;
     }
 
     //todo show all specialists
 
     @GetMapping("/all-specialists")
-    public String getAllSpecialists(Model model) {
+    public String getAllSpecialists(Model model,  @RequestParam(name = "fromLocalDate", required = false) LocalDate fromLocalDate,
+                                    @RequestParam(name = "toLocalDate", required = false) LocalDate toLocalDate) {
         String role = "ADMIN";
         if (!"ADMIN".equals(role)) {
             return "access-denied";
         }
         List<SpecialistResponseDto> allSpecialists = userService.getAllSpecialists();
+
+        allSpecialists=filterSpecialistDtoByDate(fromLocalDate,toLocalDate,allSpecialists);
         model.addAttribute("specialists", allSpecialists);
         return "specialist-list";
     }
@@ -127,4 +152,26 @@ public class AdminWebController {
         return " get-Profile-Admin";
     }
 
+
+    @GetMapping("/searchOrders")
+    public String searchOrders(
+            @ModelAttribute("orderDtoSearch") OrderDtoSearch orderDtoSearch,
+            Model model) {
+        List<OrderDto> result = orderService.searchOrders(orderDtoSearch);
+
+        model.addAttribute("orders", result);
+        return "searchOrders";
+    }
+
+    private  List<SpecialistResponseDto> filterSpecialistDtoByDate(LocalDate fromLocalDate, LocalDate toLocalDate, List<SpecialistResponseDto> specialistResponseDtos) {
+        if (fromLocalDate != null && toLocalDate != null) {
+            specialistResponseDtos = specialistResponseDtos.stream()
+                    .filter(c ->
+                            c.createdAt().isAfter(LocalDateTime.of(fromLocalDate, LocalTime.of(0, 0)))
+                                    &&
+                                    c.createdAt().isBefore(LocalDateTime.of(toLocalDate, LocalTime.of(23, 59)))
+                    ).toList();
+        }
+        return specialistResponseDtos;
+    }
 }

@@ -5,6 +5,8 @@ import jakarta.persistence.Enumerated;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
 
+import java.time.LocalDateTime;
+
 
 public record SpecialistResponseDto(
         Long specialistId,
@@ -16,6 +18,7 @@ public record SpecialistResponseDto(
         Role role,
         @Enumerated(EnumType.STRING)
         Status status,
-        String profileImage
+        String profileImage,
+         LocalDateTime createdAt
 ) implements UserResponseDto {
 }

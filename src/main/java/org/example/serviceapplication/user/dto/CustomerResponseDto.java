@@ -5,6 +5,8 @@ import jakarta.persistence.Enumerated;
 import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.enumPackage.Status;
 
+import java.time.LocalDateTime;
+
 public record CustomerResponseDto(
 
         String address,
@@ -14,7 +16,8 @@ public record CustomerResponseDto(
         @Enumerated(EnumType.STRING)
         Role role,
         @Enumerated(EnumType.STRING)
-        Status status
+        Status status,
+        LocalDateTime createdAt
 
 
 ) implements UserResponseDto {
