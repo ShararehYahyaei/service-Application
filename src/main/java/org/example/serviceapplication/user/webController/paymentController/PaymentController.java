@@ -87,7 +87,8 @@ public class PaymentController {
         if (paymentMethod.equals("card")) {
             List<CardResponse> cards = cardService.getCardsByCustomerId(customerId);
             model.addAttribute("cards", cards);
-
+            model.addAttribute("customerId", customerId);
+            model.addAttribute("orderId", orderId);
             return "select-card";
         } else {
             paymentService.payByCustomerCredit(orderId, customerId);
@@ -111,7 +112,7 @@ public class PaymentController {
         return "payment-details";
     }
 
-    //todo create dto for these  request param
+
     @PostMapping("/process-payment")
     public String processPayment(@RequestParam Long cardId, String cvv,
                                  @RequestParam LocalDate expiryDate,
@@ -132,13 +133,14 @@ public class PaymentController {
         model.addAttribute("orderId", orderId);
         if (card.getAmount() >= offer.getOfferPrice()) {
             User specialist = offer.getUser();
-            cardService.widthraw(cardId, offer.getOfferPrice(), specialist,orderId);
+            cardService.widthraw(cardId, offer.getOfferPrice(), specialist, orderId);
             model.addAttribute("message", "پرداخت با موفقیت انجام شد.");
+
         } else {
             model.addAttribute("message", "موجودی کافی نیست.");
             throw new CardIsNotSufficent("موجودی کافی نیست.");
         }
-        return "customer-profile";
+        return "services";
     }
 
     private void validationCard(String cvv, LocalDate expiryDate, Card card) {

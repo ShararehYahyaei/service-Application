@@ -47,9 +47,9 @@ public class ReviewServiceImpl implements ReviewService {
             logger.error("Order does not belong to this customer!");
             throw new OrderOwnershipException("Order does not belong to this customer.");
         }
-        if (order.getOrderStatus() != OrderStatus.COMPLETED) {
+        if (order.getOrderStatus() != OrderStatus.PAID) {
             logger.error("Order Status Is Not Correct");
-            throw new OrderStatusIsNotCorrect("Order status must be COMPLETED to leave a review.");
+            throw new OrderStatusIsNotCorrect("Order status must be PAID to leave a review.");
         }
 
         return new Review(
