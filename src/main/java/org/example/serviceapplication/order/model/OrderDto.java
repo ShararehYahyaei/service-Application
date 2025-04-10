@@ -9,5 +9,5 @@ public record OrderDto(
         Long customerRequestId,
         OrderStatus status,
         LocalDateTime orderDate,
-        double offerPrice) {
+        Double offerPrice) {
 }

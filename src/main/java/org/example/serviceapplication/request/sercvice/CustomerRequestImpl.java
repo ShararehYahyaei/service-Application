@@ -119,4 +119,10 @@ public class CustomerRequestImpl implements CustomerRequestService {
         requestRepo.save(customerRequest);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Long countAllRequests() {
+        return requestRepo.count();
+    }
+
 }

@@ -76,9 +76,16 @@
 </head>
 <body>
 <div class="sidebar">
+    <label> تعداد درخواست های موجود</label>
+    <input  readonly="readonly" name="countAllRequest" th:value="${countAllRequest}" />
+
+    <label> تعداد سفارش های انجام شده</label>
+    <input  readonly="readonly" name="countAllCompletedOrders" th:value="${countAllCompletedOrders}" />
+
     <form th:action="@{/all-customers}" method="get">
         <button type="submit">لیست مشتریان</button>
     </form>
+
 
     <form th:action="@{/all-specialists}" method="get">
         <button type="submit">لیست متخصصان</button>

@@ -9,6 +9,7 @@ import org.example.serviceapplication.order.model.Order;
 import org.example.serviceapplication.order.model.OrderDto;
 import org.example.serviceapplication.order.model.OrderDtoSearch;
 import org.example.serviceapplication.order.service.OrderService;
+import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategoryRequest;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.dto.CustomerResponseDto;
@@ -31,14 +32,16 @@ public class AdminWebController {
     private final ServiceCategoryInterface categoryService;
     private final SubServiceCategoryInterface subServiceCategoryInterface;
     private final OrderService orderService;
+    private final CustomerRequestService customerRequestService;
 
 
     public AdminWebController(UserService userService,
-                              ServiceCategoryInterface categoryService, SubServiceCategoryInterface subServiceCategoryInterface, OrderService orderService) {
+                              ServiceCategoryInterface categoryService, SubServiceCategoryInterface subServiceCategoryInterface, OrderService orderService, CustomerRequestService customerRequestService) {
         this.userService = userService;
         this.categoryService = categoryService;
         this.subServiceCategoryInterface = subServiceCategoryInterface;
         this.orderService = orderService;
+        this.customerRequestService = customerRequestService;
     }
 
     @GetMapping("/all-customers")
@@ -149,8 +152,13 @@ public class AdminWebController {
 
     @GetMapping("/get-Profile-Admin")
     public String getProfileAdmin(Model model) {
+        Long countAllRequest = customerRequestService.countAllRequests();
+        Long countAllCompletedOrders = orderService.countAllOrders();
+        model.addAttribute("countAllRequest", countAllRequest);
+        model.addAttribute("countAllCompletedOrders", countAllCompletedOrders);
         return " get-Profile-Admin";
     }
+
 
 
     @GetMapping("/searchOrders")

@@ -30,4 +30,5 @@ public interface OrderService {
 
     @Transactional(readOnly = true)
     List<OrderDto> searchOrders(OrderDtoSearch orderDtoSearch);
+    Long countAllOrders();
 }

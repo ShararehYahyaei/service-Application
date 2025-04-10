@@ -203,6 +203,12 @@ public class OrderServiceImpl implements OrderService {
         query.where(cb.and(predicates.toArray(new Predicate[0])));
         return convertOrdersToOrderDtos(entityManager.createQuery(query).getResultList());
     }
+@Transactional(readOnly = true)
+    @Override
+    public Long countAllOrders() {
+        return orderRepository.countByOrderStatus(OrderStatus.COMPLETED);
+
+    }
 
 
 }

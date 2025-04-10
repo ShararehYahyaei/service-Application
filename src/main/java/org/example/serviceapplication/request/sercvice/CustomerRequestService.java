@@ -18,4 +18,5 @@ public interface CustomerRequestService {
 
     @Transactional
     void updateRequest(CustomerRequest customerRequest);
+    Long countAllRequests();
 }

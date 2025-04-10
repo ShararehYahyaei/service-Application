@@ -15,5 +15,6 @@ public interface CustomerRequestRepo extends JpaRepository<CustomerRequest, Long
             (Collection<SubServiceCategory> subServiceCategories);
     List<CustomerRequest> findByUserId(Long userId);
 
+
 }
 
