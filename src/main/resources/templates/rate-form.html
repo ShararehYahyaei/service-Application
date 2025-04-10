@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>گرفتن امتیاز متخصص</title>
+</head>
+<body>
+<h1>گرفتن امتیاز متخصص</h1>
+
+<form th:action="@{/rate-form}" method="post">
+    <label>شماره متخصص:</label>
+    <input type="number" name="userId" required/>
+    <button type="submit">جستجو</button>
+</form>
+
+<div th:if="${rate != null}">
+    <p>امتیاز این متخصص: <strong th:text="${rate}"></strong></p>
+</div>
+
+<div th:if="${error != null}">
+    <p style="color:red;" th:text="${error}"></p>
+</div>
+
+</body>
+</html>

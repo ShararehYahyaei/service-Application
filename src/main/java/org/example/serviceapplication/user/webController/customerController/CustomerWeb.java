@@ -15,6 +15,7 @@ import org.example.serviceapplication.request.exception.RequestNotPresent;
 import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.review.model.ReviewDto;
+import org.example.serviceapplication.review.service.ReviewService;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.enumPackage.Role;
@@ -45,10 +46,11 @@ public class CustomerWeb {
     private final UserService userService;
     private final OrderService orderService;
     private final CreditService creditService;
+    private final ReviewService reviewService;
 
     public CustomerWeb(SubServiceCategoryInterface subService, CustomerService customerService,
                        CustomerRequestService customerRequestService, OfferServiceInterface offerService,
-                       CardService cardService, UserService userService, OrderService orderService, CreditService creditService) {
+                       CardService cardService, UserService userService, OrderService orderService, CreditService creditService, ReviewService reviewService) {
         this.subService = subService;
         this.customerService = customerService;
         this.customerRequestService = customerRequestService;
@@ -57,6 +59,7 @@ public class CustomerWeb {
         this.userService = userService;
         this.orderService = orderService;
         this.creditService = creditService;
+        this.reviewService = reviewService;
     }
 
     @GetMapping("/services")
@@ -258,6 +261,32 @@ public class CustomerWeb {
         model.addAttribute("orders", ordersByCustomerId);
         return "order_list";
     }
+
+    @GetMapping("/rate-form")
+    public String showRateForm(Model model) {
+        model.addAttribute("userId", 0);
+        return "rate-form";
+    }
+
+
+    @PostMapping("/rate-form")
+    public String getRate(@RequestParam("userId") Long userId, Model model) {
+        try {
+            User user = userService.getUserById(userId);
+            if (user.getRole() != Role.Specialist) {
+                model.addAttribute("error", "کاربر نقش متخصص ندارد.");
+                return "rate-form";
+            }
+
+            Double rate = reviewService.getRateForUser(userId);
+            model.addAttribute("rate", rate);
+        } catch (Exception e) {
+            model.addAttribute("error", "خطا در پردازش: " + e.getMessage());
+        }
+
+        return "rate-form";
+    }
+
 
 
 }
