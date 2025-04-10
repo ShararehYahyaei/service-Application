@@ -163,7 +163,7 @@ public class PaymentController {
         Duration between = Duration.between(LocalDateTime.ofInstant(Instant.ofEpochMilli(entryTime),
                 ZoneId.systemDefault()), LocalDateTime.now());
 
-        if (entryTime == null || between.toMinutes() > 1) {
+        if (entryTime == null || between.toMinutes() > 10) {
             model.addAttribute("error", "مهلت پرداخت شما به پایان رسیده است. لطفاً دوباره تلاش کنید.");
             throw new IllegalStateException("time uit");
 
