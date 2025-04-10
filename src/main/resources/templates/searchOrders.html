@@ -30,6 +30,18 @@
                    class="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"/>
         </div>
 
+        <div>
+            <label for="category" class="block text-lg font-medium text-gray-700">نام خدمت:</label>
+            <input type="text" id="category" name="category" th:field="*{category}"
+                   class="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-green-500"/>
+        </div>
+
+        <div>
+            <label for="subService" class="block text-lg font-medium text-gray-700">نام زیرخدمت:</label>
+            <input type="text" id="subService" name="subService" th:field="*{subService}"
+                   class="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-purple-500"/>
+        </div>
+
         <div class="text-center">
             <button type="submit"
                     class="mt-4 py-2 px-6 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-300">جستجو</button>
