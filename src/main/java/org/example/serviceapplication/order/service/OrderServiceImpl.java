@@ -168,23 +168,24 @@ public class OrderServiceImpl implements OrderService {
         List<Predicate> predicates = new ArrayList<>();
 
         Join<Object, Object> customerRequestJoin = orderRoot.join("customerRequest");
-        // Join to SubServiceCategory
         Join<Object, Object> subServiceJoin = customerRequestJoin.join("subServiceCategory");
-        // Join to ServiceCategory
         Join<Object, Object> serviceJoin = subServiceJoin.join("category");
 
 
         if (orderDtoSearch.subService() != null && !orderDtoSearch.subService().isEmpty()) {
-            predicates.add(cb.like(cb.lower(subServiceJoin.get("name")), "%" + orderDtoSearch.subService().toLowerCase() + "%"));
+            predicates.add(cb.like(cb.lower(subServiceJoin.get("name")), "%" + orderDtoSearch.subService()
+                    .toLowerCase() + "%"));
         }
 
         if (orderDtoSearch.category() != null && !orderDtoSearch.category().isEmpty()) {
-            predicates.add(cb.like(cb.lower(serviceJoin.get("name")), "%" + orderDtoSearch.category().toLowerCase() + "%"));
+            predicates.add(cb.like(cb.lower(serviceJoin.get("name")), "%" + orderDtoSearch.category()
+                    .toLowerCase() + "%"));
         }
 
 
         if (orderDtoSearch.orderStatus() != null && !orderDtoSearch.orderStatus().isEmpty()) {
-            predicates.add(cb.like(orderRoot.get("orderStatus"), "%" + orderDtoSearch.orderStatus().toUpperCase() + "%"));
+            predicates.add(cb.like(orderRoot.get("orderStatus"), "%" + orderDtoSearch.orderStatus()
+                    .toUpperCase() + "%"));
         }
 
 
