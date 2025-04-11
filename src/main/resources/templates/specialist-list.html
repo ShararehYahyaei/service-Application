@@ -10,51 +10,99 @@
             padding: 20px;
             direction: rtl;
         }
+
         h2 {
             text-align: center;
+            font-size: 28px;
+            color: #4A148C;
+            margin-bottom: 30px;
         }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        label {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        input[type="date"] {
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .text-center {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-button {
+            background-color: #7B1FA2;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: #6A1B9A;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
+
         th, td {
-            border: 1px solid #ccc;
-            padding: 12px;
+            border: 1px solid #ddd;
+            padding: 14px 12px;
             text-align: left;
         }
+
         th {
-            background: #f2f2f2;
+            background-color: #ce93d8;
+            color: #4A148C;
+            font-size: 16px;
         }
+
         tr:nth-child(even) {
-            background: #fafafa;
+            background-color: #f9f9f9;
         }
-        .add-subservice-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-        }
-        .add-subservice-btn:hover {
-            background-color: #45a049;
+
+        tr:hover {
+            background-color: #f1f1f1;
         }
     </style>
 </head>
 <body>
 <h2>لیست متخصصان</h2>
-<form th:action="@{/all-specialists}"  method="get" class="space-y-4">
+
+<form th:action="@{/all-specialists}" method="get" class="space-y-4">
     <div>
         <label for="fromLocalDate">تاریخ از:</label>
         <input type="date" id="fromLocalDate" name="fromLocalDate" th:value="${fromLocalDate}" />
     </div>
     <div>
         <label for="toLocalDate">تاریخ تا:</label>
-        <input type="date" id="toLocalDate"   name="toLocalDate" th:value="${toLocalDate}" />
+        <input type="date" id="toLocalDate" name="toLocalDate" th:value="${toLocalDate}" />
     </div>
     <div class="text-center">
-        <button type="submit"
-                class="back-button">جستجو</button>
+        <button type="submit" class="back-button">جستجو</button>
     </div>
 </form>
 
@@ -67,7 +115,8 @@
         <th>فعال</th>
         <th>نقش</th>
         <th>وضعیت</th>
-<!--        <th>عملیات</th>-->
+        <th>عملیات</th>
+        <th>تایید یا عدم تایید</th>
     </tr>
     </thead>
     <tbody>
@@ -79,13 +128,7 @@
         <td th:text="${specialist.role}"></td>
         <td th:text="${specialist.status}"></td>
         <td th:text="${specialist.status}"></td>
-<!--        <td>-->
-
-<!--            <form th:action="@{/add-subservice}" method="post">-->
-<!--                <input hidden="hidden" type="number"  name="specialistId" th:value="${specialist.specialistId}" >-->
-<!--                <button type="submit" class="add-subservice-btn">افزودن زیر خدمت</button>-->
-<!--            </form>-->
-<!--        </td>-->
+        <td>—</td>
     </tr>
     </tbody>
 </table>
