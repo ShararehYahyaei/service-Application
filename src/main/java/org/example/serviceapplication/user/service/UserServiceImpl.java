@@ -70,11 +70,12 @@ public class UserServiceImpl implements UserService {
         UserResponseDto userResponse = null;
         User user = convertRequestIntoEntity(userRequest);
         user.setActive(false);
-        user.setStatus(Status.newJoiner);
         user.setCreatedAt(LocalDateTime.now());
         if (user.getRole() == Role.Customer) {
+            user.setStatus(Status.newJoiner);
             userResponse = customerService.createCustomer(user);
         } else if (user.getRole() == Role.Specialist && profileImage != null) {
+            user.setStatus(Status.isPendingApproval);
             Long Id = userRequest.subServiceCategoryId();
             userResponse = specialistService.createSpecialist(user, Id);
         }
