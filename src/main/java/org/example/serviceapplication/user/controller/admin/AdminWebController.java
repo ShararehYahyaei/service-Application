@@ -1,11 +1,10 @@
-package org.example.serviceapplication.user.webController.AdminController;
+package org.example.serviceapplication.user.controller.admin;
 
 import jakarta.validation.Valid;
 import org.example.serviceapplication.Category.dto.ServiceCategoryRequest;
 import org.example.serviceapplication.Category.dto.ServiceCategoryResponse;
 import org.example.serviceapplication.Category.exception.NotFoundCategory;
 import org.example.serviceapplication.Category.service.ServiceCategoryInterface;
-import org.example.serviceapplication.order.model.Order;
 import org.example.serviceapplication.order.model.OrderDto;
 import org.example.serviceapplication.order.model.OrderDtoSearch;
 import org.example.serviceapplication.order.service.OrderService;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller

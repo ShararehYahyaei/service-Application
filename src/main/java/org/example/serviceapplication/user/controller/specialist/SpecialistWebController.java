@@ -1,7 +1,5 @@
-package org.example.serviceapplication.user.webController.specialistController;
+package org.example.serviceapplication.user.controller.specialist;
 
-import org.example.serviceapplication.credit.exception.CreditNotFoundException;
-import org.example.serviceapplication.credit.model.Credit;
 import org.example.serviceapplication.credit.service.CreditService;
 import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.offer.model.Offer;
@@ -9,7 +7,6 @@ import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.order.model.Order;
 import org.example.serviceapplication.order.model.OrderDto;
 import org.example.serviceapplication.order.service.OrderService;
-import org.example.serviceapplication.request.dto.CustomerRequestDto;
 import org.example.serviceapplication.request.dto.CustomerRequestResponseDto;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
@@ -19,14 +16,11 @@ import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
 import org.example.serviceapplication.user.service.specialistService.SpecialistService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.swing.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;

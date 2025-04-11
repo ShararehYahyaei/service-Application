@@ -1,12 +1,5 @@
-package org.example.serviceapplication.user.controller;
+package org.example.serviceapplication.user.controller.customer;
 
-import org.example.serviceapplication.card.model.Card;
-import org.example.serviceapplication.card.model.CardDto;
-import org.example.serviceapplication.card.service.CardService;
-import org.example.serviceapplication.card.service.CardServiceImpl;
-import org.example.serviceapplication.credit.model.CreditDto;
-import org.example.serviceapplication.credit.service.CreditService;
-import org.example.serviceapplication.order.exception.OrderNotFound;
 import org.example.serviceapplication.order.service.OrderService;
 import org.example.serviceapplication.review.model.ReviewDto;
 import org.example.serviceapplication.offer.dto.OfferDto;
@@ -21,7 +14,6 @@ import org.example.serviceapplication.user.service.customerService.CustomerServi
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
@@ -29,13 +21,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/customer")
-public class CustomerController {
+public class CustomerRestController {
 
     private final CustomerService customerService;
 
     private final OrderService orderService;
 
-    public CustomerController(CustomerService customerService, OrderService orderService) {
+    public CustomerRestController(CustomerService customerService, OrderService orderService) {
         this.customerService = customerService;
         this.orderService = orderService;
     }

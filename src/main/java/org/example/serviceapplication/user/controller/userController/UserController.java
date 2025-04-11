@@ -1,8 +1,6 @@
-package org.example.serviceapplication.user.controller;
+package org.example.serviceapplication.user.controller.userController;
 
 
-import jakarta.validation.Valid;
-import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.offer.service.OfferServiceImpl;
 import org.example.serviceapplication.review.service.ReviewService;
 import org.example.serviceapplication.user.dto.*;
