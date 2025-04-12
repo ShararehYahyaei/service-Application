@@ -74,7 +74,7 @@ public class AdminWebController {
         return allCustomers;
     }
 
-    //todo show all specialists
+
 
     @GetMapping("/all-specialists")
     public String getAllSpecialists(Model model,  @RequestParam(name = "fromLocalDate", required = false) LocalDate fromLocalDate,

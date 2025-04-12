@@ -71,7 +71,6 @@ public class VerificationService {
             helper.setTo(email);
             helper.setSubject(subject);
             helper.setText(htmlContent, true);
-
             mailSender.send(message);
         } catch (Exception e) {
             System.out.println("Error sending HTML email: " + e.getMessage());
