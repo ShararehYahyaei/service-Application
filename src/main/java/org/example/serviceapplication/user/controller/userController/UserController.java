@@ -9,6 +9,7 @@ import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
 import org.example.serviceapplication.user.service.specialistService.SpecialistService;
+import org.example.serviceapplication.verification.service.VerificationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +26,15 @@ public class UserController {
     private final ReviewService reviewService;
     private final OfferServiceImpl offerServiceImpl;
 
+
     public UserController(UserService userService,
-                          SpecialistService specialistService, ReviewService reviewService, OfferServiceImpl offerServiceImpl) {
+                          SpecialistService specialistService, ReviewService reviewService,
+                          OfferServiceImpl offerServiceImpl) {
         this.userService = userService;
         this.specialistService = specialistService;
         this.reviewService = reviewService;
         this.offerServiceImpl = offerServiceImpl;
+
     }
 
 //    @PostMapping(value = "/create", consumes = "multipart/form-data")
@@ -132,6 +136,7 @@ public class UserController {
         Double rateForUser = reviewService.getRateForUser(userId);
       return new ResponseEntity<>(rateForUser, HttpStatus.OK);
     }
+
 
 
 }

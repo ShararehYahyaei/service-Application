@@ -18,6 +18,9 @@ import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
 import org.example.serviceapplication.user.service.specialistService.SpecialistServiceImpl;
 import org.example.serviceapplication.user.userRepository.UserRepository;
+import org.example.serviceapplication.verification.model.VerificationToken;
+import org.example.serviceapplication.verification.repository.VerificationTokenRepository;
+import org.example.serviceapplication.verification.service.VerificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,18 +44,25 @@ public class UserServiceImpl implements UserService {
     private final CustomerService customerService;
     private final SpecialistServiceImpl specialistService;
     private final SubServiceCategoryInterface subService;
+    private final EmailService emailService;
+    private final VerificationTokenRepository verificationTokenRepository;
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     public UserServiceImpl(UserRepository userRepository,
                            ServiceCategoryInterface categoryService,
                            CustomerService customerService,
-                           SpecialistServiceImpl specialistService, SubServiceCategoryInterface subService) {
+                           SpecialistServiceImpl specialistService,
+                           SubServiceCategoryInterface subService
+            , EmailService emailService, VerificationTokenRepository verificationTokenRepository) {
 
         this.userRepository = userRepository;
         this.categoryService = categoryService;
         this.customerService = customerService;
         this.specialistService = specialistService;
         this.subService = subService;
+//        this.verificationService = verificationService;
+        this.emailService = emailService;
+        this.verificationTokenRepository = verificationTokenRepository;
     }
 
     @Transactional
@@ -63,7 +73,7 @@ public class UserServiceImpl implements UserService {
             logger.error("Email already exists");
             throw new EmailNotUniqueException("The email is already taken.");
         }
-        if (!isPhone(userRequest.phone()) ){
+        if (!isPhone(userRequest.phone())) {
             logger.error("phone already exists");
             throw new PhoneIsDuplicated("The phone is already taken.");
         }
@@ -79,9 +89,15 @@ public class UserServiceImpl implements UserService {
             Long Id = userRequest.subServiceCategoryId();
             userResponse = specialistService.createSpecialist(user, Id);
         }
+//        User userByEmail = getUserByEmail(userRequest.email());
+//        String token = verificationService.generateVerificationToken(userByEmail.getEmail());
+//        emailService.sendVerificationEmail(userRequest.email(), token);
         return userResponse;
 
     }
+
+
+
 
     @Transactional(readOnly = true)
     @Override
@@ -261,6 +277,22 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email) == null;
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+
+    public void activateUser(String token) {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
+
+        User user = verificationToken.getUser();
+        user.setActive(true); // یا user.setStatus(Status.ACTIVE) بسته به پیاده‌سازی‌ت
+        userRepository.save(user);
+    }
+
+
     public boolean isPhone(String phone) {
         return userRepository.findByPhone(phone) == null;
     }
@@ -285,12 +317,13 @@ public class UserServiceImpl implements UserService {
 
 
         if (role != null && !role.isEmpty()) {
-            predicates.add(cb.like(userRoot.get("role"),"%" + role + "%"));
+            predicates.add(cb.like(userRoot.get("role"), "%" + role + "%"));
         }
 
         query.where(cb.and(predicates.toArray(new Predicate[0])));
         return entityManager.createQuery(query).getResultList();
     }
+
 
 
 }

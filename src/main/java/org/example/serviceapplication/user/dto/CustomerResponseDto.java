@@ -17,8 +17,13 @@ public record CustomerResponseDto(
         Role role,
         @Enumerated(EnumType.STRING)
         Status status,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        String email
 
 
 ) implements UserResponseDto {
+        @Override
+        public String getEmail() {
+                return email;
+        }
 }

@@ -19,6 +19,12 @@ public record SpecialistResponseDto(
         @Enumerated(EnumType.STRING)
         Status status,
         String profileImage,
-         LocalDateTime createdAt
+         LocalDateTime createdAt,
+        String email
 ) implements UserResponseDto {
+
+        @Override
+        public String getEmail() {
+                return email ;
+        }
 }

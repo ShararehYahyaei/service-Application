@@ -69,7 +69,8 @@ public class CustomerService implements CustomerServiceInter {
                 user.isActive(),
                 user.getRole(),
                 user.getStatus(),
-                user.getCreatedAt()
+                user.getCreatedAt(),
+                user.getEmail()
 
         );
     }
@@ -127,7 +128,8 @@ public class CustomerService implements CustomerServiceInter {
                         user.isActive(),
                         user.getRole(),
                         user.getStatus(),
-                        user.getCreatedAt()
+                        user.getCreatedAt(),
+                        user.getEmail()
                 ))
                 .collect(Collectors.toList());
     }

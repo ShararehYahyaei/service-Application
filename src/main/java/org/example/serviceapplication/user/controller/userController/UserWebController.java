@@ -13,6 +13,7 @@ import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
+import org.example.serviceapplication.verification.service.VerificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -30,13 +31,15 @@ public class UserWebController {
     private final UserService userService;
     private final SubServiceCategoryInterface subservice;
     private final CreditService creditService;
+    private final VerificationService verificationService;
     private final Logger logger = LoggerFactory.getLogger(UserWebController.class);
 
-    public UserWebController(UserService userService, SubServiceCategoryInterface subservice, CreditService creditService) {
+    public UserWebController(UserService userService, SubServiceCategoryInterface subservice, CreditService creditService, VerificationService verificationService) {
         this.userService = userService;
         this.subservice = subservice;
 
         this.creditService = creditService;
+        this.verificationService = verificationService;
     }
 
     @GetMapping("/register")
@@ -56,10 +59,37 @@ public class UserWebController {
             model.addAttribute("errors", result.getAllErrors());
             return "error";
         }
+
+        // ایجاد کاربر جدید
         UserResponseDto user = userService.createUser(userRequest, profileImage);
+
+        // ایجاد توکن تایید ایمیل
+        String token = verificationService.generateVerificationToken(user.getEmail());
+
+        // ارسال ایمیل تایید
+
+
+        verificationService.sendVerificationEmail(user.getEmail(), token);
+
+        // هدایت به صفحه تایید ایمیل
         model.addAttribute("user", user);
-        return "redirect:/servicesList";
+        return "registration-success";  // هدایت به صفحه تایید ایمیل
     }
+
+
+    @GetMapping("/verify")
+    public String verifyEmail(@RequestParam("token") String token) {
+        boolean isValid = verificationService.verifyToken(token);
+        if (isValid) {
+            userService.activateUser(token);
+            return "email-confirmation-success";
+
+        } else {
+            return "email-confirmation-error";
+        }
+    }
+
+
 
     public List<SubServiceDto> convertToSubServiceDtoList(List<SubServiceCategories> allSubServices) {
         return allSubServices.stream()
@@ -99,17 +129,15 @@ public class UserWebController {
     }
 
 
-
     @GetMapping("/getCustomerId")
     public String showCustomerIdForm(Model model) {
         return "getCustomerId";
     }
 
 
-
     @GetMapping("/view-my-credit")
     public String getSpecialistCredit(@RequestParam(value = "userIdCredit", required = false) Long customerId,
-                                      @RequestParam(value = "Role") Role role,Model model) {
+                                      @RequestParam(value = "Role") Role role, Model model) {
         User specialist = userService.getUserById(customerId);
 
         if (specialist.getRole() == Role.Admin) {
@@ -126,7 +154,6 @@ public class UserWebController {
 
         return "view-my-credit.html";
     }
-
 
 
 }

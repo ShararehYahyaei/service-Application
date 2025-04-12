@@ -136,7 +136,8 @@ public class SpecialistServiceImpl implements SpecialistService {
                 user.getRole(),
                 user.getStatus(),
                 profileImageBase64,
-                user.getCreatedAt()
+                user.getCreatedAt(),
+                user.getEmail()
 
         );
     }
@@ -236,7 +237,8 @@ public class SpecialistServiceImpl implements SpecialistService {
                         (user.getProfileImage() != null && user.getProfileImage().length > 0)
                                 ? Base64.getEncoder().encodeToString(user.getProfileImage())
                                 : null,
-                        user.getCreatedAt()
+                        user.getCreatedAt(),
+                        user.getEmail()
                 ))
                 .collect(Collectors.toList());
     }
@@ -254,7 +256,8 @@ public class SpecialistServiceImpl implements SpecialistService {
                 (user.getProfileImage() != null && user.getProfileImage().length > 0)
                         ? Base64.getEncoder().encodeToString(user.getProfileImage())
                         : null,
-                user.getCreatedAt()
+                user.getCreatedAt(),
+                user.getEmail()
         );
     }
 

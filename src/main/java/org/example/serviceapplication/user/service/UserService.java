@@ -46,5 +46,11 @@ public interface UserService {
 
     void updatePassword(PasswordUserRequest changePasswordRequest);
 
+    @Transactional(readOnly = true)
+    User getUserByEmail(String email);
+
     List<User> searchUsers(String name, String email, String role);
+
+    @Transactional
+    void activateUser(String token);
 }
