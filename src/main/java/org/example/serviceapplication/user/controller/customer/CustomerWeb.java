@@ -6,6 +6,7 @@ import org.example.serviceapplication.card.service.CardService;
 import org.example.serviceapplication.credit.model.Credit;
 import org.example.serviceapplication.credit.model.CreditDto;
 import org.example.serviceapplication.credit.service.CreditService;
+import org.example.serviceapplication.location.service.LocationService;
 import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.order.model.OrderDto;
@@ -47,9 +48,11 @@ public class CustomerWeb {
     private final CreditService creditService;
     private final ReviewService reviewService;
 
+
     public CustomerWeb(SubServiceCategoryInterface subService, CustomerService customerService,
                        CustomerRequestService customerRequestService, OfferServiceInterface offerService,
-                       CardService cardService, UserService userService, OrderService orderService, CreditService creditService, ReviewService reviewService) {
+                       CardService cardService, UserService userService, OrderService orderService,
+                       CreditService creditService, ReviewService reviewService) {
         this.subService = subService;
         this.customerService = customerService;
         this.customerRequestService = customerRequestService;
@@ -59,6 +62,7 @@ public class CustomerWeb {
         this.orderService = orderService;
         this.creditService = creditService;
         this.reviewService = reviewService;
+
     }
 
     @GetMapping("/services")
@@ -85,7 +89,8 @@ public class CustomerWeb {
     @GetMapping("/customerRequests")
     public String showCustomerRequestPage(@RequestParam(value = "userIdCredit") Long userIdCredit,  Model model) {
         model.addAttribute("customerRequestDto", new CustomerRequestDto(userIdCredit,
-                null, 0.0, "", null, ""));
+                null, 0.0, "", null, "",
+                35.6892, 51.3890));
         return "customerRequests";
     }
 
@@ -101,6 +106,7 @@ public class CustomerWeb {
         }
 
         customerService.createRequest(customer, customerRequest);
+
         model.addAttribute("reviewDto", new ReviewDto(idUser,
                 null, null, 0, null));
         return "/customer-profile";

@@ -1,5 +1,7 @@
 package org.example.serviceapplication.user.service.customerService;
 
+import org.example.serviceapplication.location.service.LocationService;
+import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.review.model.ReviewDto;
 import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
@@ -35,19 +37,21 @@ public class CustomerService implements CustomerServiceInter {
     private final OrderService orderService;
     private final ReviewService reviewService;
     private final SpecialistService specialistService;
+    private final LocationService locationService;
     private final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
     public CustomerService(UserRepository userRepository,
                            CustomerRequestService customerRequestService,
                            OfferServiceInterface offerService,
                            OrderService orderService,
-                           ReviewService reviewService, SpecialistService specialistService) {
+                           ReviewService reviewService, SpecialistService specialistService, LocationService locationService) {
         this.customerRequestService = customerRequestService;
         this.userRepository = userRepository;
         this.offerService = offerService;
         this.orderService = orderService;
         this.reviewService = reviewService;
         this.specialistService = specialistService;
+        this.locationService = locationService;
     }
 
 
@@ -89,7 +93,9 @@ public class CustomerService implements CustomerServiceInter {
     @Transactional
     @Override
     public void createRequest(User customer, CustomerRequestDto customerRequest) {
-        customerRequestService.addRequest(customer, customerRequest);
+        CustomerRequest customerRequest1 = customerRequestService.addRequest(customer, customerRequest);
+        logger.info("Create request with customer: {}", customer);
+        locationService.createLocation(customerRequest.latitude(),customerRequest.longitude(),customerRequest1);
     }
 
     @Transactional

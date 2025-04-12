@@ -39,11 +39,12 @@ public class CustomerRequestImpl implements CustomerRequestService {
 
     @Transactional
     @Override
-    public void addRequest(User customer, CustomerRequestDto customerRequest) {
+    public CustomerRequest addRequest(User customer, CustomerRequestDto customerRequest) {
         CustomerRequest request = convertRequestIntoEntity(customer, customerRequest);
         request.setRequestDate(LocalDateTime.now());
         request.setRequestStatus(RequestStatus.AwaitingOffers);
         requestRepo.save(request);
+        return request;
     }
 
     @Override

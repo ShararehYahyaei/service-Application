@@ -11,7 +11,9 @@ public record CustomerRequestDto(
         String description,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         LocalDate deadLineTime,
-        String address
+        String address,
+        Double latitude,
+        Double longitude
 
 
 ) {

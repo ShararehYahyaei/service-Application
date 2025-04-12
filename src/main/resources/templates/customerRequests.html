@@ -2,6 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>درخواست مشتری</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
     <style>
         body {
             font-family: Tahoma, Arial, sans-serif;
@@ -21,7 +24,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
+            max-width: 600px;
             margin: 0 auto;
             direction: rtl;
         }
@@ -43,10 +46,6 @@
             font-size: 14px;
         }
 
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
-
         button {
             background-color: #4CAF50;
             color: white;
@@ -61,17 +60,33 @@
         button:hover {
             background-color: #45a049;
         }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .back-button {
+            padding: 10px 15px;
+            background: #ff69b4;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
 
-<h2>درخواست مشتری</h2>
+<h2>ثبت درخواست جدید</h2>
 
 <form th:action="@{/customerRequests}" th:object="${customerRequestDto}" method="post">
-    <label for="customerId">شماره مشتری:</label>
+    <label for="customerId">شناسه مشتری:</label>
     <input type="text" th:field="*{customerId}" id="customerId" required /><br/>
 
-    <label for="subServiceCategory">دسته‌بندی زیرخدمات:</label>
+    <label for="subServiceCategory">شناسه زیرخدمت:</label>
     <input type="text" th:field="*{subServiceCategory}" id="subServiceCategory" required /><br/>
 
     <label for="price">قیمت:</label>
@@ -80,16 +95,58 @@
     <label for="description">توضیحات:</label>
     <textarea th:field="*{description}" id="description" required></textarea><br/>
 
-    <label for="deadLineTime">زمان تعیین شده:</label>
+    <label for="deadLineTime">تاریخ مهلت:</label>
     <input type="date" th:field="*{deadLineTime}" id="deadLineTime" required /><br/>
 
     <label for="address">آدرس:</label>
     <input type="text" th:field="*{address}" id="address" required /><br/>
 
-    <button type="submit">ارسال درخواست</button>
+    <label>موقعیت مکانی روی نقشه:</label>
+    <div id="map"></div>
+
+    <!-- فیلدهای مخفی برای ارسال مختصات -->
+    <input type="hidden" th:field="*{latitude}" id="latitude" />
+    <input type="hidden" th:field="*{longitude}" id="longitude" />
+
+    <button type="submit">ثبت درخواست</button>
 </form>
-<a href="/services" class="back-button" style="padding:
- 10px 15px; background: #ff69b4; color: white; text-decoration: none; border-radius: 5px; display: inline-block;">بازگشت</a>
+
+<br/>
+<a href="/services" class="back-button">بازگشت</a>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // موقعیت پیش‌فرض (تهران)
+    var defaultLat = 35.6892;
+    var defaultLng = 51.3890;
+
+    var map = L.map('map').setView([defaultLat, defaultLng], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker = L.marker([defaultLat, defaultLng], {draggable: true}).addTo(map);
+
+    // مقدار اولیه را در فیلدها تنظیم کن
+    document.getElementById('latitude').value = defaultLat;
+    document.getElementById('longitude').value = defaultLng;
+
+    // آپدیت فیلدها هنگام جابجایی marker
+    marker.on('dragend', function (e) {
+        var latlng = marker.getLatLng();
+        document.getElementById('latitude').value = latlng.lat;
+        document.getElementById('longitude').value = latlng.lng;
+    });
+
+    // اضافه کردن marker جدید هنگام کلیک روی نقشه
+    map.on('click', function (e) {
+        marker.setLatLng(e.latlng);
+        document.getElementById('latitude').value = e.latlng.lat;
+        document.getElementById('longitude').value = e.latlng.lng;
+    });
+</script>
 
 </body>
 </html>

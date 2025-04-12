@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface CustomerRequestService {
-    void addRequest(User customer, CustomerRequestDto customerRequest);
+    CustomerRequest addRequest(User customer, CustomerRequestDto customerRequest);
     CustomerRequest findRequestById(Long id);
     List<CustomerRequestResponseDto> getAllRequestForSpecialist(List<SubServiceCategory>subServices);
     List<CustomerRequestResponseDto> getAllCustomerRequestDtoForCustomer(Long userId);
