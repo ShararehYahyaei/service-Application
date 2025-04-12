@@ -97,8 +97,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-
     @Transactional(readOnly = true)
     @Override
     public UserResponseDto findById(Long id) {
@@ -283,12 +281,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
-
+    @Override
     public void activateUser(String token) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
-
         User user = verificationToken.getUser();
-        user.setActive(true); // یا user.setStatus(Status.ACTIVE) بسته به پیاده‌سازی‌ت
+        user.setActive(true);
         userRepository.save(user);
     }
 
@@ -323,7 +320,6 @@ public class UserServiceImpl implements UserService {
         query.where(cb.and(predicates.toArray(new Predicate[0])));
         return entityManager.createQuery(query).getResultList();
     }
-
 
 
 }

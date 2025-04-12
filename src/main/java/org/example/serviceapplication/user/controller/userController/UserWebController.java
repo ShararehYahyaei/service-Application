@@ -60,20 +60,15 @@ public class UserWebController {
             return "error";
         }
 
-        // ایجاد کاربر جدید
+
         UserResponseDto user = userService.createUser(userRequest, profileImage);
 
-        // ایجاد توکن تایید ایمیل
         String token = verificationService.generateVerificationToken(user.getEmail());
-
-        // ارسال ایمیل تایید
-
 
         verificationService.sendVerificationEmail(user.getEmail(), token);
 
-        // هدایت به صفحه تایید ایمیل
         model.addAttribute("user", user);
-        return "registration-success";  // هدایت به صفحه تایید ایمیل
+        return "registration-success";
     }
 
 
@@ -88,7 +83,6 @@ public class UserWebController {
             return "email-confirmation-error";
         }
     }
-
 
 
     public List<SubServiceDto> convertToSubServiceDtoList(List<SubServiceCategories> allSubServices) {

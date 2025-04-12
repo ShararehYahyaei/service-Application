@@ -36,7 +36,6 @@ public class VerificationService {
         this.emailService = emailService;
     }
 
-    // متدهای ایجاد توکن و ارسال ایمیل
     @Transactional
     public String generateVerificationToken(String email) {
         User user = userService.getUserByEmail(email);
@@ -44,23 +43,19 @@ public class VerificationService {
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
         verificationToken.setUser(user);
-        verificationToken.setExpiryDate(LocalDateTime.now().plusHours(24)); // توکن به مدت 24 ساعت معتبر است
+        verificationToken.setExpiryDate(LocalDateTime.now().plusHours(24));
         verificationTokenRepository.save(verificationToken);
         return token;
     }
 
     @Transactional
-    // متد تایید توکن
     public boolean verifyToken(String token) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
         if (verificationToken == null || verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            return false; // توکن منقضی شده یا معتبر نیست
+            return false;
         }
         return true;
     }
-
-    // متد ارسال ایمیل تایید
-
 
     @Transactional
     public void sendVerificationEmail(String email, String token) {
@@ -72,11 +67,10 @@ public class VerificationService {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
             helper.setFrom("shariiishari662@gmail.com");
             helper.setTo(email);
             helper.setSubject(subject);
-            helper.setText(htmlContent, true); // true برای HTML بودن
+            helper.setText(htmlContent, true);
 
             mailSender.send(message);
         } catch (Exception e) {
