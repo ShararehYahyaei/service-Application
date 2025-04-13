@@ -64,10 +64,9 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order(customerForOrder, offer.get(), request);
         order.setOrderDate(LocalDateTime.now());
         order.getOffer().setStatus(OfferStatus.ACCEPTED);
-        order.getCustomerRequest().setRequestStatus(RequestStatus.InProgress);
+        order.getCustomerRequest().setRequestStatus(RequestStatus.AwaitingSpecialistArrival);
         order.setOrderStatus(OrderStatus.CONFIRMED);
         orderRepository.save(order);
-
 
     }
 
@@ -190,27 +189,26 @@ public class OrderServiceImpl implements OrderService {
 
 
         if (orderDtoSearch.fromLocalDate() != null && !orderDtoSearch.fromLocalDate().isBlank()
-        &&
+                &&
                 orderDtoSearch.toLocalDate() != null && !orderDtoSearch.toLocalDate().isBlank()
         ) {
 
             predicates.add(cb.between(orderRoot.get("orderDate"),
-                    LocalDateTime.of(LocalDate.parse(orderDtoSearch.fromLocalDate()),
-                            LocalTime.of(0,0)),
-                    LocalDateTime.of(LocalDate.parse(orderDtoSearch.toLocalDate()),
-                            LocalTime.of(23,59))
+                            LocalDateTime.of(LocalDate.parse(orderDtoSearch.fromLocalDate()),
+                                    LocalTime.of(0, 0)),
+                            LocalDateTime.of(LocalDate.parse(orderDtoSearch.toLocalDate()),
+                                    LocalTime.of(23, 59))
                     )
             );
 
         }
 
 
-
-
         query.where(cb.and(predicates.toArray(new Predicate[0])));
         return convertOrdersToOrderDtos(entityManager.createQuery(query).getResultList());
     }
-@Transactional(readOnly = true)
+
+    @Transactional(readOnly = true)
     @Override
     public Long countAllOrders() {
         return orderRepository.countByOrderStatus(OrderStatus.COMPLETED);
