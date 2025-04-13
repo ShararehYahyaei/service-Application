@@ -48,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void createOrder(User customer, OrderDto orderDto) {
+    public Order createOrder(User customer, OrderDto orderDto) {
         logger.info("Create order");
         CustomerRequest request = customerRequestService.findRequestById(orderDto.customerRequestId());
         User customerForOrder = request.getUser();
@@ -66,7 +66,8 @@ public class OrderServiceImpl implements OrderService {
         order.getOffer().setStatus(OfferStatus.ACCEPTED);
         order.getCustomerRequest().setRequestStatus(RequestStatus.AwaitingSpecialistArrival);
         order.setOrderStatus(OrderStatus.CONFIRMED);
-        orderRepository.save(order);
+        Order orderNew = orderRepository.save(order);
+        return orderNew;
 
     }
 

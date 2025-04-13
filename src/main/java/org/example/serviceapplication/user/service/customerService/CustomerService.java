@@ -40,6 +40,7 @@ public class CustomerService implements CustomerServiceInter {
     private final SpecialistService specialistService;
     private final LocationService locationService;
 
+
     private final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
     public CustomerService(UserRepository userRepository,

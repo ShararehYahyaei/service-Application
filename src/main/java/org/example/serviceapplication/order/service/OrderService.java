@@ -13,7 +13,7 @@ import java.util.List;
 public interface OrderService {
 
     @Transactional
-    void createOrder(User customer, OrderDto orderDto);
+    Order createOrder(User customer, OrderDto orderDto);
 
     @Transactional(readOnly = true)
     Order getOrderById(Long orderId);

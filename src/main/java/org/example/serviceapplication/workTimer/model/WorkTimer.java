@@ -22,14 +22,23 @@ public class WorkTimer {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private long estimatedDurationInHours;
+    @Enumerated(EnumType.STRING)
+    private  TimerStatus timerStatus;
 
     @Transient
     private long remainingTimeInSeconds;
 
-    public WorkTimer(Offer offer, LocalDateTime startTime, long estimatedDurationInHours) {
+    public WorkTimer(Offer offer, LocalDateTime startTime,
+                     long estimatedDurationInHours,
+                     TimerStatus timerStatus) {
         this.offer = offer;
         this.startTime = startTime;
         this.estimatedDurationInHours = estimatedDurationInHours;
+        this.timerStatus = timerStatus;
+    }
+
+    public WorkTimer() {
+
     }
 
 
