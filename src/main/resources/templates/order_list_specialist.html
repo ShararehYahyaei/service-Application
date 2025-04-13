@@ -84,12 +84,14 @@
 <body>
 
 <div class="container">
-    <h1>Orders of Customer</h1>
+    <h1>تغییر وضعیت سفارش</h1>
     <table>
         <thead>
         <tr>
             <th>شناسه سفارش</th>
             <th> شناسه پیشنهاد</th>
+            <th>شناسه درخواست</th>
+            <th>شماره مشتری</th>
             <th>وضعیت</th>
             <th>عملیات</th>
         </tr>
@@ -97,12 +99,12 @@
         <tbody>
         <tr th:each="order : ${allOrdersForSpecialist}">
             <td th:text="${order.orderId}"></td>
-            <td th:text="${order.customerId}"></td>
-            <td th:text="${order.customerRequestId}"></td>
             <td th:text="${order.offerId}"></td>
+            <td th:text="${order.customerRequestId}"></td>
+            <td th:text="${order.customerId}"></td>
             <td th:text="${order.status}"></td>
             <td>
-                <p>وضعیت سفارش: <span th:text="${order.status()}"></span></p>
+
                 <form th:action="@{/update-order-status}" method="get">
                     <input type="hidden" name="customerId" th:value="${order.customerId}" />
                     <input type="hidden" name="status" th:value="${order.status}" />

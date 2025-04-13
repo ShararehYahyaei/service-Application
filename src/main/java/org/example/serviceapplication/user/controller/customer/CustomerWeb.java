@@ -249,8 +249,6 @@ public class CustomerWeb {
 
 
 
-
-
     @GetMapping("/enter-customer-id")
     public String enterCustomerIdForm(   @RequestParam(value = "userIdCredit") Long userIdCredit) {
         return "enter-customer-id-form";

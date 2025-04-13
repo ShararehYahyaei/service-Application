@@ -18,6 +18,7 @@ import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.specialistService.SpecialistService;
 import org.example.serviceapplication.user.userRepository.UserRepository;
 
+import org.example.serviceapplication.workTimer.service.WorkTimerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -38,13 +39,15 @@ public class CustomerService implements CustomerServiceInter {
     private final ReviewService reviewService;
     private final SpecialistService specialistService;
     private final LocationService locationService;
+
     private final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
     public CustomerService(UserRepository userRepository,
                            CustomerRequestService customerRequestService,
                            OfferServiceInterface offerService,
                            OrderService orderService,
-                           ReviewService reviewService, SpecialistService specialistService, LocationService locationService) {
+                           ReviewService reviewService, SpecialistService specialistService,
+                           LocationService locationService) {
         this.customerRequestService = customerRequestService;
         this.userRepository = userRepository;
         this.offerService = offerService;
@@ -52,6 +55,7 @@ public class CustomerService implements CustomerServiceInter {
         this.reviewService = reviewService;
         this.specialistService = specialistService;
         this.locationService = locationService;
+
     }
 
 
@@ -103,8 +107,6 @@ public class CustomerService implements CustomerServiceInter {
     public List<OfferDto> getAllOffers(Long requestId, Sort sort) {
         return offerService.getAllOffersNotSorted(requestId,sort);
     }
-
-
 
 
     @Override
