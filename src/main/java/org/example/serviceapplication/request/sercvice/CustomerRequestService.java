@@ -16,7 +16,8 @@ public interface CustomerRequestService {
     List<CustomerRequestResponseDto> getAllCustomerRequestDtoForCustomer(Long userId);
 
 
-    @Transactional
     void updateRequest(CustomerRequest customerRequest);
+
     Long countAllRequests();
+  void  changeStatus(CustomerRequest request);
 }

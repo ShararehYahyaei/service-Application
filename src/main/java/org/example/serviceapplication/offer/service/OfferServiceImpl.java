@@ -38,7 +38,7 @@ public class OfferServiceImpl implements OfferServiceInterface {
 
     public OfferServiceImpl(OfferRepository offerRepository,
                             CustomerRequestService request, ReviewService reviewService
-                        ) {
+    ) {
         this.offerRepository = offerRepository;
         this.request = request;
         this.reviewService = reviewService;
@@ -56,7 +56,10 @@ public class OfferServiceImpl implements OfferServiceInterface {
         offer.setOfferDate(LocalDate.now());
         offer.setCreateTime(LocalDateTime.now());
         offerRepository.save(offer);
-
+        Long id = offerDto.customerRequestId();
+        CustomerRequest equestNew = request.findRequestById(id);
+        equestNew.setRequestStatus(RequestStatus.AwaitingSelection);
+        request.updateRequest(equestNew);
     }
 
     @Transactional
@@ -209,7 +212,6 @@ public class OfferServiceImpl implements OfferServiceInterface {
         List<Offer> byUserId = offerRepository.findByUserId(userId);
         return toOfferDTOList(byUserId);
     }
-
 
 
 }

@@ -8,6 +8,10 @@ import org.example.serviceapplication.order.model.Order;
 import org.example.serviceapplication.order.model.OrderDto;
 import org.example.serviceapplication.order.service.OrderService;
 import org.example.serviceapplication.request.dto.CustomerRequestResponseDto;
+import org.example.serviceapplication.request.exception.RequestStatusIsNotCorrect;
+import org.example.serviceapplication.request.model.CustomerRequest;
+import org.example.serviceapplication.request.model.RequestStatus;
+import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
@@ -34,16 +38,18 @@ public class SpecialistWebController {
     private final OrderService orderService;
     private final OfferServiceInterface offerService;
     private final CreditService creditService;
+    private final CustomerRequestService customerRequestService;
 
 
     public SpecialistWebController(SubServiceCategoryInterface subservice,
-                                   SpecialistService specialistService, UserService userService, OrderService orderService, OfferServiceInterface offerService, CreditService creditService) {
+                                   SpecialistService specialistService, UserService userService, OrderService orderService, OfferServiceInterface offerService, CreditService creditService, CustomerRequestService customerRequestService) {
         this.subservice = subservice;
         this.specialistService = specialistService;
         this.userService = userService;
         this.orderService = orderService;
         this.offerService = offerService;
         this.creditService = creditService;
+        this.customerRequestService = customerRequestService;
     }
 
 
@@ -73,19 +79,66 @@ public class SpecialistWebController {
         }
 
         List<CustomerRequestResponseDto> requests = specialistService.getAllRequests(specialist);
-        List<Map<String, Object>> formattedRequests = requests.stream().map(request -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("requestNumber", request.requestNumber());
-            map.put("price", request.price());
-            map.put("description", request.description());
-            map.put("formattedDeadLineTime", request.deadLineTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            map.put("address", request.address());
-            map.put("requestStatus", request.requestStatus());
-            map.put("userIdCredit", customerId);
-            return map;
-        }).toList();
+        List<Map<String, Object>> formattedRequests = requests.stream()
+                .filter(request ->
+                        request.requestStatus() != RequestStatus.AwaitingSpecialistArrival &&
+                                request.requestStatus() != RequestStatus.InProgress
+                )
+                .map(request -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("requestNumber", request.requestNumber());
+                    map.put("price", request.price());
+                    map.put("description", request.description());
+                    map.put("formattedDeadLineTime", request.deadLineTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                    map.put("address", request.address());
+                    map.put("requestStatus", request.requestStatus());
+                    map.put("userIdCredit", customerId);
+                    return map;
+                })
+                .toList();
+
         model.addAttribute("requests", formattedRequests);
         return "all-requests";
+    }
+
+
+    @GetMapping("/changeRequestStatus")
+    public String showAllRequestsPageForChangeStatus(@RequestParam(value = "userIdCredit", required = false) Long customerId, Model model) {
+        User specialist = specialistService.getById(customerId);
+        if (specialist.getRole() != Role.Specialist) {
+            throw new UserHasWrongRole("User has wrong role");
+        }
+        List<CustomerRequestResponseDto> requests = specialistService.getAllRequests(specialist);
+        List<Map<String, Object>> formattedRequests = requests.stream()
+                .filter(request -> request.requestStatus().equals(RequestStatus.AwaitingSpecialistArrival))
+                .map(request -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("requestNumber", request.requestNumber());
+                    map.put("price", request.price());
+                    map.put("description", request.description());
+                    map.put("formattedDeadLineTime", request.deadLineTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                    map.put("address", request.address());
+                    map.put("requestStatus", request.requestStatus());
+                    map.put("userIdCredit", customerId);
+                    return map;
+                })
+                .toList();
+
+        model.addAttribute("requests", formattedRequests);
+        return "changeRequestStatus";
+    }
+
+
+    @PostMapping("/change-status")
+    public String changeRequestStatus(@RequestParam("requestNumber") String requestNumber) {
+        Long idRequest = Long.parseLong(requestNumber);
+        CustomerRequest requestById = customerRequestService.findRequestById(idRequest);
+        if(requestById.getRequestStatus()== RequestStatus.AwaitingSpecialistArrival){
+            customerRequestService.changeStatus(requestById);
+            return "/services";
+        }
+        throw new RequestStatusIsNotCorrect("Request has no correct status");
+
     }
 
 
@@ -172,7 +225,7 @@ public class SpecialistWebController {
     }
 
     @GetMapping("/update-order-status")
-    public String updateOrderStatus(@RequestParam  (value = "orderId", required = false) Long orderId, Model model) {
+    public String updateOrderStatus(@RequestParam(value = "orderId", required = false) Long orderId, Model model) {
 
         Order order = orderService.getOrderById(orderId);
         Offer offer = order.getOffer();
@@ -182,24 +235,18 @@ public class SpecialistWebController {
     }
 
 
-
-
-
     @GetMapping("/addSubcategoryToSpecialist")
-    public String showAddSubcategoryToSpecialistPage( Model model) {
+    public String showAddSubcategoryToSpecialistPage(Model model) {
 
         return "addSubcategoryToSpecialist";
     }
 
     @PostMapping("/addSubcategoryToSpecialist")
-    public String addSubcategoryToSpecialistPage(@RequestParam  (value = "userId", required = false) Long userId,
-                                                 @RequestParam  (value = "subCategoryId", required = false) Long subCategoryId,Model model) {
+    public String addSubcategoryToSpecialistPage(@RequestParam(value = "userId", required = false) Long userId,
+                                                 @RequestParam(value = "subCategoryId", required = false) Long subCategoryId, Model model) {
         userService.addSubCategory(userId, subCategoryId);
         return "/ get-Profile-Admin";
     }
-
-
-
 
 
 }

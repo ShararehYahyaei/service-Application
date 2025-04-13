@@ -114,9 +114,10 @@ public class CustomerRequestImpl implements CustomerRequestService {
         return filteredRequests;
     }
 
-    @Transactional
-    @Override
-    public void updateRequest(CustomerRequest customerRequest) {
+
+@Override
+@Transactional
+public void updateRequest(CustomerRequest customerRequest) {
         requestRepo.save(customerRequest);
     }
 
@@ -124,6 +125,13 @@ public class CustomerRequestImpl implements CustomerRequestService {
     @Override
     public Long countAllRequests() {
         return requestRepo.count();
+    }
+
+    @Transactional
+    @Override
+    public void changeStatus(CustomerRequest request) {
+        request.setRequestStatus(RequestStatus.InProgress);
+        requestRepo.save(request);
     }
 
 }
