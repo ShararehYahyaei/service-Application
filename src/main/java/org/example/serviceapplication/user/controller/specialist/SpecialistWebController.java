@@ -3,6 +3,7 @@ package org.example.serviceapplication.user.controller.specialist;
 import org.example.serviceapplication.credit.service.CreditService;
 import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.offer.model.Offer;
+import org.example.serviceapplication.offer.model.OfferStatus;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.order.model.Order;
 import org.example.serviceapplication.order.model.OrderDto;
@@ -19,13 +20,18 @@ import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
+import org.example.serviceapplication.user.service.customerService.CustomerService;
 import org.example.serviceapplication.user.service.specialistService.SpecialistService;
+import org.example.serviceapplication.workTimer.model.TimerStatus;
+import org.example.serviceapplication.workTimer.model.WorkTimer;
+import org.example.serviceapplication.workTimer.service.WorkTimerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,10 +45,11 @@ public class SpecialistWebController {
     private final OfferServiceInterface offerService;
     private final CreditService creditService;
     private final CustomerRequestService customerRequestService;
+    private final WorkTimerService workTimerService;
 
 
     public SpecialistWebController(SubServiceCategoryInterface subservice,
-                                   SpecialistService specialistService, UserService userService, OrderService orderService, OfferServiceInterface offerService, CreditService creditService, CustomerRequestService customerRequestService) {
+                                   SpecialistService specialistService, UserService userService, OrderService orderService, OfferServiceInterface offerService, CreditService creditService, CustomerRequestService customerRequestService, WorkTimerService workTimerService) {
         this.subservice = subservice;
         this.specialistService = specialistService;
         this.userService = userService;
@@ -50,6 +57,7 @@ public class SpecialistWebController {
         this.offerService = offerService;
         this.creditService = creditService;
         this.customerRequestService = customerRequestService;
+        this.workTimerService = workTimerService;
     }
 
 
@@ -110,13 +118,15 @@ public class SpecialistWebController {
         }
         List<CustomerRequestResponseDto> requests = specialistService.getAllRequests(specialist);
         List<Map<String, Object>> formattedRequests = requests.stream()
-                .filter(request -> request.requestStatus().equals(RequestStatus.AwaitingSpecialistArrival))
+                .filter(request -> request.requestStatus().
+                        equals(RequestStatus.AwaitingSpecialistArrival))
                 .map(request -> {
                     Map<String, Object> map = new HashMap<>();
                     map.put("requestNumber", request.requestNumber());
                     map.put("price", request.price());
                     map.put("description", request.description());
-                    map.put("formattedDeadLineTime", request.deadLineTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                    map.put("formattedDeadLineTime", request.deadLineTime().
+                            format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                     map.put("address", request.address());
                     map.put("requestStatus", request.requestStatus());
                     map.put("userIdCredit", customerId);
@@ -135,6 +145,11 @@ public class SpecialistWebController {
         CustomerRequest requestById = customerRequestService.findRequestById(idRequest);
         if(requestById.getRequestStatus()== RequestStatus.AwaitingSpecialistArrival){
             customerRequestService.changeStatus(requestById);
+            Offer acceptedOffer = offerService.getOfferBYCustomerRequestAndStatus(requestById, OfferStatus.ACCEPTED);
+            int estimationTime = acceptedOffer.getEstimationTime();
+            System.out.println(estimationTime+"jjjj");
+            workTimerService .createWorkTimer(acceptedOffer);
+            System.out.println(acceptedOffer.getEstimationTime() +"dcjsdcbjshdbchsd");
             return "/services";
         }
         throw new RequestStatusIsNotCorrect("Request has no correct status");

@@ -8,6 +8,8 @@ import org.example.serviceapplication.credit.model.CreditDto;
 import org.example.serviceapplication.credit.service.CreditService;
 import org.example.serviceapplication.location.service.LocationService;
 import org.example.serviceapplication.offer.dto.OfferDto;
+import org.example.serviceapplication.offer.model.Offer;
+import org.example.serviceapplication.offer.model.OfferStatus;
 import org.example.serviceapplication.offer.service.OfferServiceInterface;
 import org.example.serviceapplication.order.model.OrderDto;
 import org.example.serviceapplication.order.service.OrderService;
@@ -24,6 +26,9 @@ import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
+import org.example.serviceapplication.workTimer.exception.NotWorkTimerForThisOffer;
+import org.example.serviceapplication.workTimer.model.WorkTimer;
+import org.example.serviceapplication.workTimer.service.WorkTimerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -47,12 +52,13 @@ public class CustomerWeb {
     private final OrderService orderService;
     private final CreditService creditService;
     private final ReviewService reviewService;
+    private final WorkTimerService workTimerService;
 
 
     public CustomerWeb(SubServiceCategoryInterface subService, CustomerService customerService,
                        CustomerRequestService customerRequestService, OfferServiceInterface offerService,
                        CardService cardService, UserService userService, OrderService orderService,
-                       CreditService creditService, ReviewService reviewService) {
+                       CreditService creditService, ReviewService reviewService, WorkTimerService workTimerService) {
         this.subService = subService;
         this.customerService = customerService;
         this.customerRequestService = customerRequestService;
@@ -63,6 +69,7 @@ public class CustomerWeb {
         this.creditService = creditService;
         this.reviewService = reviewService;
 
+        this.workTimerService = workTimerService;
     }
 
     @GetMapping("/services")
@@ -289,6 +296,44 @@ public class CustomerWeb {
 
         return "rate-form";
     }
+
+
+
+    @GetMapping("/show-timer-form")
+    public String showTimerForm() {
+        return "show-timer";
+    }
+
+    @GetMapping("/show-timer")
+    public String showRemainingTime(@RequestParam("requestId") Long requestId, Model model) {
+        CustomerRequest request = customerRequestService.findRequestById(requestId);
+
+        if (request == null) {
+            model.addAttribute("remainingTime", "درخواست یافت نشد");
+            return "services";
+        }
+
+        Offer offer = offerService.getOfferBYCustomerRequestAndStatus(request, OfferStatus.ACCEPTED);
+        System.out.println(offer.toString()+"snvdhvbdhbv");
+        if (offer == null) {
+            model.addAttribute("remainingTime", "پیشنهاد تایید شده‌ای یافت نشد");
+            return "time";
+        }
+
+        try {
+
+            WorkTimer timer = workTimerService.getByOffer(offer.getId());
+            String formattedTime = workTimerService.getRemainingTimeFormatted(timer);
+            model.addAttribute("remainingTime", formattedTime);
+            return "time";
+        } catch (NotWorkTimerForThisOffer e) {
+            model.addAttribute("remainingTime", "تایمر برای این پیشنهاد فعال نشده است");
+        }
+
+        return "time";
+    }
+
+
 
 
 

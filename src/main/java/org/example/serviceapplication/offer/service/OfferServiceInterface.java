@@ -3,6 +3,7 @@ package org.example.serviceapplication.offer.service;
 import org.example.serviceapplication.offer.dto.OfferDto;
 import org.example.serviceapplication.offer.dto.OfferUpdateDto;
 import org.example.serviceapplication.offer.model.Offer;
+import org.example.serviceapplication.offer.model.OfferStatus;
 import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.user.model.User;
 import org.springframework.data.domain.Sort;
@@ -33,6 +34,9 @@ public interface OfferServiceInterface {
 
     @Transactional
     List<OfferDto>getAllOffersBySpecialistId(Long userId);
+
+    @Transactional(readOnly = true)
+    Offer getOfferBYCustomerRequestAndStatus(CustomerRequest customerRequest, OfferStatus offerStatus);
 
     //  List<OfferDto> getAllOffersSortedByRate(CustomerRequest request);
 }

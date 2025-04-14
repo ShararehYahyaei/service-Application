@@ -14,8 +14,6 @@ import org.example.serviceapplication.request.model.RequestStatus;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.review.service.ReviewService;
 import org.example.serviceapplication.user.model.User;
-import org.example.serviceapplication.workTimer.model.WorkTimer;
-import org.example.serviceapplication.workTimer.service.WorkTimerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -213,6 +211,15 @@ public class OfferServiceImpl implements OfferServiceInterface {
         return toOfferDTOList(byUserId);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Offer getOfferBYCustomerRequestAndStatus(CustomerRequest customerRequest, OfferStatus offerStatus) {
+        Offer byCustomerRequestAndStatus = offerRepository.findByCustomerRequestAndStatus(customerRequest, offerStatus);
+        if (byCustomerRequestAndStatus == null) {
+            throw new OfferNotFound("OfferNotFound");
+        }
+        return byCustomerRequestAndStatus;
+    }
 
 }
 

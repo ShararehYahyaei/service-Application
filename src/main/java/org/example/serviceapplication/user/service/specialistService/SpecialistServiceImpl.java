@@ -35,21 +35,18 @@ public class SpecialistServiceImpl implements SpecialistService {
 
     private final UserRepository userRepository;
     private final SubServiceCategoryInterface subServiceCategory;
-    private final SubServiceCategoryRepository subServiceCategoryRepository;
     private final Logger logger = LoggerFactory.getLogger(SpecialistServiceImpl.class);
 
 
     public SpecialistServiceImpl(OfferServiceInterface offerService, CustomerRequestService customerRequestService, OrderService orderService,
                                  UserRepository userRepository,
-                                 SubServiceCategoryInterface subService,
-                                 SubServiceCategoryRepository subServiceCategoryRepository) {
+                                 SubServiceCategoryInterface subService
+                                ) {
         this.offerService = offerService;
         this.customerRequestService = customerRequestService;
         this.orderService = orderService;
         this.userRepository = userRepository;
         this.subServiceCategory = subService;
-
-        this.subServiceCategoryRepository = subServiceCategoryRepository;
     }
 
     @Transactional
@@ -195,8 +192,7 @@ public class SpecialistServiceImpl implements SpecialistService {
     @Override
     public List<CustomerRequestResponseDto> getAllRequests(User specialist) {
         List<SubServiceCategory> subServiceCategories = specialist.getSubServiceCategories();
-        return customerRequestService.
-                getAllRequestForSpecialist(subServiceCategories);
+        return customerRequestService.getAllRequestForSpecialist(subServiceCategories);
 
     }
 

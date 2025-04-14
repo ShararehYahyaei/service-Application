@@ -9,4 +9,11 @@ public interface WorkTimerService {
 
     @Transactional
     WorkTimer createWorkTimer(Offer offer);
+
+    @Transactional
+    String getRemainingTimeFormatted(WorkTimer timer);
+
+
+    @Transactional(readOnly = true)
+    WorkTimer getByOffer(long offerId);
 }

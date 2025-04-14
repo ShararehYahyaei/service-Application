@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>زمان باقی‌مانده</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .timer {
+            font-size: 2em;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+<h1>زمان باقی‌مانده برای انجام کار</h1>
+<div class="timer" th:text="${remainingTime}">در حال بارگذاری...</div>
+</body>
+</html>

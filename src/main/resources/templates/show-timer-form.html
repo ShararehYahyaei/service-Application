@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fa" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>بررسی زمان باقی‌مانده</title>
+    <style>
+        body {
+            font-family: 'Vazirmatn', Arial, sans-serif;
+            direction: rtl;
+            background-color: #ffeef2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            width: 350px;
+        }
+        label, input, button {
+            width: 100%;
+            margin-top: 10px;
+        }
+        button {
+            background-color: #ec407a;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h2>بررسی زمان باقی‌مانده</h2>
+    <form th:action="@{/show-timer}" method="get">
+        <label for="requestId">شماره درخواست:</label>
+        <input type="number" id="requestId" name="requestId" required>
+        <button type="submit">نمایش</button>
+    </form>
+</div>
+</body>
+</html>

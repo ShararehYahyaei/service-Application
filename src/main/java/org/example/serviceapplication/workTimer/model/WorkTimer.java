@@ -21,15 +21,15 @@ public class WorkTimer {
     private Offer offer;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private long estimatedDurationInHours;
+    private int estimatedDurationInHours;
     @Enumerated(EnumType.STRING)
-    private  TimerStatus timerStatus;
+    private TimerStatus timerStatus;
 
     @Transient
     private long remainingTimeInSeconds;
 
     public WorkTimer(Offer offer, LocalDateTime startTime,
-                     long estimatedDurationInHours,
+                     int estimatedDurationInHours,
                      TimerStatus timerStatus) {
         this.offer = offer;
         this.startTime = startTime;
@@ -41,10 +41,5 @@ public class WorkTimer {
 
     }
 
-
-    public void updateRemainingTime() {
-        this.remainingTimeInSeconds = Duration.between(LocalDateTime.now(),
-                this.endTime).getSeconds();
-    }
 
 }

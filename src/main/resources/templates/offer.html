@@ -84,7 +84,8 @@
         <input type="date" id="offerDate" th:field="*{offerDate}" required>
 
         <label for="estimationTime">مدت زمان تخمینی (روز):</label>
-        <input type="number" id="estimationTime" th:field="*{estimationTime}" required>
+
+        <input type="number" id="estimationTime"  min="1" th:field="*{estimationTime}" required>
 
         <label for="customerRequestId">کد درخواست مشتری:</label>
         <input type="number" id="customerRequestId" th:field="*{customerRequestId}" required>
