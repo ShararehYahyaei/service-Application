@@ -58,6 +58,7 @@
             background-color: #6A1B9A;
         }
 
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -87,6 +88,22 @@
         tr:hover {
             background-color: #f1f1f1;
         }
+        .approve-colored-btn {
+            background-color: #7B1FA2;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .approve-colored-btn:hover {
+            background-color: #6A1B9A;
+        }
+
     </style>
 </head>
 <body>
@@ -126,7 +143,14 @@
         <td th:text="${specialist.active ? 'بله' : 'خیر'}"></td>
         <td th:text="${specialist.role}"></td>
         <td th:text="${specialist.status}"></td>
-        <td>—</td>
+        <td>
+            <form th:action="@{/approve-specialist}" method="post" th:if="${specialist.status.name() == 'isPendingApproval'}" style="display: inline;">
+                <input type="hidden" name="id" th:value="${specialist.specialistId}" />
+                <button type="submit" class="approve-colored-btn">تایید</button>
+            </form>
+        </td>
+
+
     </tr>
     </tbody>
 </table>

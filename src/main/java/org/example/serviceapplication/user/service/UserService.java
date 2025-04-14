@@ -53,4 +53,7 @@ public interface UserService {
 
     @Transactional
     void activateUser(String token);
+
+    @Transactional
+    User upadteUser(User user);
 }

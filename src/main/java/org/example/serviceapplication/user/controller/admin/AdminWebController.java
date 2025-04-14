@@ -13,6 +13,9 @@ import org.example.serviceapplication.subCategory.dto.SubServiceCategoryRequest;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.dto.CustomerResponseDto;
 import org.example.serviceapplication.user.dto.SpecialistResponseDto;
+import org.example.serviceapplication.user.enumPackage.Status;
+import org.example.serviceapplication.user.exception.UserHasWrongRole;
+import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,7 +65,7 @@ public class AdminWebController {
         return "customer-list";
     }
 
-    private  List<CustomerResponseDto> filterCustomerDtoByDate(LocalDate fromLocalDate, LocalDate toLocalDate, List<CustomerResponseDto> allCustomers) {
+    private List<CustomerResponseDto> filterCustomerDtoByDate(LocalDate fromLocalDate, LocalDate toLocalDate, List<CustomerResponseDto> allCustomers) {
         if (fromLocalDate != null && toLocalDate != null) {
             allCustomers = allCustomers.stream()
                     .filter(c ->
@@ -75,9 +78,8 @@ public class AdminWebController {
     }
 
 
-
     @GetMapping("/all-specialists")
-    public String getAllSpecialists(Model model,  @RequestParam(name = "fromLocalDate", required = false) LocalDate fromLocalDate,
+    public String getAllSpecialists(Model model, @RequestParam(name = "fromLocalDate", required = false) LocalDate fromLocalDate,
                                     @RequestParam(name = "toLocalDate", required = false) LocalDate toLocalDate) {
         String role = "ADMIN";
         if (!"ADMIN".equals(role)) {
@@ -85,12 +87,11 @@ public class AdminWebController {
         }
         List<SpecialistResponseDto> allSpecialists = userService.getAllSpecialists();
 
-        allSpecialists=filterSpecialistDtoByDate(fromLocalDate,toLocalDate,allSpecialists);
+        allSpecialists = filterSpecialistDtoByDate(fromLocalDate, toLocalDate, allSpecialists);
         model.addAttribute("specialists", allSpecialists);
         return "specialist-list";
     }
 
-    //todo show all categories
 
     @GetMapping("/categoriesListPage")
     public String showCategoriesList(Model model) {
@@ -158,7 +159,6 @@ public class AdminWebController {
     }
 
 
-
     @GetMapping("/searchOrders")
     public String searchOrders(
             @ModelAttribute("orderDtoSearch") OrderDtoSearch orderDtoSearch,
@@ -169,7 +169,7 @@ public class AdminWebController {
         return "searchOrders";
     }
 
-    private  List<SpecialistResponseDto> filterSpecialistDtoByDate(LocalDate fromLocalDate, LocalDate toLocalDate, List<SpecialistResponseDto> specialistResponseDtos) {
+    private List<SpecialistResponseDto> filterSpecialistDtoByDate(LocalDate fromLocalDate, LocalDate toLocalDate, List<SpecialistResponseDto> specialistResponseDtos) {
         if (fromLocalDate != null && toLocalDate != null) {
             specialistResponseDtos = specialistResponseDtos.stream()
                     .filter(c ->
@@ -180,4 +180,18 @@ public class AdminWebController {
         }
         return specialistResponseDtos;
     }
+
+
+    @PostMapping("/approve-specialist")
+    public String approveSpecialist(@RequestParam("id") Long id) {
+        User userById = userService.getUserById(id);
+        System.out.println(userById+"dfgdfgdf");
+            if (userById.getRole().equals("Specialist")) {
+            throw new UserHasWrongRole("user has wrong role");
+        }
+        userById.setStatus(Status.Approved);
+        userService.upadteUser(userById);
+        return "success";
+    }
+
 }

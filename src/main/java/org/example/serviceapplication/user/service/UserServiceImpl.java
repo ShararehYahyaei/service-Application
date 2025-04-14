@@ -20,7 +20,6 @@ import org.example.serviceapplication.user.service.specialistService.SpecialistS
 import org.example.serviceapplication.user.userRepository.UserRepository;
 import org.example.serviceapplication.verification.model.VerificationToken;
 import org.example.serviceapplication.verification.repository.VerificationTokenRepository;
-import org.example.serviceapplication.verification.service.VerificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -322,4 +321,9 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Transactional
+    @Override
+    public User upadteUser(User user) {
+     return    userRepository.save(user);
+    }
 }
