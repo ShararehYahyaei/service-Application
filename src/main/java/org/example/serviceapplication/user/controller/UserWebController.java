@@ -51,7 +51,7 @@ public class UserWebController {
         return "register";
     }
 
-    @PostMapping(value = "/create", consumes = "multipart/form-data")
+        @PostMapping(value = "/create", consumes = "multipart/form-data")
     public String createUser(@ModelAttribute @Valid UserRequest userRequest,
                              @RequestParam(required = false) MultipartFile profileImage,
                              BindingResult result, Model model) {

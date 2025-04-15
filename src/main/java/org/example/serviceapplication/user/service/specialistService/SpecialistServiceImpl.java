@@ -103,8 +103,6 @@ public class SpecialistServiceImpl implements SpecialistService {
         User specialist = userRepository.save(user);
         SubServiceCategory subService = subServiceCategory.getSubServiceCategoryById(subServiceId);
         subService.getUsers().add(specialist);
-//        encodedPassword=   specialist.getPassword();
-//        specialist.setPassword(encodedPassword);
         specialist.getSubServiceCategories() .add(subService);
         userRepository.saveAndFlush(specialist);
         return convertEntityToResponseDto(specialist);

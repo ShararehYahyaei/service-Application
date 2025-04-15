@@ -59,7 +59,7 @@ public class VerificationService {
 
     @Transactional
     public void sendVerificationEmail(String email, String token) {
-        String url = "https://762b-188-89-211-29.ngrok-free.app/verify?token=" + token;
+        String url = "http://localhost:8082/verify?token=" + token;
         String subject = "Email Verification";
         String htmlContent = "<p>Click the link below to verify your email:</p>"
                 + "<a href=\"" + url + "\">Verify Email</a>";

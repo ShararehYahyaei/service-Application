@@ -22,6 +22,7 @@ import org.example.serviceapplication.verification.model.VerificationToken;
 import org.example.serviceapplication.verification.repository.VerificationTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,6 +46,7 @@ public class UserServiceImpl implements UserService {
     private final SubServiceCategoryInterface subService;
     private final EmailService emailService;
     private final VerificationTokenRepository verificationTokenRepository;
+    private final PasswordEncoder passwordEncoder;
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     public UserServiceImpl(UserRepository userRepository,
@@ -52,7 +54,7 @@ public class UserServiceImpl implements UserService {
                            CustomerService customerService,
                            SpecialistServiceImpl specialistService,
                            SubServiceCategoryInterface subService
-            , EmailService emailService, VerificationTokenRepository verificationTokenRepository) {
+            , EmailService emailService, VerificationTokenRepository verificationTokenRepository, PasswordEncoder passwordEncoder) {
 
         this.userRepository = userRepository;
         this.categoryService = categoryService;
@@ -62,6 +64,7 @@ public class UserServiceImpl implements UserService {
 //        this.verificationService = verificationService;
         this.emailService = emailService;
         this.verificationTokenRepository = verificationTokenRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -80,6 +83,7 @@ public class UserServiceImpl implements UserService {
         User user = convertRequestIntoEntity(userRequest);
         user.setActive(false);
         user.setCreatedAt(LocalDateTime.now());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (user.getRole() == Role.Customer) {
             user.setStatus(Status.newJoiner);
             userResponse = customerService.createCustomer(user);

@@ -37,8 +37,6 @@ public class User {
     private String userName;
     @Email(message = "InValid email")
     private String email;
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8}$",
-            message = "Password must be exactly 8 characters with at least one letter and one digit")
     private String password;
     private boolean active;
     @Enumerated(EnumType.STRING)

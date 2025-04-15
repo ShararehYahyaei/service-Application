@@ -93,6 +93,7 @@
     <h2>فرم ثبت‌نام</h2>
 
     <form action="/create" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
         <label for="name">نام:</label>
         <input type="text" id="name" name="name" placeholder="مثلاً علی" required>

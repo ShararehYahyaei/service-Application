@@ -33,7 +33,11 @@ public class WebSecurityConfig {
                                 "/services",
                                 "/categoriesListPage",
                                 "/servicesList",
-                                "/register")
+                                "/create",
+                                "/verify",
+                                "/register",
+                                "/captcha/image",
+                                "/image/**")
                         .permitAll()
                         .requestMatchers("/getProfile").hasRole("Specialist")
                         .requestMatchers("/getCustomerId").hasRole("Customer")
