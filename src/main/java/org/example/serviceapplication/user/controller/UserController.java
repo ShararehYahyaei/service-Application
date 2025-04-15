@@ -1,4 +1,4 @@
-package org.example.serviceapplication.user.controller.userController;
+package org.example.serviceapplication.user.controller;
 
 
 import org.example.serviceapplication.offer.service.OfferServiceImpl;
@@ -9,7 +9,6 @@ import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
 import org.example.serviceapplication.user.service.specialistService.SpecialistService;
-import org.example.serviceapplication.verification.service.VerificationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

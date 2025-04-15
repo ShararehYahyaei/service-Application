@@ -1,4 +1,4 @@
-package org.example.serviceapplication.user.controller.userController;
+package org.example.serviceapplication.user.controller;
 
 import jakarta.validation.Valid;
 import org.example.serviceapplication.credit.exception.CreditNotFoundException;
@@ -16,6 +16,7 @@ import org.example.serviceapplication.user.service.UserService;
 import org.example.serviceapplication.verification.service.VerificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -92,6 +93,7 @@ public class UserWebController {
     }
 
     @GetMapping("/getProfile")
+    @PreAuthorize("hasRole('Specialist')")
     public String getSpecialistProfile() {
         return "getProfile";
     }

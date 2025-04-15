@@ -72,7 +72,7 @@ public class CustomerWeb {
         this.workTimerService = workTimerService;
     }
 
-    @GetMapping("/services")
+    @GetMapping( path = {"/services","/"})
     public String showServicesPage(Model model) {
         model.addAttribute("showList", false);
         return "services";
