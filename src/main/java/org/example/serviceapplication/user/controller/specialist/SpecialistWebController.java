@@ -18,7 +18,9 @@ import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 import org.example.serviceapplication.user.enumPackage.Role;
+import org.example.serviceapplication.user.enumPackage.Status;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
+import org.example.serviceapplication.user.exception.UserIsNotApproved;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
 import org.example.serviceapplication.user.service.customerService.CustomerService;
@@ -87,6 +89,8 @@ public class SpecialistWebController {
         User specialist = specialistService.getById(customerId);
         if (specialist.getRole() != Role.Specialist) {
             throw new UserHasWrongRole("User has wrong role");
+        }   if (specialist.getStatus() != Status.Approved) {
+            throw new UserIsNotApproved("User Is Not Approved Yet....");
         }
 
         List<CustomerRequestResponseDto> requests = specialistService.getAllRequests(specialist);
@@ -119,6 +123,9 @@ public class SpecialistWebController {
         if (specialist.getRole() != Role.Specialist) {
             throw new UserHasWrongRole("User has wrong role");
         }
+        if (specialist.getStatus() != Status.Approved) {
+            throw new UserIsNotApproved("User Is Not Approved Yet....");
+        }
         List<CustomerRequestResponseDto> requests = specialistService.getAllRequests(specialist);
         List<Map<String, Object>> formattedRequests = requests.stream()
                 .filter(request -> request.requestStatus().
@@ -149,10 +156,7 @@ public class SpecialistWebController {
         if(requestById.getRequestStatus()== RequestStatus.AwaitingSpecialistArrival){
             customerRequestService.changeStatus(requestById);
             Offer acceptedOffer = offerService.getOfferBYCustomerRequestAndStatus(requestById, OfferStatus.ACCEPTED);
-            int estimationTime = acceptedOffer.getEstimationTime();
-            System.out.println(estimationTime+"jjjj");
             workTimerService .createWorkTimer(acceptedOffer);
-            System.out.println(acceptedOffer.getEstimationTime() +"dcjsdcbjshdbchsd");
             return "/services";
         }
         throw new RequestStatusIsNotCorrect("Request has no correct status");
@@ -185,6 +189,8 @@ public class SpecialistWebController {
         model.addAttribute("specialist", offerDto);
         if (specialist.getRole() != Role.Specialist) {
             throw new UserHasWrongRole("Specialist has wrong role");
+        }   if (specialist.getStatus() != Status.Approved) {
+            throw new UserIsNotApproved("User Is Not Approved Yet....");
         }
 
         specialistService.createOffer(specialist, offerDto);
