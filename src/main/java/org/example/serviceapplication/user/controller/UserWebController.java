@@ -128,7 +128,7 @@ public class UserWebController {
 
 
     @GetMapping("/getCustomerId")
-    public String showCustomerIdForm(Model model) {
+    public String showCustomerIdForm( Model model) {
         return "getCustomerId";
     }
 
