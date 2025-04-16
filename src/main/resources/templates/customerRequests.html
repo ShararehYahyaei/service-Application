@@ -114,10 +114,10 @@
 <br/>
 <a href="/services" class="back-button">بازگشت</a>
 
-<!-- Leaflet JS -->
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // موقعیت پیش‌فرض (تهران)
+
     var defaultLat = 35.6892;
     var defaultLng = 51.3890;
 
@@ -129,18 +129,17 @@
 
     var marker = L.marker([defaultLat, defaultLng], {draggable: true}).addTo(map);
 
-    // مقدار اولیه را در فیلدها تنظیم کن
     document.getElementById('latitude').value = defaultLat;
     document.getElementById('longitude').value = defaultLng;
 
-    // آپدیت فیلدها هنگام جابجایی marker
+
     marker.on('dragend', function (e) {
         var latlng = marker.getLatLng();
         document.getElementById('latitude').value = latlng.lat;
         document.getElementById('longitude').value = latlng.lng;
     });
 
-    // اضافه کردن marker جدید هنگام کلیک روی نقشه
+
     map.on('click', function (e) {
         marker.setLatLng(e.latlng);
         document.getElementById('latitude').value = e.latlng.lat;

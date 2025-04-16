@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.example.serviceapplication.credit.exception.CreditNotFoundException;
 import org.example.serviceapplication.credit.model.Credit;
 import org.example.serviceapplication.credit.service.CreditService;
+import org.example.serviceapplication.review.model.ReviewDto;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.dto.SubServiceDto;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
@@ -93,7 +94,6 @@ public class UserWebController {
     }
 
     @GetMapping("/getProfile")
-    @PreAuthorize("hasRole('Specialist')")
     public String getSpecialistProfile() {
         return "getProfile";
     }
@@ -105,11 +105,13 @@ public class UserWebController {
 
         if (specialist == null) {
             model.addAttribute("error", "متخصصی با این شناسه یافت نشد.");
-            return "specialist-profile";
+
         }
 
         model.addAttribute("specialist", specialist);
-        return "specialist-profile";
+        model.addAttribute("reviewDto", new ReviewDto(specialistId,
+                null, null, 0, null));
+        return "get-Specialist-profile";
     }
 
 
@@ -149,6 +151,16 @@ public class UserWebController {
         model.addAttribute("Role", role);
 
         return "view-my-credit.html";
+    }
+
+
+    @GetMapping("/login")
+    public String loginPage(@RequestParam(value = "error", required = false) String error,
+                            Model model) {
+        if (error != null) {
+            model.addAttribute("errorMessage", "نام کاربری یا رمز عبور اشتباه است!");
+        }
+        return "login";
     }
 
 

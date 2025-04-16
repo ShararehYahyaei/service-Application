@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>صفحه ورود</title>
+    <style>
+        body {
+            font-family: Vazirmatn, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: right;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px 15px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error-message {
+            color: #d8000c;
+            background-color: #ffbaba;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h1>ورود به حساب</h1>
+    <form th:action="@{/login}" method="post">
+        <label>نام کاربری:
+            <input type="text" name="username" required/>
+        </label>
+
+        <label>رمز عبور:
+            <input type="password" name="password" required/>
+        </label>
+
+        <button type="submit">ورود</button>
+    </form>
+
+    <div th:if="${errorMessage}" class="error-message">
+        <p th:text="${errorMessage}"></p>
+    </div>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">خروج</button>
+    </form>
+
+</div>
+</body>
+</html>

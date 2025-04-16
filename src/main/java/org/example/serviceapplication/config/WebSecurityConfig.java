@@ -41,12 +41,16 @@ public class WebSecurityConfig {
                         .permitAll()
                         .requestMatchers("/getProfile").hasRole("Specialist")
                         .requestMatchers("/getCustomerId").hasRole("Customer")
+                        .requestMatchers("/customer-profile").hasRole("Customer")
+
 
                         .anyRequest()
                         .authenticated()
 
                 )
                 .formLogin((form) -> form
+                        .loginPage("/login") // اگر صفحه لاگین اختصاصی دارید
+                        .failureUrl("/login?error=true")
                         .permitAll()
                 )
                 .logout((logout) -> logout

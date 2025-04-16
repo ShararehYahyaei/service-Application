@@ -181,8 +181,6 @@ public class CustomerWeb {
         model.addAttribute("Role", user.getRole());
         if (user.getRole() == Role.Customer) {
            return "customer-profile";
-        } else if (user.getRole() == Role.Specialist) {
-            return "get-Specialist-profile";
         }
         throw new UserHasWrongRole("User has wrong role");
     }
@@ -196,7 +194,6 @@ public class CustomerWeb {
         }
 
         customerService.addReview(customer, reviewDto);
-
         model.addAttribute("reviewDto", new ReviewDto(reviewDto.customerId(),
                 null, null, 0, null));
         return "/customer-profile";
