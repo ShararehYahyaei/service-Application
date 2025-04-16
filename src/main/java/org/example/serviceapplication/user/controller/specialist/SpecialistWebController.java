@@ -13,6 +13,7 @@ import org.example.serviceapplication.request.exception.RequestStatusIsNotCorrec
 import org.example.serviceapplication.request.model.CustomerRequest;
 import org.example.serviceapplication.request.model.RequestStatus;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
+import org.example.serviceapplication.review.model.ReviewDto;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
@@ -25,6 +26,8 @@ import org.example.serviceapplication.user.service.specialistService.SpecialistS
 import org.example.serviceapplication.workTimer.model.TimerStatus;
 import org.example.serviceapplication.workTimer.model.WorkTimer;
 import org.example.serviceapplication.workTimer.service.WorkTimerService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -251,8 +254,11 @@ public class SpecialistWebController {
 
 
     @GetMapping("/addSubcategoryToSpecialist")
-    public String showAddSubcategoryToSpecialistPage(Model model) {
+    public String showAddSubcategoryToSpecialistPage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        User user = userService.getUserByEmail(userDetails.getUsername());
+        model.addAttribute("userId", user.getId());
 
+        model.addAttribute("Role", user.getRole());
         return "addSubcategoryToSpecialist";
     }
 

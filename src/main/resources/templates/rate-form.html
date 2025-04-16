@@ -1,23 +1,86 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="fa">
 <head>
+    <meta charset="UTF-8">
     <title>گرفتن امتیاز متخصص</title>
+    <style>
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background-color: #f4f4f4;
+            direction: rtl;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 25px;
+            margin: 0 auto;
+            display: inline-block;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            padding: 8px;
+            width: 200px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .result, .error {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
+
 <h1>گرفتن امتیاز متخصص</h1>
 
 <form th:action="@{/rate-form}" method="post">
-    <label>شماره متخصص:</label>
-    <input type="number" name="userId" required/>
+    <label for="userId">شماره متخصص:</label>
+    <input type="number" id="userId" name="userId" required/>
+    <br/>
     <button type="submit">جستجو</button>
 </form>
 
-<div th:if="${rate != null}">
+<div th:if="${rate != null}" class="result">
     <p>امتیاز این متخصص: <strong th:text="${rate}"></strong></p>
 </div>
 
-<div th:if="${error != null}">
-    <p style="color:red;" th:text="${error}"></p>
+<div th:if="${error != null}" class="error">
+    <p th:text="${error}"></p>
 </div>
 
 </body>

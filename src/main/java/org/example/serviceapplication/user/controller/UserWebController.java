@@ -18,6 +18,8 @@ import org.example.serviceapplication.verification.service.VerificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -94,8 +96,12 @@ public class UserWebController {
     }
 
     @GetMapping("/getProfile")
-    public String getSpecialistProfile() {
-        return "getProfile";
+    public String getSpecialistProfile(@AuthenticationPrincipal UserDetails userDetails,Model model) {
+        User user = userService.getUserByEmail(userDetails.getUsername());
+        model.addAttribute("reviewDto", new ReviewDto(user.getId(),
+                null, null, 0, null));
+        model.addAttribute("Role", user.getRole());
+        return "get-Specialist-profile";
     }
 
 
@@ -128,8 +134,13 @@ public class UserWebController {
 
 
     @GetMapping("/getCustomerId")
-    public String showCustomerIdForm( Model model) {
-        return "getCustomerId";
+    public String showCustomerIdForm(@AuthenticationPrincipal UserDetails userDetails,Model model) {
+        User user = userService.getUserByEmail(userDetails.getUsername());
+        model.addAttribute("reviewDto", new ReviewDto(user.getId(),
+                null, null, 0, null));
+        model.addAttribute("Role", user.getRole());
+
+        return "customer-profile";
     }
 
 
