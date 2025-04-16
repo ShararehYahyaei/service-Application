@@ -92,9 +92,7 @@ public class UserServiceImpl implements UserService {
             Long Id = userRequest.subServiceCategoryId();
             userResponse = specialistService.createSpecialist(user, Id);
         }
-//        User userByEmail = getUserByEmail(userRequest.email());
-//        String token = verificationService.generateVerificationToken(userByEmail.getEmail());
-//        emailService.sendVerificationEmail(userRequest.email(), token);
+
         return userResponse;
 
     }

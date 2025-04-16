@@ -41,6 +41,7 @@ public class WebSecurityConfig {
                         .permitAll()
                         .requestMatchers("/getProfile").hasRole("Specialist")
                         .requestMatchers("/getCustomerId").hasRole("Customer")
+                        .requestMatchers("/get-Profile-Admin").hasRole("Admin")
 
 
                         .anyRequest()
