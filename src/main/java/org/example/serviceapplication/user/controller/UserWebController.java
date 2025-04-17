@@ -14,6 +14,8 @@ import org.example.serviceapplication.user.enumPackage.Role;
 import org.example.serviceapplication.user.exception.UserHasWrongRole;
 import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.UserService;
+import org.example.serviceapplication.user.service.customerService.CustomerServiceInter;
+import org.example.serviceapplication.user.service.specialistService.SpecialistService;
 import org.example.serviceapplication.verification.service.VerificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,14 +38,18 @@ public class UserWebController {
     private final SubServiceCategoryInterface subservice;
     private final CreditService creditService;
     private final VerificationService verificationService;
+    private final CustomerServiceInter customerService;
     private final Logger logger = LoggerFactory.getLogger(UserWebController.class);
+    private final SpecialistService specialistService;
 
-    public UserWebController(UserService userService, SubServiceCategoryInterface subservice, CreditService creditService, VerificationService verificationService) {
+    public UserWebController(UserService userService, SubServiceCategoryInterface subservice, CreditService creditService, VerificationService verificationService, CustomerServiceInter customerService, SpecialistService specialistService) {
         this.userService = userService;
         this.subservice = subservice;
 
         this.creditService = creditService;
         this.verificationService = verificationService;
+        this.customerService = customerService;
+        this.specialistService = specialistService;
     }
 
     @GetMapping("/register")
@@ -54,7 +60,7 @@ public class UserWebController {
         return "register";
     }
 
-        @PostMapping(value = "/create", consumes = "multipart/form-data")
+    @PostMapping(value = "/create", consumes = "multipart/form-data")
     public String createUser(@ModelAttribute @Valid UserRequest userRequest,
                              @RequestParam(required = false) MultipartFile profileImage,
                              BindingResult result, Model model) {
@@ -96,7 +102,7 @@ public class UserWebController {
     }
 
     @GetMapping("/getProfile")
-    public String getSpecialistProfile(@AuthenticationPrincipal UserDetails userDetails,Model model) {
+    public String getSpecialistProfile(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         User user = userService.getUserByEmail(userDetails.getUsername());
         model.addAttribute("reviewDto", new ReviewDto(user.getId(),
                 null, null, 0, null));
@@ -134,7 +140,7 @@ public class UserWebController {
 
 
     @GetMapping("/getCustomerId")
-    public String showCustomerIdForm(@AuthenticationPrincipal UserDetails userDetails,Model model) {
+    public String showCustomerIdForm(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         User user = userService.getUserByEmail(userDetails.getUsername());
         model.addAttribute("reviewDto", new ReviewDto(user.getId(),
                 null, null, 0, null));
@@ -172,6 +178,27 @@ public class UserWebController {
             model.addAttribute("errorMessage", "نام کاربری یا رمز عبور اشتباه است!");
         }
         return "login";
+    }
+
+
+    @GetMapping("/change-password-form")
+    public String showChangePasswordForm(@RequestParam(value = "userIdCredit") Long userIdCredit) {
+        return "change-password";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("newPassword") String newPassword,
+                                 @AuthenticationPrincipal UserDetails userDetails, Model model
+    ) {
+        User user = userService.getUserByEmail(userDetails.getUsername());
+        if (user.getRole() == Role.Customer) {
+            customerService.changePassword(user, newPassword);
+        }
+        if (user.getRole() == Role.Specialist) {
+            specialistService.changePassword(user, newPassword);
+        }
+        model.addAttribute("userId", user.getId());
+        return "password-changed-success";
     }
 
 

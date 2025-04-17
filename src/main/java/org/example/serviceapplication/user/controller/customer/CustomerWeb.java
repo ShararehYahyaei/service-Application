@@ -332,19 +332,6 @@ public class CustomerWeb {
     }
 
 
-    @GetMapping("/change-password-form")
-    public String showChangePasswordForm(@RequestParam(value = "userIdCredit") Long userIdCredit) {
-        return "change-password";
-    }
-
-    @PostMapping("/change-password")
-    public String changePassword(@RequestParam("newPassword") String newPassword,
-                                 @AuthenticationPrincipal UserDetails userDetails
-                             ) {
-        User user = userService.getUserByEmail(userDetails.getUsername());
-        customerService.changePassword(user, newPassword);
-        return "password-changed-success";
-    }
 
 
 }

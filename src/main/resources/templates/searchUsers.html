@@ -1,52 +1,63 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نتایج جستجو</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-100 font-sans leading-relaxed">
 
-<div class="max-w-4xl mx-auto my-8 p-6 bg-white shadow-lg rounded-lg">
-    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">نتایج جستجوی کاربران</h1>
+<div class="max-w-5xl mx-auto my-12 p-8 bg-white shadow-2xl rounded-3xl">
+    <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-10">جستجوی کاربران</h1>
 
-
-    <form th:action="@{/searchUsers}" method="get" class="space-y-4">
+    <!-- Search Form -->
+    <form th:action="@{/searchUsers}" method="get" class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
-            <label for="name" class="block text-lg font-medium text-gray-700">نام:</label>
+            <label for="name" class="block mb-2 text-gray-700 font-medium">نام</label>
             <input type="text" id="name" name="name" th:value="${name}"
-                   class="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                   class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
         </div>
         <div>
-            <label for="email" class="block text-lg font-medium text-gray-700">ایمیل:</label>
+            <label for="email" class="block mb-2 text-gray-700 font-medium">ایمیل</label>
             <input type="text" id="email" name="email" th:value="${email}"
-                   class="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                   class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
         </div>
         <div>
-            <label for="role" class="block text-lg font-medium text-gray-700">نقش:</label>
+            <label for="role" class="block mb-2 text-gray-700 font-medium">نقش</label>
             <input type="text" id="role" name="role" th:value="${role}"
-                   class="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                   class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
         </div>
-        <div class="text-center">
+
+        <div class="md:col-span-3 text-center">
             <button type="submit"
-                    class="mt-4 py-2 px-6 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-300">جستجو</button>
+                    class="mt-4 px-8 py-3 bg-blue-500 text-white rounded-full font-semibold shadow-md hover:bg-blue-600 transition duration-300">
+                جستجو
+            </button>
         </div>
     </form>
 
+    <!-- Search Results -->
+    <div class="mt-10">
+        <h2 class="text-2xl font-bold text-gray-700 mb-6 border-b pb-2">نتایج جستجو</h2>
 
-    <div class="mt-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">نتایج جستجو:</h2>
-        <ul class="space-y-4">
-            <li th:each="user : ${users}" class="p-4 bg-gray-50 border rounded-lg shadow-sm">
-                <div class="flex justify-between items-center">
-                    <span th:text="${user.name}" class="text-xl font-semibold text-gray-700"></span>
-                    <span th:text="${user.email}" class="text-sm text-gray-500"></span>
+        <ul class="space-y-6" th:if="${users != null}">
+            <li th:each="user : ${users}" class="p-6 bg-gray-50 border border-gray-200 rounded-2xl shadow-sm">
+                <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+                    <div>
+                        <p th:text="${user.name}" class="text-xl font-semibold text-gray-800"></p>
+                        <p th:text="${user.email}" class="text-sm text-gray-500 mt-1"></p>
+                    </div>
+                    <div>
+                        <span th:text="${user.role}" class="text-sm bg-blue-100 text-blue-700 px-4 py-1 rounded-full font-medium"></span>
+                    </div>
                 </div>
-                <span th:text="${user.role}" class="block text-right mt-2 text-gray-600"></span>
             </li>
         </ul>
+
+        <div th:if="${users.size() == 0}" class="text-center text-gray-500 mt-8">
+            هیچ کاربری با این مشخصات پیدا نشد.
+        </div>
     </div>
 </div>
 

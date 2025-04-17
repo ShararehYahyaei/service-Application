@@ -9,7 +9,6 @@ import org.example.serviceapplication.request.dto.CustomerRequestResponseDto;
 import org.example.serviceapplication.request.sercvice.CustomerRequestService;
 import org.example.serviceapplication.subCategory.dto.SubServiceCategories;
 import org.example.serviceapplication.subCategory.model.SubServiceCategory;
-import org.example.serviceapplication.subCategory.repsitory.SubServiceCategoryRepository;
 import org.example.serviceapplication.subCategory.service.SubServiceCategoryInterface;
 
 import org.example.serviceapplication.user.dto.SpecialistResponseDto;
@@ -19,6 +18,7 @@ import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.userRepository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,19 +32,20 @@ public class SpecialistServiceImpl implements SpecialistService {
     private final OfferServiceInterface offerService;
     private final CustomerRequestService customerRequestService;
     private final OrderService orderService;
-
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final SubServiceCategoryInterface subServiceCategory;
     private final Logger logger = LoggerFactory.getLogger(SpecialistServiceImpl.class);
 
 
-    public SpecialistServiceImpl(OfferServiceInterface offerService, CustomerRequestService customerRequestService, OrderService orderService,
+    public SpecialistServiceImpl(OfferServiceInterface offerService, CustomerRequestService customerRequestService, OrderService orderService, PasswordEncoder passwordEncoder,
                                  UserRepository userRepository,
                                  SubServiceCategoryInterface subService
                                 ) {
         this.offerService = offerService;
         this.customerRequestService = customerRequestService;
         this.orderService = orderService;
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.subServiceCategory = subService;
     }
@@ -263,5 +264,12 @@ public class SpecialistServiceImpl implements SpecialistService {
         offerService.deleteOffer(offerId);
     }
 
+
+    @Transactional
+    @Override
+    public void changePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
 
 }

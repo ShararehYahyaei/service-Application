@@ -263,7 +263,6 @@ public class SpecialistWebController {
     public String showAddSubcategoryToSpecialistPage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         User user = userService.getUserByEmail(userDetails.getUsername());
         model.addAttribute("userId", user.getId());
-
         model.addAttribute("Role", user.getRole());
         return "addSubcategoryToSpecialist";
     }

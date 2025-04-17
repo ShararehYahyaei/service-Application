@@ -50,4 +50,7 @@ public interface SpecialistService {
     SpecialistResponseDto convertToRes(User user);
 
     void deleteOffer(Long offerId);
+
+    @Transactional
+    void changePassword(User user, String newPassword);
 }
