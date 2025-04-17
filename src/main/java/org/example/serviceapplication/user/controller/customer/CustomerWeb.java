@@ -31,6 +31,9 @@ import org.example.serviceapplication.workTimer.model.WorkTimer;
 import org.example.serviceapplication.workTimer.service.WorkTimerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.Banner;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -72,7 +75,7 @@ public class CustomerWeb {
         this.workTimerService = workTimerService;
     }
 
-    @GetMapping( path = {"/services","/"})
+    @GetMapping(path = {"/services", "/"})
     public String showServicesPage(Model model) {
         model.addAttribute("showList", false);
         return "services";
@@ -94,7 +97,7 @@ public class CustomerWeb {
 
 
     @GetMapping("/customerRequests")
-    public String showCustomerRequestPage(@RequestParam(value = "userIdCredit") Long userIdCredit,  Model model) {
+    public String showCustomerRequestPage(@RequestParam(value = "userIdCredit") Long userIdCredit, Model model) {
         model.addAttribute("customerRequestDto", new CustomerRequestDto(userIdCredit,
                 null, 0.0, "", null, "",
                 35.6892, 51.3890));
@@ -173,20 +176,20 @@ public class CustomerWeb {
     }
 
     @GetMapping("/customer-profile")
-    public String showCustomerProfile(@RequestParam(value = "customerId", required = false)Long customerId,
+    public String showCustomerProfile(@RequestParam(value = "customerId", required = false) Long customerId,
                                       Model model) {
         User user = userService.getUserById(customerId);
         model.addAttribute("reviewDto", new ReviewDto(customerId,
                 null, null, 0, null));
         model.addAttribute("Role", user.getRole());
         if (user.getRole() == Role.Customer) {
-           return "customer-profile";
+            return "customer-profile";
         }
         throw new UserHasWrongRole("User has wrong role");
     }
 
     @PostMapping("/customer-profile")
-    public String submitReview(@ModelAttribute ReviewDto reviewDto,Model model) {
+    public String submitReview(@ModelAttribute ReviewDto reviewDto, Model model) {
         User customer = customerService.getUserById(reviewDto.customerId());
 
         if (customer.getRole() != Role.Customer) {
@@ -200,13 +203,13 @@ public class CustomerWeb {
     }
 
     @GetMapping("/add-customer-card-form")
-    public String showAddCardForm(@RequestParam(value = "userIdCredit") Long userIdCredit,Model model) {
+    public String showAddCardForm(@RequestParam(value = "userIdCredit") Long userIdCredit, Model model) {
         model.addAttribute("cardForm", new CardDto(null,
                 null,
                 null,
                 null,
                 userIdCredit
-                ));
+        ));
         return "add-customer-card-form";
     }
 
@@ -252,9 +255,8 @@ public class CustomerWeb {
     }
 
 
-
     @GetMapping("/enter-customer-id")
-    public String enterCustomerIdForm(   @RequestParam(value = "userIdCredit") Long userIdCredit) {
+    public String enterCustomerIdForm(@RequestParam(value = "userIdCredit") Long userIdCredit) {
         return "enter-customer-id-form";
     }
 
@@ -295,7 +297,6 @@ public class CustomerWeb {
     }
 
 
-
     @GetMapping("/show-timer-form")
     public String showTimerForm() {
         return "show-timer";
@@ -311,7 +312,7 @@ public class CustomerWeb {
         }
 
         Offer offer = offerService.getOfferBYCustomerRequestAndStatus(request, OfferStatus.ACCEPTED);
-        System.out.println(offer.toString()+"snvdhvbdhbv");
+        System.out.println(offer.toString() + "snvdhvbdhbv");
         if (offer == null) {
             model.addAttribute("remainingTime", "پیشنهاد تایید شده‌ای یافت نشد");
             return "time";
@@ -331,7 +332,19 @@ public class CustomerWeb {
     }
 
 
+    @GetMapping("/change-password-form")
+    public String showChangePasswordForm(@RequestParam(value = "userIdCredit") Long userIdCredit) {
+        return "change-password";
+    }
 
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("newPassword") String newPassword,
+                                 @AuthenticationPrincipal UserDetails userDetails
+                             ) {
+        User user = userService.getUserByEmail(userDetails.getUsername());
+        customerService.changePassword(user, newPassword);
+        return "password-changed-success";
+    }
 
 
 }

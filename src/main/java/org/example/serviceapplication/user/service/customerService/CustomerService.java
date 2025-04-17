@@ -18,10 +18,10 @@ import org.example.serviceapplication.user.model.User;
 import org.example.serviceapplication.user.service.specialistService.SpecialistService;
 import org.example.serviceapplication.user.userRepository.UserRepository;
 
-import org.example.serviceapplication.workTimer.service.WorkTimerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +39,7 @@ public class CustomerService implements CustomerServiceInter {
     private final ReviewService reviewService;
     private final SpecialistService specialistService;
     private final LocationService locationService;
+    private final PasswordEncoder passwordEncoder;
 
 
     private final Logger logger = LoggerFactory.getLogger(CustomerService.class);
@@ -48,7 +49,7 @@ public class CustomerService implements CustomerServiceInter {
                            OfferServiceInterface offerService,
                            OrderService orderService,
                            ReviewService reviewService, SpecialistService specialistService,
-                           LocationService locationService) {
+                           LocationService locationService, PasswordEncoder passwordEncoder) {
         this.customerRequestService = customerRequestService;
         this.userRepository = userRepository;
         this.offerService = offerService;
@@ -57,6 +58,7 @@ public class CustomerService implements CustomerServiceInter {
         this.specialistService = specialistService;
         this.locationService = locationService;
 
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -100,13 +102,13 @@ public class CustomerService implements CustomerServiceInter {
     public void createRequest(User customer, CustomerRequestDto customerRequest) {
         CustomerRequest customerRequest1 = customerRequestService.addRequest(customer, customerRequest);
         logger.info("Create request with customer: {}", customer);
-        locationService.createLocation(customerRequest.latitude(),customerRequest.longitude(),customerRequest1);
+        locationService.createLocation(customerRequest.latitude(), customerRequest.longitude(), customerRequest1);
     }
 
     @Transactional
     @Override
     public List<OfferDto> getAllOffers(Long requestId, Sort sort) {
-        return offerService.getAllOffersNotSorted(requestId,sort);
+        return offerService.getAllOffersNotSorted(requestId, sort);
     }
 
 
@@ -147,8 +149,13 @@ public class CustomerService implements CustomerServiceInter {
     @Override
     public SpecialistResponseDto getSpecialistForMyRequest(Long requestId) {
         User userForThisRequest = offerService.getSpecialist(requestId);
-      return    specialistService.convertToRes(userForThisRequest);
+        return specialistService.convertToRes(userForThisRequest);
     }
 
-
+    @Transactional
+    @Override
+    public void changePassword(User user,String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
 }

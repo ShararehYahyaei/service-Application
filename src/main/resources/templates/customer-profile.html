@@ -115,6 +115,10 @@
         <button type="submit"> بررسی زمان باقی‌مانده برای هر درخواست</button>
     </form>
 
+    <form th:action="@{/change-password-form}" method="get">
+        <input hidden="hidden" type="number" name="userIdCredit" th:value="${reviewDto.customerId}" >
+        <button type="submit">تغییر رمز عبور</button>
+    </form>
 
 
 </div>

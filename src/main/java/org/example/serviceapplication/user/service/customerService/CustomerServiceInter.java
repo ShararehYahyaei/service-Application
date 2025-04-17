@@ -35,4 +35,6 @@ public interface CustomerServiceInter {
     @Transactional(readOnly = true)
     SpecialistResponseDto getSpecialistForMyRequest(Long requestId);
 
+    @Transactional
+    void changePassword(User user,String newPassword);
 }

@@ -61,7 +61,6 @@ public class UserServiceImpl implements UserService {
         this.customerService = customerService;
         this.specialistService = specialistService;
         this.subService = subService;
-//        this.verificationService = verificationService;
         this.emailService = emailService;
         this.verificationTokenRepository = verificationTokenRepository;
         this.passwordEncoder = passwordEncoder;
