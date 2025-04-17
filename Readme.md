@@ -224,3 +224,87 @@ and put rate and reviews for specialist_
 `All steps should be passed step by step,
 otherwise can get suitable errors`
 
+
+
+
+1. User Registration
+   Users can sign up as Customer or Specialist via the /service page.
+Specialists can select their Sub-Service Categories during sign-up.
+Sub-Service Categories can also be added later by:
+The Admin in the admin panel.
+The Specialist in their own profile.
+
+2. Email Verification
+   After registration, a verification link is sent to the user's email.
+Users must click the link to verify their email before logging in.
+
+3. Admin Approval for Specialists
+   After email verification, Specialists must be manually activated by the Admin in the admin panel.
+Only activated specialists can access their profile and work with requests.
+
+4. Customer Request Submission
+   Customers can create a service request from their profile.
+While submitting, they:
+Choose service and sub-service.
+Fill in request details.
+Select an address using an interactive map.
+
+5. Specialist Viewing Requests
+   Specialists can view available service requests related to their selected sub-service category.
+Requests are only visible if the specialist is active and verified.
+
+6. Specialist Sending Offers
+   Specialists can create offers for the available requests.
+Offers include proposed price and estimated duration
+
+
+7. Customer Viewing Offers
+   Customers can view all received offers for their submitted requests.
+They choose one offer, which creates an Order with the initial status
+set to "Awaiting Specialist Arrival".
+
+
+8. Specialist Starting the Job
+   Once selected, the specialist can:
+Change the order status to "In Progress".
+The system shows a timer for the customer
+indicating the remaining time based on the offer’s duration.
+
+9. Order Completion & Payment
+   When the specialist finishes the work, they change the status to "Completed".
+
+The customer must then pay using:
+Credit
+or by adding a Card and paying with it.
+After payment:
+70% of the offer price is added to the Specialist's credit.
+The specialist can view their current credit in their profile.
+
+
+10. Prevent Duplicate Payments
+    Once the order status is "Completed" and payment is done:
+The system blocks re-payment.
+The status cannot be changed anymore.
+
+
+11. Customer Reviews
+ After the payment:
+Customers can leave a review for the specialist.
+The specialist's rating becomes visible in their profile.
+
+✅ Key Features
+Role-based access: Customer, Specialist, Admin.
+
+Email verification and admin approval.
+
+Interactive address selection via map.
+
+Offer and order management with real-time tracking.
+
+Secure payment system (credit and card).
+
+Review and rating system.
+
+
+
+
